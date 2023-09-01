@@ -1,15 +1,28 @@
 # Bước đầu lập trình STM8S003F3P6
-**Các branch trong source code này phục vụ cho các project liên quan đến VĐK STM8** \
+**Các branch trong source code này phục vụ cho các project liên quan đến VĐK STM8** 
+
 *Các branch là các bài code cơ bản trước khi tìm hiểu một vi điều khiển mới bao gồm GPIO, Timer, Ngắt ngoài, giao tiếp UART, I2C, SPI, ...*\
 *Ngoài ra kèm theo code là tài liệu của chip và phần chạy code trong thực tế*
-## 1. Set Clock cho STM8S003F3P6
-```php
+## 1. Các thư viện
+```C
+    #include <stdint.h>
+    #include <stddef.h>
+```
+## 2. Set Clock cho STM8S003F3P6
+```C
 //sử dụng clock nội 16MHZ
 CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
 ```
-## 3. Code cho phần Timer
+## 3. GPIO
+```C
+/*Khai bao chan noi den LED la output*/
+GPIO_DeInit(GPIOD);
+GPIO_Init(GPIOD, GPIO_PIN_3, GPIO_MODE_OUT_PP_LOW_FAST);
+```
+
+## 4. Code cho phần Timer
 #### a. Dùng timer2 để tạo delay
-```php
+```C
 void main (void)
 {
     CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
@@ -30,9 +43,10 @@ void main (void)
     TIM2_ClearFlag(TIM2_FLAG_UPDATE);
  }
  ```
-* Kết quả LED nháy tắt 500ms
+- Kết quả LED nháy tắt 500ms
 Nếu không sử dụng hàm ngắt chúng ta kiểm tra cờ ngắt của timer2
- ```php
+ 
+ ```c
  void main (void)
  {
     TIM2_TimeBaseInit(TIM2_PRESCALER_512, 15624);
@@ -48,11 +62,11 @@ void delay_ms(uint16_t delay)
         --delay;
     }
 }
- ``` 
+ ```  
  
-
 #### b.Dùng timer4 để tạo delay
-```php
+```c
+uint16_t i = 0;
 void main (void)
 {
     /*Thet lap ngat cho timer4*/
@@ -78,7 +92,7 @@ void main (void)
  }  
 ```
 Nếu không sử dụng hàm ngắt
-```php
+```c
 void main(void)
 {
     TIM4_TimeBaseInit(TIM4_PRESCALER_128, 125 - 1);
@@ -94,8 +108,8 @@ void delay_ms(uint16_t u16Delay)
     }
 }
 ```
-## 4. Ngắt ngoài
-```php
+## 5. Ngắt ngoài
+```c
 void main(void)
 {
     /*ngat ngoai*/
@@ -110,3 +124,22 @@ INTERRUPT_HANDLER(EXTI_PORTD_IRQHandler, 6)
   GPIO_WriteReverse(GPIOD, GPIO_PIN_3);
 }
 ```
+Hàm ngắt ngoài nhưng có chống dội nút nhấn
+```php
+/*---------Ngat ngoai tai chan PD4----------*/
+INTERRUPT_HANDLER(EXTI_PORTD_IRQHandler, 6)
+{
+  if(GPIO_ReadInputPin(GPIOD, GPIO_PIN_4)==0)
+  {
+    delay_ms(100);
+    while(GPIO_ReadInputPin(GPIOD, GPIO_PIN_4)==0){}
+    GPIO_WriteReverse(GPIOD, GPIO_PIN_3);
+    dem++;
+    if (dem>9)dem=0;
+  }
+}
+```
+
+## 6. UART
+Linh tham khảo
+<https://circuitdigest.com/microcontroller-projects/serial-monitor-on-stm8s-using-cosmic-and-stvd>
