@@ -1,23 +1,74 @@
 # Bước đầu lập trình STM8S003F3P6
 **Các branch trong source code này phục vụ cho các project liên quan đến VĐK STM8** 
+*Các branch là các bài code cơ bản trước khi tìm hiểu một vi điều khiển mới bao gồm GPIO, Timer, Ngắt ngoài, giao tiếp UART, I2C, SPI, ...Ngoài ra kèm theo code là tài liệu của chip và phần chạy code trong thực tế*
 
-*Các branch là các bài code cơ bản trước khi tìm hiểu một vi điều khiển mới bao gồm GPIO, Timer, Ngắt ngoài, giao tiếp UART, I2C, SPI, ...*\
-*Ngoài ra kèm theo code là tài liệu của chip và phần chạy code trong thực tế*
+---
+**Mục Lục**
+---
+[Thư viện sử dụng cho lập trình STM8S003](#1-các-thư-viện)
+[Set dao động cho VĐK](#2-set-clock-cho-stm8s003f3p6)
+[Cấu hình ngõ vào ngõ ra cho VĐK](#3-gpio)
+[Cấu hình Timer cho VĐK](#4-code-cho-phần-timer)
+[Cấu hình PWM ](#5-pwm)
+[External Interrupt](#6-ngắt-ngoài)
+[Giao tiếp UART](#7-uart)
+
+---
 ## 1. Các thư viện
-```C
+- **Nghiên cứu các thư viện này:**
+```c
     #include <stdint.h>
     #include <stddef.h>
 ```
+
+- Vấn đề viết thư viện cho STM8 dùng trình biên dịch SDCC và soạn thảo Visual Studio Code:
+ + Để viết thư viện chúng ta 
+
+
 ## 2. Set Clock cho STM8S003F3P6
 ```C
 //sử dụng clock nội 16MHZ
 CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
 ```
 ## 3. GPIO
-```C
+```c
 /*Khai bao chan noi den LED la output*/
 GPIO_DeInit(GPIOD);
 GPIO_Init(GPIOD, GPIO_PIN_3, GPIO_MODE_OUT_PP_LOW_FAST);
+```
+- Câu lệnh khai báo như trên có nghĩa là: 
+<span style = "color : red " > 
+    OUT: output, PP: push-pull, LOW: first logic is '0', FAST: Output speed up to 10 MHz  
+    Tuy nhiên thời gian đáp ứng trên chân nhanh hơn sẽ tiêu tốn năng lượng nhiều hơn
+</span>
+
+[Luu y khi dung chan PB4 PB5 lam chan IO](https://www.youtube.com/watch?v=y3SxX6kZuUI&list=WL&index=82&pp=gAQBiAQB)
+
+- Code dưới đây khai báo GPIO cho STM8S003
+
+```c
+#include "stm8s.h"  /* Using stm8s_clk.h library*/
+#include "stdio.h"
+uint32_t clk=0;
+void mydelay(uint32_t time);
+
+void main (void)
+{
+    /*Using HSI clock 16Mhz*/
+    CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1); 
+    
+    GPIO_Init(GPIOD, GPIO_PIN_3, GPIO_MODE_OUT_PP_LOW_FAST);
+    clk = CLK_GetClockFreq();
+    while (1)
+    {
+        GPIO_WriteReverse(GPIOD,GPIO_PIN_3);
+        mydelay(200000);
+    }
+}
+void mydelay(uint32_t time)
+{
+    while(time--);
+}
 ```
 
 ## 4. Code cho phần Timer
@@ -108,7 +159,10 @@ void delay_ms(uint16_t u16Delay)
     }
 }
 ```
-## 5. Ngắt ngoài
+## 5. PWM
+[Tham khao](https://www.youtube.com/watch?v=2wEJFeGk3G4&list=WL&index=82)
+
+## 6. Ngắt ngoài
 ```c
 void main(void)
 {
@@ -140,6 +194,7 @@ INTERRUPT_HANDLER(EXTI_PORTD_IRQHandler, 6)
 }
 ```
 
-## 6. UART
+## 7. UART
 Linh tham khảo
 <https://circuitdigest.com/microcontroller-projects/serial-monitor-on-stm8s-using-cosmic-and-stvd>
+<https://b4050n.wordpress.com/2017/05/03/stm8s-8-1-wire-bus-tren-stm8s/>
