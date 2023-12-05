@@ -1,0 +1,16 @@
+EFM8SB10F8A-A
+25
+2000
+B4
+04
+02 B6 40
+02 FF 80
+02 EF 02
+02 A9 04
+;Name
+;ID hex
+;flash size hex
+;num of init hex
+;init--------01: Write SFR
+      |------02: Write Direct
+      |------03: Delay in Ms

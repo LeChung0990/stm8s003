@@ -1,0 +1,16 @@
+C8051F340-GQ
+0F
+FC00
+AD
+04
+01 B6 90
+01 FF 80
+01 EF 02
+01 B2 83
+;Name
+;ID hex
+;flash size hex
+;num of init hex
+;init--------01: Write SFR
+      |------02: Write Direct
+      |------03: Delay in Ms

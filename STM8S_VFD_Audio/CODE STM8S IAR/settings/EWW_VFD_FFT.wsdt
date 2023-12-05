@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>Prj_vfd_fft/Debug</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>213</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>26</ColumnWidth0><ColumnWidth1>1148</ColumnWidth1><ColumnWidth2>306</ColumnWidth2><ColumnWidth3>76</ColumnWidth3></Build>
+      <Find-All-Declarations>
+        
+        
+        
+      <ColumnWidth0>552</ColumnWidth0><ColumnWidth1>78</ColumnWidth1><ColumnWidth2>946</ColumnWidth2></Find-All-Declarations>
+    <Select-Ambiguous-Definitions><ColumnWidth0>552</ColumnWidth0><ColumnWidth1>78</ColumnWidth1><ColumnWidth2>946</ColumnWidth2></Select-Ambiguous-Definitions><TerminalIO/><Debug-Log><ColumnWidth0>25</ColumnWidth0><ColumnWidth1>1532</ColumnWidth1></Debug-Log></Static>
+    <Windows>
+      
+      
+    <Wnd2>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-15923-15372</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>Prj_vfd_fft</ExpandedNode><ExpandedNode>Prj_vfd_fft/FWLib</ExpandedNode><ExpandedNode>Prj_vfd_fft/Main</ExpandedNode><ExpandedNode>Prj_vfd_fft/Project</ExpandedNode><ExpandedNode>Prj_vfd_fft/STM8S</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-11135-18327</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-4193-20914</Identity>
+            <TabName>Declarations</TabName>
+            <Factory>Find-All-Declarations</Factory>
+            <Session/>
+          </Tab>
+        <Tab><Identity>TabID-8237-14577</Identity><TabName>Ambiguous Definitions</TabName><Factory>Select-Ambiguous-Definitions</Factory><Session/></Tab><Tab><Identity>TabID-16529-20183</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab><Tab><Identity>TabID-23093-10295</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory></Tab></Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\userSTM8\source\interrupt.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>315</SelStart2><SelEnd2>315</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\userSTM8\source\adc.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>1382</SelStart2><SelEnd2>1382</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\ProjectLib\include\display.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>486</SelStart2><SelEnd2>486</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Main\main.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>32</YPos2><SelStart2>1299</SelStart2><SelEnd2>1299</SelEnd2></Tab><ActiveTab>3</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\userSTM8\source\timer.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>113</SelStart2><SelEnd2>113</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\ProjectLib\source\display.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>33</YPos2><SelStart2>3098</SelStart2><SelEnd2>3098</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Main\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>434</SelStart2><SelEnd2>434</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\userSTM8\include\usart.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>12</YPos2><SelStart2>3451</SelStart2><SelEnd2>3451</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\userSTM8\source\gpio.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>864</SelStart2><SelEnd2>864</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\userSTM8\source\delay.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>140</SelStart2><SelEnd2>146</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\userSTM8\source\clock.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>141</SelStart2><SelEnd2>141</SelEnd2></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-02789F10><key>iaridepm.enu1</key></Toolbar-02789F10></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>577</Bottom><Right>304</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>205</yscreen><sizeHorzCX>125000</sizeHorzCX><sizeHorzCY>250611</sizeHorzCY><sizeVertCX>191250</sizeVertCX><sizeVertCY>707824</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>196</Bottom><Right>1602</Right><x>-2</x><y>-2</y><xscreen>1604</xscreen><yscreen>198</yscreen><sizeHorzCX>1002500</sizeHorzCX><sizeHorzCY>242054</sizeHorzCY><sizeVertCX>125000</sizeVertCX><sizeVertCY>250611</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

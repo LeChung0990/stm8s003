@@ -1,0 +1,66 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8)  Page 1
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  002710 L
+    .__.ABS.                                                    =  000000 G
+    .__.CPU.                                                    =  000000 L
+    .__.H$L.                                                    =  000001 L
+  1 _Data                                                          000000 GR
+  1 _Flag                                                          000001 GR
+    _I2C_address                                                   ****** GX
+    _I2C_init                                                      ****** GX
+    _I2C_start                                                     ****** GX
+    _I2C_stop                                                      ****** GX
+    _I2C_write                                                     ****** GX
+  8 _Message1                                                      000153 GR
+  8 _Message2                                                      000159 GR
+  8 _OLED_FONT                                                     00000E GR
+  8 _OLED_INIT_CMD                                                 000000 GR
+  A _OLED_clear                                                    00033B GR
+  A _OLED_cursor                                                   000303 GR
+  A _OLED_init                                                     0000DB GR
+  A _OLED_printFloat                                               0001FF GR
+  A _OLED_printNum                                                 00015F GR
+  A _OLED_printOneNumber                                           0002C4 GR
+  A _OLED_printP                                                   000107 GR
+  A _Read_EEPROM                                                   000022 GR
+    _Timer4Config                                                  ****** GX
+    _Timer4DelayMs                                                 ****** GX
+  A _Write_EEPROM                                                  000000 GR
+    ___fs2uint                                                     ****** GX
+    ___fsmul                                                       ****** GX
+    ___sdcc_external_startup                                       ****** GX
+  8 ___str_0                                                       000162 R
+  5 __interrupt_vect                                               000000 R
+    __modsint                                                      ****** GX
+  6 __sdcc_init_data                                               000009 R
+  5 __sdcc_program_startup                                         000004 R
+  3 __start__stack                                                 000000 R
+  A _main                                                          00002A GR
+    l_DATA                                                         ****** GX
+    l_INITIALIZER                                                  ****** GX
+    s_DATA                                                         ****** GX
+    s_GSINIT                                                       ****** GX
+    s_INITIALIZED                                                  ****** GX
+    s_INITIALIZER                                                  ****** GX
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8)  Page 2
+Hexadecimal [24-Bits]
+
+Area Table
+
+   0 _CODE                                      size      0   flags    0
+   1 DATA                                       size      2   flags    0
+   2 INITIALIZED                                size      0   flags    0
+   3 SSEG                                       size      1   flags    0
+   4 DABS                                       size      0   flags    8
+   5 HOME                                       size      7   flags    0
+   6 GSINIT                                     size     23   flags    0
+   7 GSFINAL                                    size      3   flags    0
+   8 CONST                                      size    166   flags    0
+   9 INITIALIZER                                size      0   flags    0
+   A CODE                                       size    365   flags    0
+   B CABS                                       size      0   flags    8
+

@@ -1,0 +1,161 @@
+ASxxxx Linker V03.00/V05.40 + sdld,  page 1.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+.  .ABS.                            00000000    00000000 =           0. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000000  .__.ABS.                           _fs2ulong
+     00000000  l_CABS                          
+     00000000  l_DABS                          
+     00000000  l_INITIALIZED                   
+     00000000  l_INITIALIZER                   
+     00000000  l__CODE                         
+     00000000  s_CABS                          
+     00000000  s_DABS                          
+     00000000  s__CODE                         
+     00000001  l_SSEG                          
+     00000001  s_DATA                          
+     00000002  l_DATA                          
+     00000003  l_GSFINAL                       
+     00000003  s_INITIALIZED                   
+     00000003  s_SSEG                          
+     00000007  l_HOME                          
+     00000023  l_GSINIT                        
+     00000166  l_CONST                         
+     0000071E  l_CODE                          
+     00008000  s_HOME                          
+     00008007  s_GSINIT                        
+     0000802A  s_GSFINAL                       
+     0000802D  s_CONST                         
+     00008193  s_CODE                          
+     00008193  s_INITIALIZER                   
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 2.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+DATA                                00000001    00000002 =           2. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000001  _Data                              main
+     00000002  _Flag                              main
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 3.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+SSEG                                00000003    00000001 =           1. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 4.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+HOME                                00008000    00000007 =           7. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 5.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+GSINIT                              00008007    00000023 =          35. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 6.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+GSFINAL                             0000802A    00000003 =           3. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 7.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+CONST                               0000802D    00000166 =         358. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000802D  _OLED_INIT_CMD                     main
+     0000803B  _OLED_FONT                         main
+     00008180  _Message1                          main
+     00008186  _Message2                          main
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 8.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+CODE                                00008193    0000071E =        1822. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00008193  _Write_EEPROM                      main
+     000081B5  _Read_EEPROM                       main
+     000081BD  _main                              main
+     0000826E  _OLED_init                         main
+     0000829A  _OLED_printP                       main
+     000082F2  _OLED_printNum                     main
+     00008392  _OLED_printFloat                   main
+     00008457  _OLED_printOneNumber               main
+     00008496  _OLED_cursor                       main
+     000084CE  _OLED_clear                        main
+     000084F8  _Timer4Config                      lib
+     00008505  _Timer4DelayMs                     lib
+     0000851A  _I2C_init                          lib
+     00008552  _I2C_start                         lib
+     00008564  _I2C_stop                          lib
+     0000856F  _I2C_address                       lib
+     00008589  _I2C_write                         lib
+     0000859F  ___fsmul                           _fsmul
+     00008759  ___fs2uint                         _fs2uint
+     00008779  ___sdcc_external_startup           _startup
+     0000877B  __modsint                          
+     00008793  ___muluint2ulong                   
+     00008799  ___mulsint2slong                   
+     000087EA  ___fs2ulong                        _fs2ulong
+ASxxxx Linker V03.00/V05.40 + sdld,  page 9.
+
+Files Linked                              [ module(s) ]
+
+obj/main.rel                              [ main ]
+obj/lib.rel                               [ lib ]
+
+
+Libraries Linked                          [ object file ]
+
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _fsmul.rel ]
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _fs2uint.rel ]
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _startup.rel ]
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _modsint.rel ]
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ __mulsint2slong.rel ]
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _fs2ulong.rel ]
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 10.
+
+User Base Address Definitions
+
+HOME = 0x8000
+DATA = 0x0001
+
+

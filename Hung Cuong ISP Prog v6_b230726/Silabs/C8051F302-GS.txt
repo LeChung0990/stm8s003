@@ -1,0 +1,13 @@
+C8051F302-GS
+04
+1E00
+B4
+01
+01 B2 07
+;Name
+;ID hex
+;flash size hex
+;num of init hex
+;init--------01: Write SFR
+      |------02: Write Direct
+      |------03: Delay in Ms

@@ -1,0 +1,29 @@
+0000008F 28
+00000088 Low Power Crystal Oscillator 0.4 - 0.9MHz
+00000089 Low Power Crystal Oscillator 0.4 - 0.9MHz
+00000008 Low Power Crystal Oscillator 0.4 - 0.9MHz / 8
+00000009 Low Power Crystal Oscillator 0.4 - 0.9MHz / 8
+0000008A Low Power Crystal Oscillator 0.9 - 3.0MHz
+0000008B Low Power Crystal Oscillator 0.9 - 3.0MHz
+0000000A Low Power Crystal Oscillator 0.9 - 3.0MHz / 8
+0000000B Low Power Crystal Oscillator 0.9 - 3.0MHz / 8
+0000008C Low Power Crystal Oscillator 3.0 - 8.0MHz
+0000008D Low Power Crystal Oscillator 3.0 - 8.0MHz
+0000000C Low Power Crystal Oscillator 3.0 - 8.0MHz / 8
+0000000D Low Power Crystal Oscillator 3.0 - 8.0MHz / 8
+0000008E Low Power Crystal Oscillator 8.0 - 16.0MHz
+0000008F Low Power Crystal Oscillator 8.0 - 16.0MHz
+0000000E Low Power Crystal Oscillator 8.0 - 16.0MHz / 8
+0000000F Low Power Crystal Oscillator 8.0 - 16.0MHz / 8
+00000084 Low Frequency Crystal Oscillator ~ 128KHz
+00000085 Low Frequency Crystal Oscillator ~ 128KHz
+00000004 Low Frequency Crystal Oscillator ~ 128KHz / 8
+00000005 Low Frequency Crystal Oscillator ~ 128KHz / 8
+00000082 Calibrated Internal RC Oscillator 8MHz
+00000002 Calibrated Internal RC Oscillator 8MHz / 8
+00000083 128kHz Internal Oscillator
+00000003 128kHz Internal Oscillator / 8
+00000080 External Clock 0 - 20MHz
+00000000 External Clock 0 - 20MHz / 8
+00000001 Reserved (do not use)
+00000081 Reserved (do not use)

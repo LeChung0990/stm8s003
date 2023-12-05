@@ -1,0 +1,78 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8)  Page 1
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  002710 L
+    .__.ABS.                                                    =  000000 G
+    .__.CPU.                                                    =  000000 L
+    .__.H$L.                                                    =  000001 L
+  A _InitializeI2C                                                 00018D GR
+  A _InitializeSystemClock                                         000008 GR
+  A _InitializeUART                                                0001B7 GR
+  A _UARTPrintF                                                    0000BA GR
+    ___fslt                                                        ****** GX
+    ___fssub                                                       ****** GX
+    ___sdcc_external_startup                                       ****** GX
+  8 ___str_0                                                       000011 R
+  8 ___str_1                                                       00001B R
+  8 ___str_2                                                       000025 R
+  8 ___str_3                                                       000039 R
+  8 ___str_4                                                       000046 R
+    ___uint2fs                                                     ****** GX
+  5 __interrupt_vect                                               000000 R
+    __mulint                                                       ****** GX
+  6 __sdcc_init_data                                               000009 R
+  5 __sdcc_program_startup                                         000004 R
+  3 __start__stack                                                 000000 R
+  A __tm1637ClkHigh                                                00033D GR
+  A __tm1637ClkLow                                                 000342 GR
+  A __tm1637DioHigh                                                000347 GR
+  A __tm1637DioLow                                                 00034C GR
+  A __tm1637ReadResult                                             0002F3 GR
+  A __tm1637Start                                                  0002C6 GR
+  A __tm1637Stop                                                   0002D5 GR
+  A __tm1637WriteByte                                              000308 GR
+  A _delay                                                         000043 GR
+  A _delayTenMicro                                                 000000 GR
+  A _getMPU6050                                                    0003BE GR
+  A _i2c_read                                                      000086 GR
+  A _i2c_read_register                                             000152 GR
+  A _i2c_send_address                                              0000CA GR
+  A _i2c_send_reg                                                  00009A GR
+  A _i2c_set_nak                                                   000090 GR
+  A _i2c_set_start_ack                                             00010A GR
+  A _i2c_set_stop                                                  000095 GR
+  A _initMPU6050                                                   000351 GR
+  A _main                                                          0003F0 GR
+  A _print_byte_hex                                                000114 GR
+  8 _segmentMap                                                    000000 GR
+  A _tm1637DisplayDecimal                                          00022B GR
+  A _tm1637Init                                                    000226 GR
+  A _tm1637SetBrightness                                           0002B6 GR
+    l_DATA                                                         ****** GX
+    l_INITIALIZER                                                  ****** GX
+    s_DATA                                                         ****** GX
+    s_GSINIT                                                       ****** GX
+    s_INITIALIZED                                                  ****** GX
+    s_INITIALIZER                                                  ****** GX
+
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8)  Page 2
+Hexadecimal [24-Bits]
+
+Area Table
+
+   0 _CODE                                      size      0   flags    0
+   1 DATA                                       size      0   flags    0
+   2 INITIALIZED                                size      0   flags    0
+   3 SSEG                                       size      1   flags    0
+   4 DABS                                       size      0   flags    8
+   5 HOME                                       size      7   flags    0
+   6 GSINIT                                     size     23   flags    0
+   7 GSFINAL                                    size      3   flags    0
+   8 CONST                                      size     53   flags    0
+   9 INITIALIZER                                size      0   flags    0
+   A CODE                                       size    545   flags    0
+   B CABS                                       size      0   flags    8
+

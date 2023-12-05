@@ -1,0 +1,229 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler 
+                                      3 ; Version 4.3.0 #14184 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module 74HC595
+                                      6 	.optsdcc -mstm8
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _SEG_SELECT
+                                     12 	.globl _SEG_MAP
+                                     13 	.globl _data
+                                     14 	.globl _strobe
+                                     15 	.globl _shcp
+                                     16 	.globl _delay_us
+                                     17 	.globl _GPIO_WriteLow
+                                     18 	.globl _GPIO_WriteHigh
+                                     19 	.globl _GPIO_Init
+                                     20 	.globl _HC595_Init
+                                     21 	.globl _ONE7SEG
+                                     22 	.globl _FOUR7SEG
+                                     23 	.globl _HIENTHI
+                                     24 ;--------------------------------------------------------
+                                     25 ; ram data
+                                     26 ;--------------------------------------------------------
+                                     27 	.area DATA
+                                     28 ;--------------------------------------------------------
+                                     29 ; ram data
+                                     30 ;--------------------------------------------------------
+                                     31 	.area INITIALIZED
+                                     32 ;--------------------------------------------------------
+                                     33 ; absolute external ram data
+                                     34 ;--------------------------------------------------------
+                                     35 	.area DABS (ABS)
+                                     36 
+                                     37 ; default segment ordering for linker
+                                     38 	.area HOME
+                                     39 	.area GSINIT
+                                     40 	.area GSFINAL
+                                     41 	.area CONST
+                                     42 	.area INITIALIZER
+                                     43 	.area CODE
+                                     44 
+                                     45 ;--------------------------------------------------------
+                                     46 ; global & static initialisations
+                                     47 ;--------------------------------------------------------
+                                     48 	.area HOME
+                                     49 	.area GSINIT
+                                     50 	.area GSFINAL
+                                     51 	.area GSINIT
+                                     52 ;--------------------------------------------------------
+                                     53 ; Home
+                                     54 ;--------------------------------------------------------
+                                     55 	.area HOME
+                                     56 	.area HOME
+                                     57 ;--------------------------------------------------------
+                                     58 ; code
+                                     59 ;--------------------------------------------------------
+                                     60 	.area CODE
+                                     61 ;	74HC595.c: 7: void delay_us(unsigned int  value)
+                                     62 ;	-----------------------------------------
+                                     63 ;	 function delay_us
+                                     64 ;	-----------------------------------------
+      0085BD                         65 _delay_us:
+                                     66 ;	74HC595.c: 11: while(loops)
+      0085BD                         67 00101$:
+      0085BD 5D               [ 2]   68 	tnzw	x
+      0085BE 26 01            [ 1]   69 	jrne	00117$
+      0085C0 81               [ 4]   70 	ret
+      0085C1                         71 00117$:
+                                     72 ;	74HC595.c: 13: nop();
+      0085C1 9D               [ 1]   73 	nop
+                                     74 ;	74HC595.c: 14: loops--;
+      0085C2 5A               [ 2]   75 	decw	x
+      0085C3 20 F8            [ 2]   76 	jra	00101$
+                                     77 ;	74HC595.c: 16: }
+      0085C5 81               [ 4]   78 	ret
+                                     79 ;	74HC595.c: 18: void HC595_Init(void)
+                                     80 ;	-----------------------------------------
+                                     81 ;	 function HC595_Init
+                                     82 ;	-----------------------------------------
+      0085C6                         83 _HC595_Init:
+                                     84 ;	74HC595.c: 20: GPIO_Init(SH_PORT,(GPIO_Pin_TypeDef)(SH_PIN|DATA_PIN|ST_PIN),GPIO_MODE_OUT_PP_LOW_FAST);
+      0085C6 4B E0            [ 1]   85 	push	#0xe0
+      0085C8 A6 E0            [ 1]   86 	ld	a, #0xe0
+      0085CA AE 50 0A         [ 2]   87 	ldw	x, #0x500a
+      0085CD CD 80 65         [ 4]   88 	call	_GPIO_Init
+                                     89 ;	74HC595.c: 21: }
+      0085D0 81               [ 4]   90 	ret
+                                     91 ;	74HC595.c: 23: void shcp(void)
+                                     92 ;	-----------------------------------------
+                                     93 ;	 function shcp
+                                     94 ;	-----------------------------------------
+      0085D1                         95 _shcp:
+                                     96 ;	74HC595.c: 25: PIN_HIGH(SH_PORT, SH_PIN);
+      0085D1 A6 80            [ 1]   97 	ld	a, #0x80
+      0085D3 AE 50 0A         [ 2]   98 	ldw	x, #0x500a
+      0085D6 CD 80 DF         [ 4]   99 	call	_GPIO_WriteHigh
+                                    100 ;	74HC595.c: 27: PIN_LOW(SH_PORT, SH_PIN);
+      0085D9 A6 80            [ 1]  101 	ld	a, #0x80
+      0085DB AE 50 0A         [ 2]  102 	ldw	x, #0x500a
+                                    103 ;	74HC595.c: 29: }
+      0085DE CC 80 E8         [ 2]  104 	jp	_GPIO_WriteLow
+                                    105 ;	74HC595.c: 31: void strobe(void)
+                                    106 ;	-----------------------------------------
+                                    107 ;	 function strobe
+                                    108 ;	-----------------------------------------
+      0085E1                        109 _strobe:
+                                    110 ;	74HC595.c: 34: PIN_HIGH(ST_PORT, ST_PIN);
+      0085E1 A6 40            [ 1]  111 	ld	a, #0x40
+      0085E3 AE 50 0A         [ 2]  112 	ldw	x, #0x500a
+      0085E6 CD 80 DF         [ 4]  113 	call	_GPIO_WriteHigh
+                                    114 ;	74HC595.c: 35: delay_us(300);
+      0085E9 AE 01 2C         [ 2]  115 	ldw	x, #0x012c
+      0085EC CD 85 BD         [ 4]  116 	call	_delay_us
+                                    117 ;	74HC595.c: 36: PIN_LOW(ST_PORT, ST_PIN);
+      0085EF A6 40            [ 1]  118 	ld	a, #0x40
+      0085F1 AE 50 0A         [ 2]  119 	ldw	x, #0x500a
+                                    120 ;	74HC595.c: 37: }
+      0085F4 CC 80 E8         [ 2]  121 	jp	_GPIO_WriteLow
+                                    122 ;	74HC595.c: 40: void data(uint8_t data)
+                                    123 ;	-----------------------------------------
+                                    124 ;	 function data
+                                    125 ;	-----------------------------------------
+      0085F7                        126 _data:
+      0085F7 52 02            [ 2]  127 	sub	sp, #2
+      0085F9 6B 01            [ 1]  128 	ld	(0x01, sp), a
+                                    129 ;	74HC595.c: 43: for (uint8_t i = 0 ; i < 8; i++)
+      0085FB 0F 02            [ 1]  130 	clr	(0x02, sp)
+      0085FD                        131 00106$:
+      0085FD 7B 02            [ 1]  132 	ld	a, (0x02, sp)
+      0085FF A1 08            [ 1]  133 	cp	a, #0x08
+      008601 24 21            [ 1]  134 	jrnc	00108$
+                                    135 ;	74HC595.c: 45: t = data & 0x01;     //Dich du lieu de lay tung bit trong 8 bit
+      008603 7B 01            [ 1]  136 	ld	a, (0x01, sp)
+                                    137 ;	74HC595.c: 46: if (t == 1) {               //Xuat bit 0 hoac 1 ra chan Data
+      008605 A5 01            [ 1]  138 	bcp	a, #0x01
+      008607 27 0A            [ 1]  139 	jreq	00102$
+                                    140 ;	74HC595.c: 47: PIN_HIGH(DATA_PORT, DATA_PIN);
+      008609 A6 20            [ 1]  141 	ld	a, #0x20
+      00860B AE 50 0A         [ 2]  142 	ldw	x, #0x500a
+      00860E CD 80 DF         [ 4]  143 	call	_GPIO_WriteHigh
+      008611 20 08            [ 2]  144 	jra	00103$
+      008613                        145 00102$:
+                                    146 ;	74HC595.c: 50: PIN_LOW(DATA_PORT, DATA_PIN);
+      008613 A6 20            [ 1]  147 	ld	a, #0x20
+      008615 AE 50 0A         [ 2]  148 	ldw	x, #0x500a
+      008618 CD 80 E8         [ 4]  149 	call	_GPIO_WriteLow
+      00861B                        150 00103$:
+                                    151 ;	74HC595.c: 52: shcp();                     //CHO 1 XUNG CHAN SH_CP DE XUAT 1 BIT RA CHAN DS
+      00861B CD 85 D1         [ 4]  152 	call	_shcp
+                                    153 ;	74HC595.c: 53: data = data >> 1;
+      00861E 04 01            [ 1]  154 	srl	(0x01, sp)
+                                    155 ;	74HC595.c: 43: for (uint8_t i = 0 ; i < 8; i++)
+      008620 0C 02            [ 1]  156 	inc	(0x02, sp)
+      008622 20 D9            [ 2]  157 	jra	00106$
+      008624                        158 00108$:
+                                    159 ;	74HC595.c: 55: }
+      008624 5B 02            [ 2]  160 	addw	sp, #2
+      008626 81               [ 4]  161 	ret
+                                    162 ;	74HC595.c: 56: void ONE7SEG(uint8_t Value)
+                                    163 ;	-----------------------------------------
+                                    164 ;	 function ONE7SEG
+                                    165 ;	-----------------------------------------
+      008627                        166 _ONE7SEG:
+                                    167 ;	74HC595.c: 58: data(Value);
+      008627 CD 85 F7         [ 4]  168 	call	_data
+                                    169 ;	74HC595.c: 59: strobe();
+                                    170 ;	74HC595.c: 60: }
+      00862A CC 85 E1         [ 2]  171 	jp	_strobe
+                                    172 ;	74HC595.c: 62: void FOUR7SEG(uint8_t Digit, uint8_t Value) {
+                                    173 ;	-----------------------------------------
+                                    174 ;	 function FOUR7SEG
+                                    175 ;	-----------------------------------------
+      00862D                        176 _FOUR7SEG:
+                                    177 ;	74HC595.c: 63: data(Value);
+      00862D 88               [ 1]  178 	push	a
+      00862E 7B 04            [ 1]  179 	ld	a, (0x04, sp)
+      008630 CD 85 F7         [ 4]  180 	call	_data
+      008633 84               [ 1]  181 	pop	a
+                                    182 ;	74HC595.c: 64: data(Digit);		//Dich data so sau do moi dich ma Digit
+      008634 CD 85 F7         [ 4]  183 	call	_data
+                                    184 ;	74HC595.c: 65: strobe();
+      008637 1E 01            [ 2]  185 	ldw	x, (1, sp)
+      008639 1F 02            [ 2]  186 	ldw	(2, sp), x
+      00863B 84               [ 1]  187 	pop	a
+                                    188 ;	74HC595.c: 66: }
+      00863C CC 85 E1         [ 2]  189 	jp	_strobe
+      00863F 84               [ 1]  190 	pop	a
+      008640 FC               [ 2]  191 	jp	(x)
+                                    192 ;	74HC595.c: 68: void HIENTHI(int so)
+                                    193 ;	-----------------------------------------
+                                    194 ;	 function HIENTHI
+                                    195 ;	-----------------------------------------
+      008641                        196 _HIENTHI:
+                                    197 ;	74HC595.c: 73: FOUR7SEG(SEG_SELECT[3], SEG_MAP[(so / 1) % 10]);
+      008641 4B 0A            [ 1]  198 	push	#0x0a
+      008643 4B 00            [ 1]  199 	push	#0x00
+      008645 CD 86 59         [ 4]  200 	call	__modsint
+      008648 1C 80 39         [ 2]  201 	addw	x, #(_SEG_MAP+0)
+      00864B F6               [ 1]  202 	ld	a, (x)
+      00864C 97               [ 1]  203 	ld	xl, a
+      00864D C6 80 46         [ 1]  204 	ld	a, _SEG_SELECT+3
+      008650 89               [ 2]  205 	pushw	x
+      008651 5B 01            [ 2]  206 	addw	sp, #1
+      008653 CD 86 2D         [ 4]  207 	call	_FOUR7SEG
+                                    208 ;	74HC595.c: 74: }
+      008656 81               [ 4]  209 	ret
+                                    210 	.area CODE
+                                    211 	.area CONST
+      008039                        212 _SEG_MAP:
+      008039 3F                     213 	.db #0x3f	; 63
+      00803A 06                     214 	.db #0x06	; 6
+      00803B 5B                     215 	.db #0x5b	; 91
+      00803C 4F                     216 	.db #0x4f	; 79	'O'
+      00803D 66                     217 	.db #0x66	; 102	'f'
+      00803E 6D                     218 	.db #0x6d	; 109	'm'
+      00803F 7D                     219 	.db #0x7d	; 125
+      008040 07                     220 	.db #0x07	; 7
+      008041 7F                     221 	.db #0x7f	; 127
+      008042 6F                     222 	.db #0x6f	; 111	'o'
+      008043                        223 _SEG_SELECT:
+      008043 F7                     224 	.db #0xf7	; 247
+      008044 FB                     225 	.db #0xfb	; 251
+      008045 FD                     226 	.db #0xfd	; 253
+      008046 FE                     227 	.db #0xfe	; 254
+                                    228 	.area INITIALIZER
+                                    229 	.area CABS (ABS)

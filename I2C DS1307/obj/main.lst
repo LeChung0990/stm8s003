@@ -1,0 +1,579 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler 
+                                      3 ; Version 4.3.0 #14184 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module main
+                                      6 	.optsdcc -mstm8
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _OLED_FONT
+                                     12 	.globl _OLED_INIT_CMD
+                                     13 	.globl _main
+                                     14 	.globl _I2C_GetFlagStatus
+                                     15 	.globl _I2C_CheckEvent
+                                     16 	.globl _I2C_SendData
+                                     17 	.globl _I2C_Send7bitAddress
+                                     18 	.globl _I2C_GenerateSTOP
+                                     19 	.globl _I2C_GenerateSTART
+                                     20 	.globl _I2C_Cmd
+                                     21 	.globl _I2C_Init
+                                     22 	.globl _I2C_DeInit
+                                     23 	.globl _CLK_GetClockFreq
+                                     24 	.globl _CLK_HSIPrescalerConfig
+                                     25 	.globl _CLK_PeripheralClockConfig
+                                     26 	.globl _I2C_init
+                                     27 	.globl _I2C_start
+                                     28 	.globl _I2C_address
+                                     29 	.globl _I2C_write
+                                     30 	.globl _I2C_stop
+                                     31 	.globl _OLED_init
+                                     32 	.globl _OLED_printC
+                                     33 	.globl _OLED_cursor
+                                     34 	.globl _OLED_clear
+                                     35 ;--------------------------------------------------------
+                                     36 ; ram data
+                                     37 ;--------------------------------------------------------
+                                     38 	.area DATA
+                                     39 ;--------------------------------------------------------
+                                     40 ; ram data
+                                     41 ;--------------------------------------------------------
+                                     42 	.area INITIALIZED
+                                     43 ;--------------------------------------------------------
+                                     44 ; Stack segment in internal ram
+                                     45 ;--------------------------------------------------------
+                                     46 	.area SSEG
+      000000                         47 __start__stack:
+      000000                         48 	.ds	1
+                                     49 
+                                     50 ;--------------------------------------------------------
+                                     51 ; absolute external ram data
+                                     52 ;--------------------------------------------------------
+                                     53 	.area DABS (ABS)
+                                     54 
+                                     55 ; default segment ordering for linker
+                                     56 	.area HOME
+                                     57 	.area GSINIT
+                                     58 	.area GSFINAL
+                                     59 	.area CONST
+                                     60 	.area INITIALIZER
+                                     61 	.area CODE
+                                     62 
+                                     63 ;--------------------------------------------------------
+                                     64 ; interrupt vector
+                                     65 ;--------------------------------------------------------
+                                     66 	.area HOME
+      000000                         67 __interrupt_vect:
+      000000 82v00u00u00             68 	int s_GSINIT ; reset
+                                     69 ;--------------------------------------------------------
+                                     70 ; global & static initialisations
+                                     71 ;--------------------------------------------------------
+                                     72 	.area HOME
+                                     73 	.area GSINIT
+                                     74 	.area GSFINAL
+                                     75 	.area GSINIT
+      000000 CDr00r00         [ 4]   76 	call	___sdcc_external_startup
+      000003 4D               [ 1]   77 	tnz	a
+      000004 27 03            [ 1]   78 	jreq	__sdcc_init_data
+      000006 CCr00r04         [ 2]   79 	jp	__sdcc_program_startup
+      000009                         80 __sdcc_init_data:
+                                     81 ; stm8_genXINIT() start
+      000009 AEr00r00         [ 2]   82 	ldw x, #l_DATA
+      00000C 27 07            [ 1]   83 	jreq	00002$
+      00000E                         84 00001$:
+      00000E 72 4FuFFuFF      [ 1]   85 	clr (s_DATA - 1, x)
+      000012 5A               [ 2]   86 	decw x
+      000013 26 F9            [ 1]   87 	jrne	00001$
+      000015                         88 00002$:
+      000015 AEr00r00         [ 2]   89 	ldw	x, #l_INITIALIZER
+      000018 27 09            [ 1]   90 	jreq	00004$
+      00001A                         91 00003$:
+      00001A D6uFFuFF         [ 1]   92 	ld	a, (s_INITIALIZER - 1, x)
+      00001D D7uFFuFF         [ 1]   93 	ld	(s_INITIALIZED - 1, x), a
+      000020 5A               [ 2]   94 	decw	x
+      000021 26 F7            [ 1]   95 	jrne	00003$
+      000023                         96 00004$:
+                                     97 ; stm8_genXINIT() end
+                                     98 	.area GSFINAL
+      000000 CCr00r04         [ 2]   99 	jp	__sdcc_program_startup
+                                    100 ;--------------------------------------------------------
+                                    101 ; Home
+                                    102 ;--------------------------------------------------------
+                                    103 	.area HOME
+                                    104 	.area HOME
+      000004                        105 __sdcc_program_startup:
+      000004 CCr00r00         [ 2]  106 	jp	_main
+                                    107 ;	return from main will return to caller
+                                    108 ;--------------------------------------------------------
+                                    109 ; code
+                                    110 ;--------------------------------------------------------
+                                    111 	.area CODE
+                                    112 ;	main.c: 54: void main(void)
+                                    113 ;	-----------------------------------------
+                                    114 ;	 function main
+                                    115 ;	-----------------------------------------
+      000000                        116 _main:
+                                    117 ;	main.c: 56: CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
+      000000 4F               [ 1]  118 	clr	a
+      000001 CDr00r00         [ 4]  119 	call	_CLK_HSIPrescalerConfig
+                                    120 ;	main.c: 57: I2C_init();
+      000004 CDr00r45         [ 4]  121 	call	_I2C_init
+                                    122 ;	main.c: 58: OLED_init();
+      000007 CDr00rD8         [ 4]  123 	call	_OLED_init
+                                    124 ;	main.c: 62: while(1) {
+      00000A                        125 00103$:
+                                    126 ;	main.c: 63: OLED_cursor(0,0);
+      00000A 4B 00            [ 1]  127 	push	#0x00
+      00000C 4F               [ 1]  128 	clr	a
+      00000D CDr01r39         [ 4]  129 	call	_OLED_cursor
+                                    130 ;	main.c: 64: OLED_clear();
+      000010 CDr01r6A         [ 4]  131 	call	_OLED_clear
+                                    132 ;	main.c: 65: for (int i=13;i<23; i++)
+      000013 AE 00 0D         [ 2]  133 	ldw	x, #0x000d
+      000016                        134 00106$:
+      000016 A3 00 17         [ 2]  135 	cpw	x, #0x0017
+      000019 2E 09            [ 1]  136 	jrsge	00101$
+                                    137 ;	main.c: 67: OLED_printC(i);
+      00001B 9F               [ 1]  138 	ld	a, xl
+      00001C 89               [ 2]  139 	pushw	x
+      00001D CDr00rFD         [ 4]  140 	call	_OLED_printC
+      000020 85               [ 2]  141 	popw	x
+                                    142 ;	main.c: 65: for (int i=13;i<23; i++)
+      000021 5C               [ 1]  143 	incw	x
+      000022 20 F2            [ 2]  144 	jra	00106$
+      000024                        145 00101$:
+                                    146 ;	main.c: 69: OLED_printC(21);
+      000024 A6 15            [ 1]  147 	ld	a, #0x15
+      000026 CDr00rFD         [ 4]  148 	call	_OLED_printC
+                                    149 ;	main.c: 70: OLED_printC(22);
+      000029 A6 16            [ 1]  150 	ld	a, #0x16
+      00002B CDr00rFD         [ 4]  151 	call	_OLED_printC
+                                    152 ;	main.c: 71: OLED_printC(16);
+      00002E A6 10            [ 1]  153 	ld	a, #0x10
+      000030 CDr00rFD         [ 4]  154 	call	_OLED_printC
+                                    155 ;	main.c: 72: OLED_printC(23);
+      000033 A6 17            [ 1]  156 	ld	a, #0x17
+      000035 CDr00rFD         [ 4]  157 	call	_OLED_printC
+                                    158 ;	main.c: 73: OLED_printC(14);
+      000038 A6 0E            [ 1]  159 	ld	a, #0x0e
+      00003A CDr00rFD         [ 4]  160 	call	_OLED_printC
+                                    161 ;	main.c: 74: OLED_printC(21);
+      00003D A6 15            [ 1]  162 	ld	a, #0x15
+      00003F CDr00rFD         [ 4]  163 	call	_OLED_printC
+      000042 20 C6            [ 2]  164 	jra	00103$
+                                    165 ;	main.c: 77: }
+      000044 81               [ 4]  166 	ret
+                                    167 ;	main.c: 79: void I2C_init(void)
+                                    168 ;	-----------------------------------------
+                                    169 ;	 function I2C_init
+                                    170 ;	-----------------------------------------
+      000045                        171 _I2C_init:
+      000045 88               [ 1]  172 	push	a
+                                    173 ;	main.c: 82: Input_Clock = CLK_GetClockFreq()/1000000;
+      000046 CDr00r00         [ 4]  174 	call	_CLK_GetClockFreq
+      000049 4B 40            [ 1]  175 	push	#0x40
+      00004B 4B 42            [ 1]  176 	push	#0x42
+      00004D 4B 0F            [ 1]  177 	push	#0x0f
+      00004F 4B 00            [ 1]  178 	push	#0x00
+      000051 89               [ 2]  179 	pushw	x
+      000052 90 89            [ 2]  180 	pushw	y
+      000054 CDr00r00         [ 4]  181 	call	__divulong
+      000057 5B 08            [ 2]  182 	addw	sp, #8
+      000059 9F               [ 1]  183 	ld	a, xl
+      00005A 6B 01            [ 1]  184 	ld	(0x01, sp), a
+                                    185 ;	main.c: 83: I2C_DeInit();
+      00005C CDr00r00         [ 4]  186 	call	_I2C_DeInit
+                                    187 ;	main.c: 84: CLK_PeripheralClockConfig(CLK_PERIPHERAL_I2C, ENABLE);
+      00005F 4B 01            [ 1]  188 	push	#0x01
+      000061 4F               [ 1]  189 	clr	a
+      000062 CDr00r00         [ 4]  190 	call	_CLK_PeripheralClockConfig
+                                    191 ;	main.c: 85: I2C_Cmd( ENABLE);
+      000065 A6 01            [ 1]  192 	ld	a, #0x01
+      000067 CDr00r00         [ 4]  193 	call	_I2C_Cmd
+                                    194 ;	main.c: 86: I2C_Init(DS1307_I2C_CLOCK, DS1307_I2C_ADDR, I2C_DUTYCYCLE_2, I2C_ACK_CURR, I2C_ADDMODE_7BIT, Input_Clock);
+      00006A 7B 01            [ 1]  195 	ld	a, (0x01, sp)
+      00006C 88               [ 1]  196 	push	a
+      00006D 4B 00            [ 1]  197 	push	#0x00
+      00006F 4B 01            [ 1]  198 	push	#0x01
+      000071 4B 00            [ 1]  199 	push	#0x00
+      000073 4B 78            [ 1]  200 	push	#0x78
+      000075 4B 00            [ 1]  201 	push	#0x00
+      000077 4B A0            [ 1]  202 	push	#0xa0
+      000079 4B 86            [ 1]  203 	push	#0x86
+      00007B 4B 01            [ 1]  204 	push	#0x01
+      00007D 4B 00            [ 1]  205 	push	#0x00
+      00007F CDr00r00         [ 4]  206 	call	_I2C_Init
+                                    207 ;	main.c: 87: }
+      000082 84               [ 1]  208 	pop	a
+      000083 81               [ 4]  209 	ret
+                                    210 ;	main.c: 88: void I2C_start(void)
+                                    211 ;	-----------------------------------------
+                                    212 ;	 function I2C_start
+                                    213 ;	-----------------------------------------
+      000084                        214 _I2C_start:
+                                    215 ;	main.c: 91: while(I2C_GetFlagStatus( I2C_FLAG_BUSBUSY)==SET);
+      000084                        216 00101$:
+      000084 AE 03 02         [ 2]  217 	ldw	x, #0x0302
+      000087 CDr00r00         [ 4]  218 	call	_I2C_GetFlagStatus
+      00008A 4D               [ 1]  219 	tnz	a
+      00008B 26 F7            [ 1]  220 	jrne	00101$
+                                    221 ;	main.c: 92: I2C_GenerateSTART(ENABLE);
+      00008D A6 01            [ 1]  222 	ld	a, #0x01
+      00008F CDr00r00         [ 4]  223 	call	_I2C_GenerateSTART
+                                    224 ;	main.c: 93: while(!I2C_CheckEvent( I2C_EVENT_MASTER_MODE_SELECT));
+      000092                        225 00104$:
+      000092 AE 03 01         [ 2]  226 	ldw	x, #0x0301
+      000095 CDr00r00         [ 4]  227 	call	_I2C_CheckEvent
+      000098 4D               [ 1]  228 	tnz	a
+      000099 27 F7            [ 1]  229 	jreq	00104$
+                                    230 ;	main.c: 94: }
+      00009B 81               [ 4]  231 	ret
+                                    232 ;	main.c: 95: void I2C_address(uint8_t mode)
+                                    233 ;	-----------------------------------------
+                                    234 ;	 function I2C_address
+                                    235 ;	-----------------------------------------
+      00009C                        236 _I2C_address:
+      00009C 88               [ 1]  237 	push	a
+      00009D 6B 01            [ 1]  238 	ld	(0x01, sp), a
+                                    239 ;	main.c: 98: I2C_Send7bitAddress((uint8_t)DS1307_I2C_ADDR,I2C_DIRECTION_TX);
+      00009F 4B 00            [ 1]  240 	push	#0x00
+      0000A1 A6 78            [ 1]  241 	ld	a, #0x78
+      0000A3 CDr00r00         [ 4]  242 	call	_I2C_Send7bitAddress
+                                    243 ;	main.c: 101: while(!I2C_CheckEvent( I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
+      0000A6                        244 00101$:
+      0000A6 AE 07 82         [ 2]  245 	ldw	x, #0x0782
+      0000A9 CDr00r00         [ 4]  246 	call	_I2C_CheckEvent
+      0000AC 4D               [ 1]  247 	tnz	a
+      0000AD 27 F7            [ 1]  248 	jreq	00101$
+                                    249 ;	main.c: 104: I2C_SendData(mode);
+      0000AF 7B 01            [ 1]  250 	ld	a, (0x01, sp)
+      0000B1 CDr00r00         [ 4]  251 	call	_I2C_SendData
+                                    252 ;	main.c: 107: while(!I2C_CheckEvent( I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+      0000B4                        253 00104$:
+      0000B4 AE 07 84         [ 2]  254 	ldw	x, #0x0784
+      0000B7 CDr00r00         [ 4]  255 	call	_I2C_CheckEvent
+      0000BA 4D               [ 1]  256 	tnz	a
+      0000BB 27 F7            [ 1]  257 	jreq	00104$
+                                    258 ;	main.c: 108: }
+      0000BD 84               [ 1]  259 	pop	a
+      0000BE 81               [ 4]  260 	ret
+                                    261 ;	main.c: 109: void I2C_write(uint8_t data)
+                                    262 ;	-----------------------------------------
+                                    263 ;	 function I2C_write
+                                    264 ;	-----------------------------------------
+      0000BF                        265 _I2C_write:
+                                    266 ;	main.c: 112: I2C_SendData(data);
+      0000BF CDr00r00         [ 4]  267 	call	_I2C_SendData
+                                    268 ;	main.c: 115: while(!I2C_GetFlagStatus( I2C_FLAG_TRANSFERFINISHED));
+      0000C2                        269 00101$:
+      0000C2 AE 01 04         [ 2]  270 	ldw	x, #0x0104
+      0000C5 CDr00r00         [ 4]  271 	call	_I2C_GetFlagStatus
+      0000C8 4D               [ 1]  272 	tnz	a
+      0000C9 27 F7            [ 1]  273 	jreq	00101$
+                                    274 ;	main.c: 116: }
+      0000CB 81               [ 4]  275 	ret
+                                    276 ;	main.c: 117: void I2C_stop(void)
+                                    277 ;	-----------------------------------------
+                                    278 ;	 function I2C_stop
+                                    279 ;	-----------------------------------------
+      0000CC                        280 _I2C_stop:
+                                    281 ;	main.c: 120: I2C_GenerateSTOP(ENABLE);
+      0000CC A6 01            [ 1]  282 	ld	a, #0x01
+      0000CE CDr00r00         [ 4]  283 	call	_I2C_GenerateSTOP
+                                    284 ;	main.c: 122: I2C->SR1;       I2C->SR3;
+      0000D1 C6 52 17         [ 1]  285 	ld	a, 0x5217
+      0000D4 C6 52 19         [ 1]  286 	ld	a, 0x5219
+                                    287 ;	main.c: 123: }
+      0000D7 81               [ 4]  288 	ret
+                                    289 ;	main.c: 124: void OLED_init(void)
+                                    290 ;	-----------------------------------------
+                                    291 ;	 function OLED_init
+                                    292 ;	-----------------------------------------
+      0000D8                        293 _OLED_init:
+      0000D8 88               [ 1]  294 	push	a
+                                    295 ;	main.c: 126: I2C_start();
+      0000D9 CDr00r84         [ 4]  296 	call	_I2C_start
+                                    297 ;	main.c: 127: I2C_address(OLED_CMD_MODE);
+      0000DC 4F               [ 1]  298 	clr	a
+      0000DD CDr00r9C         [ 4]  299 	call	_I2C_address
+                                    300 ;	main.c: 128: for (uint8_t i = 0;i < OLED_INIT_LEN;i++)
+      0000E0 0F 01            [ 1]  301 	clr	(0x01, sp)
+      0000E2                        302 00103$:
+      0000E2 7B 01            [ 1]  303 	ld	a, (0x01, sp)
+      0000E4 A1 0C            [ 1]  304 	cp	a, #0x0c
+      0000E6 24 0F            [ 1]  305 	jrnc	00101$
+                                    306 ;	main.c: 130: I2C_write(OLED_INIT_CMD[i]);
+      0000E8 5F               [ 1]  307 	clrw	x
+      0000E9 7B 01            [ 1]  308 	ld	a, (0x01, sp)
+      0000EB 97               [ 1]  309 	ld	xl, a
+      0000EC 1Cr00r00         [ 2]  310 	addw	x, #(_OLED_INIT_CMD+0)
+      0000EF F6               [ 1]  311 	ld	a, (x)
+      0000F0 CDr00rBF         [ 4]  312 	call	_I2C_write
+                                    313 ;	main.c: 128: for (uint8_t i = 0;i < OLED_INIT_LEN;i++)
+      0000F3 0C 01            [ 1]  314 	inc	(0x01, sp)
+      0000F5 20 EB            [ 2]  315 	jra	00103$
+      0000F7                        316 00101$:
+                                    317 ;	main.c: 132: I2C_stop();
+      0000F7 84               [ 1]  318 	pop	a
+      0000F8 CCr00rCC         [ 2]  319 	jp	_I2C_stop
+                                    320 ;	main.c: 133: }
+      0000FB 84               [ 1]  321 	pop	a
+      0000FC 81               [ 4]  322 	ret
+                                    323 ;	main.c: 134: void OLED_printC(char ch)
+                                    324 ;	-----------------------------------------
+                                    325 ;	 function OLED_printC
+                                    326 ;	-----------------------------------------
+      0000FD                        327 _OLED_printC:
+      0000FD 52 02            [ 2]  328 	sub	sp, #2
+                                    329 ;	main.c: 136: uint16_t offset = ch;
+      0000FF 6B 02            [ 1]  330 	ld	(0x02, sp), a
+      000101 0F 01            [ 1]  331 	clr	(0x01, sp)
+                                    332 ;	main.c: 137: offset += offset << 2;
+      000103 1E 01            [ 2]  333 	ldw	x, (0x01, sp)
+      000105 58               [ 2]  334 	sllw	x
+      000106 58               [ 2]  335 	sllw	x
+      000107 72 FB 01         [ 2]  336 	addw	x, (0x01, sp)
+      00010A 1F 01            [ 2]  337 	ldw	(0x01, sp), x
+                                    338 ;	main.c: 138: I2C_start();
+      00010C CDr00r84         [ 4]  339 	call	_I2C_start
+                                    340 ;	main.c: 139: I2C_address(OLED_DAT_MODE);
+      00010F A6 40            [ 1]  341 	ld	a, #0x40
+      000111 CDr00r9C         [ 4]  342 	call	_I2C_address
+                                    343 ;	main.c: 140: I2C_write(0x00);
+      000114 4F               [ 1]  344 	clr	a
+      000115 CDr00rBF         [ 4]  345 	call	_I2C_write
+                                    346 ;	main.c: 141: for(uint8_t i = 5; i;i--){ I2C_write(OLED_FONT[offset++]); }
+      000118 1E 01            [ 2]  347 	ldw	x, (0x01, sp)
+      00011A A6 05            [ 1]  348 	ld	a, #0x05
+      00011C 6B 02            [ 1]  349 	ld	(0x02, sp), a
+      00011E                        350 00103$:
+      00011E 0D 02            [ 1]  351 	tnz	(0x02, sp)
+      000120 27 12            [ 1]  352 	jreq	00101$
+      000122 90 93            [ 1]  353 	ldw	y, x
+      000124 72 A9r00r0E      [ 2]  354 	addw	y, #(_OLED_FONT+0)
+      000128 5C               [ 1]  355 	incw	x
+      000129 90 F6            [ 1]  356 	ld	a, (y)
+      00012B 89               [ 2]  357 	pushw	x
+      00012C CDr00rBF         [ 4]  358 	call	_I2C_write
+      00012F 85               [ 2]  359 	popw	x
+      000130 0A 02            [ 1]  360 	dec	(0x02, sp)
+      000132 20 EA            [ 2]  361 	jra	00103$
+      000134                        362 00101$:
+                                    363 ;	main.c: 142: I2C_stop();
+      000134 5B 02            [ 2]  364 	addw	sp, #2
+                                    365 ;	main.c: 143: }
+      000136 CCr00rCC         [ 2]  366 	jp	_I2C_stop
+                                    367 ;	main.c: 144: void OLED_cursor(uint8_t xpos, uint8_t ypos)
+                                    368 ;	-----------------------------------------
+                                    369 ;	 function OLED_cursor
+                                    370 ;	-----------------------------------------
+      000139                        371 _OLED_cursor:
+      000139 88               [ 1]  372 	push	a
+      00013A 6B 01            [ 1]  373 	ld	(0x01, sp), a
+                                    374 ;	main.c: 146: I2C_start();
+      00013C CDr00r84         [ 4]  375 	call	_I2C_start
+                                    376 ;	main.c: 147: I2C_address(OLED_CMD_MODE);
+      00013F 4F               [ 1]  377 	clr	a
+      000140 CDr00r9C         [ 4]  378 	call	_I2C_address
+                                    379 ;	main.c: 148: I2C_write(xpos & 0x0F);
+      000143 7B 01            [ 1]  380 	ld	a, (0x01, sp)
+      000145 A4 0F            [ 1]  381 	and	a, #0x0f
+      000147 CDr00rBF         [ 4]  382 	call	_I2C_write
+                                    383 ;	main.c: 149: I2C_write(0x10 | (xpos >> 4));
+      00014A 7B 01            [ 1]  384 	ld	a, (0x01, sp)
+      00014C 4E               [ 1]  385 	swap	a
+      00014D A4 0F            [ 1]  386 	and	a, #0x0f
+      00014F AA 10            [ 1]  387 	or	a, #0x10
+      000151 CDr00rBF         [ 4]  388 	call	_I2C_write
+                                    389 ;	main.c: 150: I2C_write(0xB0 | (ypos & 0x07));
+      000154 7B 04            [ 1]  390 	ld	a, (0x04, sp)
+      000156 A4 07            [ 1]  391 	and	a, #0x07
+      000158 AA B0            [ 1]  392 	or	a, #0xb0
+      00015A CDr00rBF         [ 4]  393 	call	_I2C_write
+                                    394 ;	main.c: 151: I2C_stop();
+      00015D 1E 02            [ 2]  395 	ldw	x, (2, sp)
+      00015F 1F 03            [ 2]  396 	ldw	(3, sp), x
+      000161 5B 02            [ 2]  397 	addw	sp, #2
+      000163 CCr00rCC         [ 2]  398 	jp	_I2C_stop
+                                    399 ;	main.c: 152: }
+      000166 84               [ 1]  400 	pop	a
+      000167 85               [ 2]  401 	popw	x
+      000168 84               [ 1]  402 	pop	a
+      000169 FC               [ 2]  403 	jp	(x)
+                                    404 ;	main.c: 153: void OLED_clear(void)
+                                    405 ;	-----------------------------------------
+                                    406 ;	 function OLED_clear
+                                    407 ;	-----------------------------------------
+      00016A                        408 _OLED_clear:
+                                    409 ;	main.c: 155: OLED_cursor(0,0);
+      00016A 4B 00            [ 1]  410 	push	#0x00
+      00016C 4F               [ 1]  411 	clr	a
+      00016D CDr01r39         [ 4]  412 	call	_OLED_cursor
+                                    413 ;	main.c: 156: I2C_start();
+      000170 CDr00r84         [ 4]  414 	call	_I2C_start
+                                    415 ;	main.c: 157: I2C_address(OLED_DAT_MODE);
+      000173 A6 40            [ 1]  416 	ld	a, #0x40
+      000175 CDr00r9C         [ 4]  417 	call	_I2C_address
+                                    418 ;	main.c: 158: for (uint16_t i=512;i;i--)
+      000178 AE 02 00         [ 2]  419 	ldw	x, #0x0200
+      00017B                        420 00103$:
+      00017B 5D               [ 2]  421 	tnzw	x
+      00017C 26 03            [ 1]  422 	jrne	00118$
+      00017E CCr00rCC         [ 2]  423 	jp	_I2C_stop
+      000181                        424 00118$:
+                                    425 ;	main.c: 160: I2C_write(0x00);
+      000181 89               [ 2]  426 	pushw	x
+      000182 4F               [ 1]  427 	clr	a
+      000183 CDr00rBF         [ 4]  428 	call	_I2C_write
+      000186 85               [ 2]  429 	popw	x
+                                    430 ;	main.c: 158: for (uint16_t i=512;i;i--)
+      000187 5A               [ 2]  431 	decw	x
+                                    432 ;	main.c: 162: I2C_stop();
+                                    433 ;	main.c: 163: }
+      000188 20 F1            [ 2]  434 	jra	00103$
+                                    435 	.area CODE
+                                    436 	.area CONST
+      000000                        437 _OLED_INIT_CMD:
+      000000 A8                     438 	.db #0xa8	; 168
+      000001 1F                     439 	.db #0x1f	; 31
+      000002 22                     440 	.db #0x22	; 34
+      000003 00                     441 	.db #0x00	; 0
+      000004 03                     442 	.db #0x03	; 3
+      000005 20                     443 	.db #0x20	; 32
+      000006 00                     444 	.db #0x00	; 0
+      000007 DA                     445 	.db #0xda	; 218
+      000008 02                     446 	.db #0x02	; 2
+      000009 8D                     447 	.db #0x8d	; 141
+      00000A 14                     448 	.db #0x14	; 20
+      00000B AF                     449 	.db #0xaf	; 175
+      00000C A1                     450 	.db #0xa1	; 161
+      00000D C8                     451 	.db #0xc8	; 200
+      00000E                        452 _OLED_FONT:
+      00000E 3E                     453 	.db #0x3e	; 62
+      00000F 51                     454 	.db #0x51	; 81	'Q'
+      000010 49                     455 	.db #0x49	; 73	'I'
+      000011 45                     456 	.db #0x45	; 69	'E'
+      000012 3E                     457 	.db #0x3e	; 62
+      000013 00                     458 	.db #0x00	; 0
+      000014 42                     459 	.db #0x42	; 66	'B'
+      000015 7F                     460 	.db #0x7f	; 127
+      000016 40                     461 	.db #0x40	; 64
+      000017 00                     462 	.db #0x00	; 0
+      000018 42                     463 	.db #0x42	; 66	'B'
+      000019 61                     464 	.db #0x61	; 97	'a'
+      00001A 51                     465 	.db #0x51	; 81	'Q'
+      00001B 49                     466 	.db #0x49	; 73	'I'
+      00001C 46                     467 	.db #0x46	; 70	'F'
+      00001D 21                     468 	.db #0x21	; 33
+      00001E 41                     469 	.db #0x41	; 65	'A'
+      00001F 45                     470 	.db #0x45	; 69	'E'
+      000020 4B                     471 	.db #0x4b	; 75	'K'
+      000021 31                     472 	.db #0x31	; 49	'1'
+      000022 18                     473 	.db #0x18	; 24
+      000023 14                     474 	.db #0x14	; 20
+      000024 12                     475 	.db #0x12	; 18
+      000025 7F                     476 	.db #0x7f	; 127
+      000026 10                     477 	.db #0x10	; 16
+      000027 27                     478 	.db #0x27	; 39
+      000028 45                     479 	.db #0x45	; 69	'E'
+      000029 45                     480 	.db #0x45	; 69	'E'
+      00002A 45                     481 	.db #0x45	; 69	'E'
+      00002B 39                     482 	.db #0x39	; 57	'9'
+      00002C 3C                     483 	.db #0x3c	; 60
+      00002D 4A                     484 	.db #0x4a	; 74	'J'
+      00002E 49                     485 	.db #0x49	; 73	'I'
+      00002F 49                     486 	.db #0x49	; 73	'I'
+      000030 30                     487 	.db #0x30	; 48	'0'
+      000031 01                     488 	.db #0x01	; 1
+      000032 71                     489 	.db #0x71	; 113	'q'
+      000033 09                     490 	.db #0x09	; 9
+      000034 05                     491 	.db #0x05	; 5
+      000035 03                     492 	.db #0x03	; 3
+      000036 36                     493 	.db #0x36	; 54	'6'
+      000037 49                     494 	.db #0x49	; 73	'I'
+      000038 49                     495 	.db #0x49	; 73	'I'
+      000039 49                     496 	.db #0x49	; 73	'I'
+      00003A 36                     497 	.db #0x36	; 54	'6'
+      00003B 06                     498 	.db #0x06	; 6
+      00003C 49                     499 	.db #0x49	; 73	'I'
+      00003D 49                     500 	.db #0x49	; 73	'I'
+      00003E 29                     501 	.db #0x29	; 41
+      00003F 1E                     502 	.db #0x1e	; 30
+      000040 7F                     503 	.db #0x7f	; 127
+      000041 09                     504 	.db #0x09	; 9
+      000042 19                     505 	.db #0x19	; 25
+      000043 29                     506 	.db #0x29	; 41
+      000044 46                     507 	.db #0x46	; 70	'F'
+      000045 46                     508 	.db #0x46	; 70	'F'
+      000046 49                     509 	.db #0x49	; 73	'I'
+      000047 49                     510 	.db #0x49	; 73	'I'
+      000048 49                     511 	.db #0x49	; 73	'I'
+      000049 31                     512 	.db #0x31	; 49	'1'
+      00004A 00                     513 	.db #0x00	; 0
+      00004B 60                     514 	.db #0x60	; 96
+      00004C 60                     515 	.db #0x60	; 96
+      00004D 00                     516 	.db #0x00	; 0
+      00004E 00                     517 	.db #0x00	; 0
+      00004F 7F                     518 	.db #0x7f	; 127
+      000050 40                     519 	.db #0x40	; 64
+      000051 40                     520 	.db #0x40	; 64
+      000052 40                     521 	.db #0x40	; 64
+      000053 40                     522 	.db #0x40	; 64
+      000054 7F                     523 	.db #0x7f	; 127
+      000055 49                     524 	.db #0x49	; 73	'I'
+      000056 49                     525 	.db #0x49	; 73	'I'
+      000057 49                     526 	.db #0x49	; 73	'I'
+      000058 41                     527 	.db #0x41	; 65	'A'
+      000059 7F                     528 	.db #0x7f	; 127
+      00005A 41                     529 	.db #0x41	; 65	'A'
+      00005B 41                     530 	.db #0x41	; 65	'A'
+      00005C 22                     531 	.db #0x22	; 34
+      00005D 1C                     532 	.db #0x1c	; 28
+      00005E 3F                     533 	.db #0x3f	; 63
+      00005F 40                     534 	.db #0x40	; 64
+      000060 40                     535 	.db #0x40	; 64
+      000061 40                     536 	.db #0x40	; 64
+      000062 3F                     537 	.db #0x3f	; 63
+      000063 3E                     538 	.db #0x3e	; 62
+      000064 41                     539 	.db #0x41	; 65	'A'
+      000065 41                     540 	.db #0x41	; 65	'A'
+      000066 41                     541 	.db #0x41	; 65	'A'
+      000067 22                     542 	.db #0x22	; 34
+      000068 7F                     543 	.db #0x7f	; 127
+      000069 08                     544 	.db #0x08	; 8
+      00006A 08                     545 	.db #0x08	; 8
+      00006B 08                     546 	.db #0x08	; 8
+      00006C 7F                     547 	.db #0x7f	; 127
+      00006D 3E                     548 	.db #0x3e	; 62
+      00006E 41                     549 	.db #0x41	; 65	'A'
+      00006F 41                     550 	.db #0x41	; 65	'A'
+      000070 41                     551 	.db #0x41	; 65	'A'
+      000071 3E                     552 	.db #0x3e	; 62
+      000072 7C                     553 	.db #0x7c	; 124
+      000073 12                     554 	.db #0x12	; 18
+      000074 11                     555 	.db #0x11	; 17
+      000075 12                     556 	.db #0x12	; 18
+      000076 7C                     557 	.db #0x7c	; 124
+      000077 7F                     558 	.db #0x7f	; 127
+      000078 04                     559 	.db #0x04	; 4
+      000079 08                     560 	.db #0x08	; 8
+      00007A 10                     561 	.db #0x10	; 16
+      00007B 7F                     562 	.db #0x7f	; 127
+      00007C 3E                     563 	.db #0x3e	; 62
+      00007D 41                     564 	.db #0x41	; 65	'A'
+      00007E 49                     565 	.db #0x49	; 73	'I'
+      00007F 49                     566 	.db #0x49	; 73	'I'
+      000080 7A                     567 	.db #0x7a	; 122	'z'
+      000081 07                     568 	.db #0x07	; 7
+      000082 08                     569 	.db #0x08	; 8
+      000083 70                     570 	.db #0x70	; 112	'p'
+      000084 08                     571 	.db #0x08	; 8
+      000085 07                     572 	.db #0x07	; 7
+      000086 40                     573 	.db #0x40	; 64
+      000087 40                     574 	.db #0x40	; 64
+      000088 40                     575 	.db #0x40	; 64
+      000089 40                     576 	.db #0x40	; 64
+      00008A 40                     577 	.db #0x40	; 64
+                                    578 	.area INITIALIZER
+                                    579 	.area CABS (ABS)
