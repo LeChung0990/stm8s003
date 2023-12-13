@@ -1,0 +1,1509 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler 
+                                      3 ; Version 4.3.0 #14184 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module main
+                                      6 	.optsdcc -mstm8
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _EXTI_PORTD_IRQHandler
+                                     12 	.globl _main
+                                     13 	.globl _ChayLEDNgoaiTrong
+                                     14 	.globl _Chay1LED
+                                     15 	.globl _HaiMau
+                                     16 	.globl _NhapNhayRED
+                                     17 	.globl _NhapNhay1
+                                     18 	.globl _ChayLED5
+                                     19 	.globl _ChayLED4
+                                     20 	.globl _ChayLed2
+                                     21 	.globl _ChayLed1
+                                     22 	.globl _clearLEDs
+                                     23 	.globl _Timer4DelayMs
+                                     24 	.globl _Timer4Config
+                                     25 	.globl _hieuung1
+                                     26 	.globl _number
+                                     27 	.globl _sendRGB
+                                     28 	.globl _Color_byte
+                                     29 	.globl _send_1
+                                     30 	.globl _send_0
+                                     31 	.globl _rand
+                                     32 	.globl _mode
+                                     33 	.globl _b
+                                     34 	.globl _g
+                                     35 	.globl _r
+                                     36 	.globl _i
+                                     37 ;--------------------------------------------------------
+                                     38 ; ram data
+                                     39 ;--------------------------------------------------------
+                                     40 	.area DATA
+      000000                         41 _i::
+      000000                         42 	.ds 1
+      000001                         43 _r::
+      000001                         44 	.ds 1
+      000002                         45 _g::
+      000002                         46 	.ds 1
+      000003                         47 _b::
+      000003                         48 	.ds 1
+                                     49 ;--------------------------------------------------------
+                                     50 ; ram data
+                                     51 ;--------------------------------------------------------
+                                     52 	.area INITIALIZED
+      000000                         53 _mode::
+      000000                         54 	.ds 1
+                                     55 ;--------------------------------------------------------
+                                     56 ; Stack segment in internal ram
+                                     57 ;--------------------------------------------------------
+                                     58 	.area SSEG
+      000000                         59 __start__stack:
+      000000                         60 	.ds	1
+                                     61 
+                                     62 ;--------------------------------------------------------
+                                     63 ; absolute external ram data
+                                     64 ;--------------------------------------------------------
+                                     65 	.area DABS (ABS)
+                                     66 
+                                     67 ; default segment ordering for linker
+                                     68 	.area HOME
+                                     69 	.area GSINIT
+                                     70 	.area GSFINAL
+                                     71 	.area CONST
+                                     72 	.area INITIALIZER
+                                     73 	.area CODE
+                                     74 
+                                     75 ;--------------------------------------------------------
+                                     76 ; interrupt vector
+                                     77 ;--------------------------------------------------------
+                                     78 	.area HOME
+      000000                         79 __interrupt_vect:
+      000000 82v00u00u00             80 	int s_GSINIT ; reset
+      000004 82 00 00 00             81 	int 0x000000 ; trap
+      000008 82 00 00 00             82 	int 0x000000 ; int0
+      00000C 82 00 00 00             83 	int 0x000000 ; int1
+      000010 82 00 00 00             84 	int 0x000000 ; int2
+      000014 82 00 00 00             85 	int 0x000000 ; int3
+      000018 82 00 00 00             86 	int 0x000000 ; int4
+      00001C 82 00 00 00             87 	int 0x000000 ; int5
+      000020 82v00u07uDF             88 	int _EXTI_PORTD_IRQHandler ; int6
+                                     89 ;--------------------------------------------------------
+                                     90 ; global & static initialisations
+                                     91 ;--------------------------------------------------------
+                                     92 	.area HOME
+                                     93 	.area GSINIT
+                                     94 	.area GSFINAL
+                                     95 	.area GSINIT
+      000000 CDr00r00         [ 4]   96 	call	___sdcc_external_startup
+      000003 4D               [ 1]   97 	tnz	a
+      000004 27 03            [ 1]   98 	jreq	__sdcc_init_data
+      000006 CCr00r24         [ 2]   99 	jp	__sdcc_program_startup
+      000009                        100 __sdcc_init_data:
+                                    101 ; stm8_genXINIT() start
+      000009 AEr00r00         [ 2]  102 	ldw x, #l_DATA
+      00000C 27 07            [ 1]  103 	jreq	00002$
+      00000E                        104 00001$:
+      00000E 72 4FuFFuFF      [ 1]  105 	clr (s_DATA - 1, x)
+      000012 5A               [ 2]  106 	decw x
+      000013 26 F9            [ 1]  107 	jrne	00001$
+      000015                        108 00002$:
+      000015 AEr00r00         [ 2]  109 	ldw	x, #l_INITIALIZER
+      000018 27 09            [ 1]  110 	jreq	00004$
+      00001A                        111 00003$:
+      00001A D6uFFuFF         [ 1]  112 	ld	a, (s_INITIALIZER - 1, x)
+      00001D D7uFFuFF         [ 1]  113 	ld	(s_INITIALIZED - 1, x), a
+      000020 5A               [ 2]  114 	decw	x
+      000021 26 F7            [ 1]  115 	jrne	00003$
+      000023                        116 00004$:
+                                    117 ; stm8_genXINIT() end
+                                    118 	.area GSFINAL
+      000000 CCr00r24         [ 2]  119 	jp	__sdcc_program_startup
+                                    120 ;--------------------------------------------------------
+                                    121 ; Home
+                                    122 ;--------------------------------------------------------
+                                    123 	.area HOME
+                                    124 	.area HOME
+      000024                        125 __sdcc_program_startup:
+      000024 CCr06r5A         [ 2]  126 	jp	_main
+                                    127 ;	return from main will return to caller
+                                    128 ;--------------------------------------------------------
+                                    129 ; code
+                                    130 ;--------------------------------------------------------
+                                    131 	.area CODE
+                                    132 ;	main.c: 12: void send_0(void)
+                                    133 ;	-----------------------------------------
+                                    134 ;	 function send_0
+                                    135 ;	-----------------------------------------
+      000000                        136 _send_0:
+                                    137 ;	main.c: 15: __asm__("bset 0x500f, #3");
+      000000 72 16 50 0F      [ 1]  138 	bset	0x500f, #3
+                                    139 ;	main.c: 16: __asm__("nop\n nop\n nop\n nop\n nop\n");
+      000004 9D               [ 1]  140 	nop
+      000005 9D               [ 1]  141 	nop
+      000006 9D               [ 1]  142 	nop
+      000007 9D               [ 1]  143 	nop
+      000008 9D               [ 1]  144 	nop
+                                    145 ;	main.c: 18: __asm__("bres 0x500f, #3");
+      000009 72 17 50 0F      [ 1]  146 	bres	0x500f, #3
+                                    147 ;	main.c: 19: __asm__("nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n");
+      00000D 9D               [ 1]  148 	nop
+      00000E 9D               [ 1]  149 	nop
+      00000F 9D               [ 1]  150 	nop
+      000010 9D               [ 1]  151 	nop
+      000011 9D               [ 1]  152 	nop
+      000012 9D               [ 1]  153 	nop
+      000013 9D               [ 1]  154 	nop
+      000014 9D               [ 1]  155 	nop
+      000015 9D               [ 1]  156 	nop
+      000016 9D               [ 1]  157 	nop
+                                    158 ;	main.c: 20: }
+      000017 81               [ 4]  159 	ret
+                                    160 ;	main.c: 21: void send_1(void)
+                                    161 ;	-----------------------------------------
+                                    162 ;	 function send_1
+                                    163 ;	-----------------------------------------
+      000018                        164 _send_1:
+                                    165 ;	main.c: 23: __asm__("bset 0x500f, #3");
+      000018 72 16 50 0F      [ 1]  166 	bset	0x500f, #3
+                                    167 ;	main.c: 24: __asm__("nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n");
+      00001C 9D               [ 1]  168 	nop
+      00001D 9D               [ 1]  169 	nop
+      00001E 9D               [ 1]  170 	nop
+      00001F 9D               [ 1]  171 	nop
+      000020 9D               [ 1]  172 	nop
+      000021 9D               [ 1]  173 	nop
+      000022 9D               [ 1]  174 	nop
+      000023 9D               [ 1]  175 	nop
+      000024 9D               [ 1]  176 	nop
+      000025 9D               [ 1]  177 	nop
+      000026 9D               [ 1]  178 	nop
+      000027 9D               [ 1]  179 	nop
+                                    180 ;	main.c: 25: __asm__("bres 0x500f, #3");
+      000028 72 17 50 0F      [ 1]  181 	bres	0x500f, #3
+                                    182 ;	main.c: 26: __asm__("nop\n nop\n nop\n");
+      00002C 9D               [ 1]  183 	nop
+      00002D 9D               [ 1]  184 	nop
+      00002E 9D               [ 1]  185 	nop
+                                    186 ;	main.c: 27: }
+      00002F 81               [ 4]  187 	ret
+                                    188 ;	main.c: 28: void Color_byte(uint8_t data)
+                                    189 ;	-----------------------------------------
+                                    190 ;	 function Color_byte
+                                    191 ;	-----------------------------------------
+      000030                        192 _Color_byte:
+      000030 88               [ 1]  193 	push	a
+                                    194 ;	main.c: 30: for (uint8_t i = 0; i < 8; i++)
+      000031 0F 01            [ 1]  195 	clr	(0x01, sp)
+      000033                        196 00106$:
+      000033 88               [ 1]  197 	push	a
+      000034 7B 02            [ 1]  198 	ld	a, (0x02, sp)
+      000036 A1 08            [ 1]  199 	cp	a, #0x08
+      000038 84               [ 1]  200 	pop	a
+      000039 24 14            [ 1]  201 	jrnc	00108$
+                                    202 ;	main.c: 32: if (data & 0x80)
+      00003B 4D               [ 1]  203 	tnz	a
+      00003C 2A 07            [ 1]  204 	jrpl	00102$
+                                    205 ;	main.c: 33: send_1();
+      00003E 88               [ 1]  206 	push	a
+      00003F CDr00r18         [ 4]  207 	call	_send_1
+      000042 84               [ 1]  208 	pop	a
+      000043 20 05            [ 2]  209 	jra	00103$
+      000045                        210 00102$:
+                                    211 ;	main.c: 35: send_0();
+      000045 88               [ 1]  212 	push	a
+      000046 CDr00r00         [ 4]  213 	call	_send_0
+      000049 84               [ 1]  214 	pop	a
+      00004A                        215 00103$:
+                                    216 ;	main.c: 36: data <<= 1;
+      00004A 48               [ 1]  217 	sll	a
+                                    218 ;	main.c: 30: for (uint8_t i = 0; i < 8; i++)
+      00004B 0C 01            [ 1]  219 	inc	(0x01, sp)
+      00004D 20 E4            [ 2]  220 	jra	00106$
+      00004F                        221 00108$:
+                                    222 ;	main.c: 38: }
+      00004F 84               [ 1]  223 	pop	a
+      000050 81               [ 4]  224 	ret
+                                    225 ;	main.c: 39: void sendRGB(uint8_t Gbyte, uint8_t Rbyte, uint8_t Bbyte)
+                                    226 ;	-----------------------------------------
+                                    227 ;	 function sendRGB
+                                    228 ;	-----------------------------------------
+      000051                        229 _sendRGB:
+                                    230 ;	main.c: 41: Color_byte(Gbyte);
+      000051 CDr00r30         [ 4]  231 	call	_Color_byte
+                                    232 ;	main.c: 42: Color_byte(Rbyte);
+      000054 7B 03            [ 1]  233 	ld	a, (0x03, sp)
+      000056 CDr00r30         [ 4]  234 	call	_Color_byte
+                                    235 ;	main.c: 43: Color_byte(Bbyte);
+      000059 7B 04            [ 1]  236 	ld	a, (0x04, sp)
+      00005B 1E 01            [ 2]  237 	ldw	x, (1, sp)
+      00005D 1F 03            [ 2]  238 	ldw	(3, sp), x
+      00005F 5B 02            [ 2]  239 	addw	sp, #2
+                                    240 ;	main.c: 44: }
+      000061 CCr00r30         [ 2]  241 	jp	_Color_byte
+                                    242 ;	main.c: 45: void number(uint8_t soLed, uint8_t Gbyte, uint8_t Rbyte, uint8_t Bbyte)
+                                    243 ;	-----------------------------------------
+                                    244 ;	 function number
+                                    245 ;	-----------------------------------------
+      000064                        246 _number:
+                                    247 ;	main.c: 47: switch (soLed)
+      000064 A1 08            [ 1]  248 	cp	a, #0x08
+      000066 23 03            [ 2]  249 	jrule	00118$
+      000068 CCr02r24         [ 2]  250 	jp	00111$
+      00006B                        251 00118$:
+      00006B 5F               [ 1]  252 	clrw	x
+      00006C 97               [ 1]  253 	ld	xl, a
+      00006D 58               [ 2]  254 	sllw	x
+      00006E DEu00u72         [ 2]  255 	ldw	x, (#00119$, x)
+      000071 FC               [ 2]  256 	jp	(x)
+      000072                        257 00119$:
+      000072r02r24                  258 	.dw	#00111$
+      000074r00r84                  259 	.dw	#00101$
+      000076r00r92                  260 	.dw	#00102$
+      000078r00rAB                  261 	.dw	#00103$
+      00007Ar00rCF                  262 	.dw	#00104$
+      00007Cr00rFE                  263 	.dw	#00105$
+      00007Er01r38                  264 	.dw	#00106$
+      000080r01r7D                  265 	.dw	#00107$
+      000082r01rCC                  266 	.dw	#00108$
+                                    267 ;	main.c: 49: case 1:
+      000084                        268 00101$:
+                                    269 ;	main.c: 50: sendRGB(Gbyte, Rbyte, Bbyte);
+      000084 7B 05            [ 1]  270 	ld	a, (0x05, sp)
+      000086 88               [ 1]  271 	push	a
+      000087 7B 05            [ 1]  272 	ld	a, (0x05, sp)
+      000089 88               [ 1]  273 	push	a
+      00008A 7B 05            [ 1]  274 	ld	a, (0x05, sp)
+      00008C CDr00r51         [ 4]  275 	call	_sendRGB
+                                    276 ;	main.c: 51: break;
+      00008F CCr02r24         [ 2]  277 	jp	00111$
+                                    278 ;	main.c: 52: case 2:
+      000092                        279 00102$:
+                                    280 ;	main.c: 53: sendRGB(Gbyte, Rbyte, Bbyte);
+      000092 7B 05            [ 1]  281 	ld	a, (0x05, sp)
+      000094 88               [ 1]  282 	push	a
+      000095 7B 05            [ 1]  283 	ld	a, (0x05, sp)
+      000097 88               [ 1]  284 	push	a
+      000098 7B 05            [ 1]  285 	ld	a, (0x05, sp)
+      00009A CDr00r51         [ 4]  286 	call	_sendRGB
+                                    287 ;	main.c: 54: sendRGB(Gbyte, Rbyte, Bbyte);
+      00009D 7B 05            [ 1]  288 	ld	a, (0x05, sp)
+      00009F 88               [ 1]  289 	push	a
+      0000A0 7B 05            [ 1]  290 	ld	a, (0x05, sp)
+      0000A2 88               [ 1]  291 	push	a
+      0000A3 7B 05            [ 1]  292 	ld	a, (0x05, sp)
+      0000A5 CDr00r51         [ 4]  293 	call	_sendRGB
+                                    294 ;	main.c: 55: break;
+      0000A8 CCr02r24         [ 2]  295 	jp	00111$
+                                    296 ;	main.c: 56: case 3:
+      0000AB                        297 00103$:
+                                    298 ;	main.c: 57: sendRGB(Gbyte, Rbyte, Bbyte);
+      0000AB 7B 05            [ 1]  299 	ld	a, (0x05, sp)
+      0000AD 88               [ 1]  300 	push	a
+      0000AE 7B 05            [ 1]  301 	ld	a, (0x05, sp)
+      0000B0 88               [ 1]  302 	push	a
+      0000B1 7B 05            [ 1]  303 	ld	a, (0x05, sp)
+      0000B3 CDr00r51         [ 4]  304 	call	_sendRGB
+                                    305 ;	main.c: 58: sendRGB(Gbyte, Rbyte, Bbyte);
+      0000B6 7B 05            [ 1]  306 	ld	a, (0x05, sp)
+      0000B8 88               [ 1]  307 	push	a
+      0000B9 7B 05            [ 1]  308 	ld	a, (0x05, sp)
+      0000BB 88               [ 1]  309 	push	a
+      0000BC 7B 05            [ 1]  310 	ld	a, (0x05, sp)
+      0000BE CDr00r51         [ 4]  311 	call	_sendRGB
+                                    312 ;	main.c: 59: sendRGB(Gbyte, Rbyte, Bbyte);
+      0000C1 7B 05            [ 1]  313 	ld	a, (0x05, sp)
+      0000C3 88               [ 1]  314 	push	a
+      0000C4 7B 05            [ 1]  315 	ld	a, (0x05, sp)
+      0000C6 88               [ 1]  316 	push	a
+      0000C7 7B 05            [ 1]  317 	ld	a, (0x05, sp)
+      0000C9 CDr00r51         [ 4]  318 	call	_sendRGB
+                                    319 ;	main.c: 60: break;
+      0000CC CCr02r24         [ 2]  320 	jp	00111$
+                                    321 ;	main.c: 61: case 4:
+      0000CF                        322 00104$:
+                                    323 ;	main.c: 62: sendRGB(Gbyte, Rbyte, Bbyte);
+      0000CF 7B 05            [ 1]  324 	ld	a, (0x05, sp)
+      0000D1 88               [ 1]  325 	push	a
+      0000D2 7B 05            [ 1]  326 	ld	a, (0x05, sp)
+      0000D4 88               [ 1]  327 	push	a
+      0000D5 7B 05            [ 1]  328 	ld	a, (0x05, sp)
+      0000D7 CDr00r51         [ 4]  329 	call	_sendRGB
+                                    330 ;	main.c: 63: sendRGB(Gbyte, Rbyte, Bbyte);
+      0000DA 7B 05            [ 1]  331 	ld	a, (0x05, sp)
+      0000DC 88               [ 1]  332 	push	a
+      0000DD 7B 05            [ 1]  333 	ld	a, (0x05, sp)
+      0000DF 88               [ 1]  334 	push	a
+      0000E0 7B 05            [ 1]  335 	ld	a, (0x05, sp)
+      0000E2 CDr00r51         [ 4]  336 	call	_sendRGB
+                                    337 ;	main.c: 64: sendRGB(Gbyte, Rbyte, Bbyte);
+      0000E5 7B 05            [ 1]  338 	ld	a, (0x05, sp)
+      0000E7 88               [ 1]  339 	push	a
+      0000E8 7B 05            [ 1]  340 	ld	a, (0x05, sp)
+      0000EA 88               [ 1]  341 	push	a
+      0000EB 7B 05            [ 1]  342 	ld	a, (0x05, sp)
+      0000ED CDr00r51         [ 4]  343 	call	_sendRGB
+                                    344 ;	main.c: 65: sendRGB(Gbyte, Rbyte, Bbyte);
+      0000F0 7B 05            [ 1]  345 	ld	a, (0x05, sp)
+      0000F2 88               [ 1]  346 	push	a
+      0000F3 7B 05            [ 1]  347 	ld	a, (0x05, sp)
+      0000F5 88               [ 1]  348 	push	a
+      0000F6 7B 05            [ 1]  349 	ld	a, (0x05, sp)
+      0000F8 CDr00r51         [ 4]  350 	call	_sendRGB
+                                    351 ;	main.c: 66: break;
+      0000FB CCr02r24         [ 2]  352 	jp	00111$
+                                    353 ;	main.c: 67: case 5:
+      0000FE                        354 00105$:
+                                    355 ;	main.c: 68: sendRGB(Gbyte, Rbyte, Bbyte);
+      0000FE 7B 05            [ 1]  356 	ld	a, (0x05, sp)
+      000100 88               [ 1]  357 	push	a
+      000101 7B 05            [ 1]  358 	ld	a, (0x05, sp)
+      000103 88               [ 1]  359 	push	a
+      000104 7B 05            [ 1]  360 	ld	a, (0x05, sp)
+      000106 CDr00r51         [ 4]  361 	call	_sendRGB
+                                    362 ;	main.c: 69: sendRGB(Gbyte, Rbyte, Bbyte);
+      000109 7B 05            [ 1]  363 	ld	a, (0x05, sp)
+      00010B 88               [ 1]  364 	push	a
+      00010C 7B 05            [ 1]  365 	ld	a, (0x05, sp)
+      00010E 88               [ 1]  366 	push	a
+      00010F 7B 05            [ 1]  367 	ld	a, (0x05, sp)
+      000111 CDr00r51         [ 4]  368 	call	_sendRGB
+                                    369 ;	main.c: 70: sendRGB(Gbyte, Rbyte, Bbyte);
+      000114 7B 05            [ 1]  370 	ld	a, (0x05, sp)
+      000116 88               [ 1]  371 	push	a
+      000117 7B 05            [ 1]  372 	ld	a, (0x05, sp)
+      000119 88               [ 1]  373 	push	a
+      00011A 7B 05            [ 1]  374 	ld	a, (0x05, sp)
+      00011C CDr00r51         [ 4]  375 	call	_sendRGB
+                                    376 ;	main.c: 71: sendRGB(Gbyte, Rbyte, Bbyte);
+      00011F 7B 05            [ 1]  377 	ld	a, (0x05, sp)
+      000121 88               [ 1]  378 	push	a
+      000122 7B 05            [ 1]  379 	ld	a, (0x05, sp)
+      000124 88               [ 1]  380 	push	a
+      000125 7B 05            [ 1]  381 	ld	a, (0x05, sp)
+      000127 CDr00r51         [ 4]  382 	call	_sendRGB
+                                    383 ;	main.c: 72: sendRGB(Gbyte, Rbyte, Bbyte);
+      00012A 7B 05            [ 1]  384 	ld	a, (0x05, sp)
+      00012C 88               [ 1]  385 	push	a
+      00012D 7B 05            [ 1]  386 	ld	a, (0x05, sp)
+      00012F 88               [ 1]  387 	push	a
+      000130 7B 05            [ 1]  388 	ld	a, (0x05, sp)
+      000132 CDr00r51         [ 4]  389 	call	_sendRGB
+                                    390 ;	main.c: 73: break;
+      000135 CCr02r24         [ 2]  391 	jp	00111$
+                                    392 ;	main.c: 74: case 6:
+      000138                        393 00106$:
+                                    394 ;	main.c: 75: sendRGB(Gbyte, Rbyte, Bbyte);
+      000138 7B 05            [ 1]  395 	ld	a, (0x05, sp)
+      00013A 88               [ 1]  396 	push	a
+      00013B 7B 05            [ 1]  397 	ld	a, (0x05, sp)
+      00013D 88               [ 1]  398 	push	a
+      00013E 7B 05            [ 1]  399 	ld	a, (0x05, sp)
+      000140 CDr00r51         [ 4]  400 	call	_sendRGB
+                                    401 ;	main.c: 76: sendRGB(Gbyte, Rbyte, Bbyte);
+      000143 7B 05            [ 1]  402 	ld	a, (0x05, sp)
+      000145 88               [ 1]  403 	push	a
+      000146 7B 05            [ 1]  404 	ld	a, (0x05, sp)
+      000148 88               [ 1]  405 	push	a
+      000149 7B 05            [ 1]  406 	ld	a, (0x05, sp)
+      00014B CDr00r51         [ 4]  407 	call	_sendRGB
+                                    408 ;	main.c: 77: sendRGB(Gbyte, Rbyte, Bbyte);
+      00014E 7B 05            [ 1]  409 	ld	a, (0x05, sp)
+      000150 88               [ 1]  410 	push	a
+      000151 7B 05            [ 1]  411 	ld	a, (0x05, sp)
+      000153 88               [ 1]  412 	push	a
+      000154 7B 05            [ 1]  413 	ld	a, (0x05, sp)
+      000156 CDr00r51         [ 4]  414 	call	_sendRGB
+                                    415 ;	main.c: 78: sendRGB(Gbyte, Rbyte, Bbyte);
+      000159 7B 05            [ 1]  416 	ld	a, (0x05, sp)
+      00015B 88               [ 1]  417 	push	a
+      00015C 7B 05            [ 1]  418 	ld	a, (0x05, sp)
+      00015E 88               [ 1]  419 	push	a
+      00015F 7B 05            [ 1]  420 	ld	a, (0x05, sp)
+      000161 CDr00r51         [ 4]  421 	call	_sendRGB
+                                    422 ;	main.c: 79: sendRGB(Gbyte, Rbyte, Bbyte);
+      000164 7B 05            [ 1]  423 	ld	a, (0x05, sp)
+      000166 88               [ 1]  424 	push	a
+      000167 7B 05            [ 1]  425 	ld	a, (0x05, sp)
+      000169 88               [ 1]  426 	push	a
+      00016A 7B 05            [ 1]  427 	ld	a, (0x05, sp)
+      00016C CDr00r51         [ 4]  428 	call	_sendRGB
+                                    429 ;	main.c: 80: sendRGB(Gbyte, Rbyte, Bbyte);
+      00016F 7B 05            [ 1]  430 	ld	a, (0x05, sp)
+      000171 88               [ 1]  431 	push	a
+      000172 7B 05            [ 1]  432 	ld	a, (0x05, sp)
+      000174 88               [ 1]  433 	push	a
+      000175 7B 05            [ 1]  434 	ld	a, (0x05, sp)
+      000177 CDr00r51         [ 4]  435 	call	_sendRGB
+                                    436 ;	main.c: 81: break;
+      00017A CCr02r24         [ 2]  437 	jp	00111$
+                                    438 ;	main.c: 82: case 7:
+      00017D                        439 00107$:
+                                    440 ;	main.c: 83: sendRGB(Gbyte, Rbyte, Bbyte);
+      00017D 7B 05            [ 1]  441 	ld	a, (0x05, sp)
+      00017F 88               [ 1]  442 	push	a
+      000180 7B 05            [ 1]  443 	ld	a, (0x05, sp)
+      000182 88               [ 1]  444 	push	a
+      000183 7B 05            [ 1]  445 	ld	a, (0x05, sp)
+      000185 CDr00r51         [ 4]  446 	call	_sendRGB
+                                    447 ;	main.c: 84: sendRGB(Gbyte, Rbyte, Bbyte);
+      000188 7B 05            [ 1]  448 	ld	a, (0x05, sp)
+      00018A 88               [ 1]  449 	push	a
+      00018B 7B 05            [ 1]  450 	ld	a, (0x05, sp)
+      00018D 88               [ 1]  451 	push	a
+      00018E 7B 05            [ 1]  452 	ld	a, (0x05, sp)
+      000190 CDr00r51         [ 4]  453 	call	_sendRGB
+                                    454 ;	main.c: 85: sendRGB(Gbyte, Rbyte, Bbyte);
+      000193 7B 05            [ 1]  455 	ld	a, (0x05, sp)
+      000195 88               [ 1]  456 	push	a
+      000196 7B 05            [ 1]  457 	ld	a, (0x05, sp)
+      000198 88               [ 1]  458 	push	a
+      000199 7B 05            [ 1]  459 	ld	a, (0x05, sp)
+      00019B CDr00r51         [ 4]  460 	call	_sendRGB
+                                    461 ;	main.c: 86: sendRGB(Gbyte, Rbyte, Bbyte);
+      00019E 7B 05            [ 1]  462 	ld	a, (0x05, sp)
+      0001A0 88               [ 1]  463 	push	a
+      0001A1 7B 05            [ 1]  464 	ld	a, (0x05, sp)
+      0001A3 88               [ 1]  465 	push	a
+      0001A4 7B 05            [ 1]  466 	ld	a, (0x05, sp)
+      0001A6 CDr00r51         [ 4]  467 	call	_sendRGB
+                                    468 ;	main.c: 87: sendRGB(Gbyte, Rbyte, Bbyte);
+      0001A9 7B 05            [ 1]  469 	ld	a, (0x05, sp)
+      0001AB 88               [ 1]  470 	push	a
+      0001AC 7B 05            [ 1]  471 	ld	a, (0x05, sp)
+      0001AE 88               [ 1]  472 	push	a
+      0001AF 7B 05            [ 1]  473 	ld	a, (0x05, sp)
+      0001B1 CDr00r51         [ 4]  474 	call	_sendRGB
+                                    475 ;	main.c: 88: sendRGB(Gbyte, Rbyte, Bbyte);
+      0001B4 7B 05            [ 1]  476 	ld	a, (0x05, sp)
+      0001B6 88               [ 1]  477 	push	a
+      0001B7 7B 05            [ 1]  478 	ld	a, (0x05, sp)
+      0001B9 88               [ 1]  479 	push	a
+      0001BA 7B 05            [ 1]  480 	ld	a, (0x05, sp)
+      0001BC CDr00r51         [ 4]  481 	call	_sendRGB
+                                    482 ;	main.c: 89: sendRGB(Gbyte, Rbyte, Bbyte);
+      0001BF 7B 05            [ 1]  483 	ld	a, (0x05, sp)
+      0001C1 88               [ 1]  484 	push	a
+      0001C2 7B 05            [ 1]  485 	ld	a, (0x05, sp)
+      0001C4 88               [ 1]  486 	push	a
+      0001C5 7B 05            [ 1]  487 	ld	a, (0x05, sp)
+      0001C7 CDr00r51         [ 4]  488 	call	_sendRGB
+                                    489 ;	main.c: 90: break;
+      0001CA 20 58            [ 2]  490 	jra	00111$
+                                    491 ;	main.c: 91: case 8:
+      0001CC                        492 00108$:
+                                    493 ;	main.c: 92: sendRGB(Gbyte, Rbyte, Bbyte);
+      0001CC 7B 05            [ 1]  494 	ld	a, (0x05, sp)
+      0001CE 88               [ 1]  495 	push	a
+      0001CF 7B 05            [ 1]  496 	ld	a, (0x05, sp)
+      0001D1 88               [ 1]  497 	push	a
+      0001D2 7B 05            [ 1]  498 	ld	a, (0x05, sp)
+      0001D4 CDr00r51         [ 4]  499 	call	_sendRGB
+                                    500 ;	main.c: 93: sendRGB(Gbyte, Rbyte, Bbyte);
+      0001D7 7B 05            [ 1]  501 	ld	a, (0x05, sp)
+      0001D9 88               [ 1]  502 	push	a
+      0001DA 7B 05            [ 1]  503 	ld	a, (0x05, sp)
+      0001DC 88               [ 1]  504 	push	a
+      0001DD 7B 05            [ 1]  505 	ld	a, (0x05, sp)
+      0001DF CDr00r51         [ 4]  506 	call	_sendRGB
+                                    507 ;	main.c: 94: sendRGB(Gbyte, Rbyte, Bbyte);
+      0001E2 7B 05            [ 1]  508 	ld	a, (0x05, sp)
+      0001E4 88               [ 1]  509 	push	a
+      0001E5 7B 05            [ 1]  510 	ld	a, (0x05, sp)
+      0001E7 88               [ 1]  511 	push	a
+      0001E8 7B 05            [ 1]  512 	ld	a, (0x05, sp)
+      0001EA CDr00r51         [ 4]  513 	call	_sendRGB
+                                    514 ;	main.c: 95: sendRGB(Gbyte, Rbyte, Bbyte);
+      0001ED 7B 05            [ 1]  515 	ld	a, (0x05, sp)
+      0001EF 88               [ 1]  516 	push	a
+      0001F0 7B 05            [ 1]  517 	ld	a, (0x05, sp)
+      0001F2 88               [ 1]  518 	push	a
+      0001F3 7B 05            [ 1]  519 	ld	a, (0x05, sp)
+      0001F5 CDr00r51         [ 4]  520 	call	_sendRGB
+                                    521 ;	main.c: 96: sendRGB(Gbyte, Rbyte, Bbyte);
+      0001F8 7B 05            [ 1]  522 	ld	a, (0x05, sp)
+      0001FA 88               [ 1]  523 	push	a
+      0001FB 7B 05            [ 1]  524 	ld	a, (0x05, sp)
+      0001FD 88               [ 1]  525 	push	a
+      0001FE 7B 05            [ 1]  526 	ld	a, (0x05, sp)
+      000200 CDr00r51         [ 4]  527 	call	_sendRGB
+                                    528 ;	main.c: 97: sendRGB(Gbyte, Rbyte, Bbyte);
+      000203 7B 05            [ 1]  529 	ld	a, (0x05, sp)
+      000205 88               [ 1]  530 	push	a
+      000206 7B 05            [ 1]  531 	ld	a, (0x05, sp)
+      000208 88               [ 1]  532 	push	a
+      000209 7B 05            [ 1]  533 	ld	a, (0x05, sp)
+      00020B CDr00r51         [ 4]  534 	call	_sendRGB
+                                    535 ;	main.c: 98: sendRGB(Gbyte, Rbyte, Bbyte);
+      00020E 7B 05            [ 1]  536 	ld	a, (0x05, sp)
+      000210 88               [ 1]  537 	push	a
+      000211 7B 05            [ 1]  538 	ld	a, (0x05, sp)
+      000213 88               [ 1]  539 	push	a
+      000214 7B 05            [ 1]  540 	ld	a, (0x05, sp)
+      000216 CDr00r51         [ 4]  541 	call	_sendRGB
+                                    542 ;	main.c: 99: sendRGB(Gbyte, Rbyte, Bbyte);
+      000219 7B 05            [ 1]  543 	ld	a, (0x05, sp)
+      00021B 88               [ 1]  544 	push	a
+      00021C 7B 05            [ 1]  545 	ld	a, (0x05, sp)
+      00021E 88               [ 1]  546 	push	a
+      00021F 7B 05            [ 1]  547 	ld	a, (0x05, sp)
+      000221 CDr00r51         [ 4]  548 	call	_sendRGB
+                                    549 ;	main.c: 103: }
+      000224                        550 00111$:
+                                    551 ;	main.c: 104: }
+      000224 1E 01            [ 2]  552 	ldw	x, (1, sp)
+      000226 5B 05            [ 2]  553 	addw	sp, #5
+      000228 FC               [ 2]  554 	jp	(x)
+                                    555 ;	main.c: 106: void hieuung1(uint8_t r, uint8_t g, uint8_t b)
+                                    556 ;	-----------------------------------------
+                                    557 ;	 function hieuung1
+                                    558 ;	-----------------------------------------
+      000229                        559 _hieuung1:
+      000229 52 05            [ 2]  560 	sub	sp, #5
+      00022B 6B 01            [ 1]  561 	ld	(0x01, sp), a
+                                    562 ;	main.c: 108: uint8_t rev_r = 0, rev_g = 0, rev_b = 0;
+      00022D 0F 02            [ 1]  563 	clr	(0x02, sp)
+      00022F 0F 03            [ 1]  564 	clr	(0x03, sp)
+      000231 0F 04            [ 1]  565 	clr	(0x04, sp)
+                                    566 ;	main.c: 110: for (uint8_t i = 0; i < 8; i++)
+      000233 0F 05            [ 1]  567 	clr	(0x05, sp)
+      000235                        568 00105$:
+      000235 7B 05            [ 1]  569 	ld	a, (0x05, sp)
+      000237 A1 08            [ 1]  570 	cp	a, #0x08
+      000239 24 33            [ 1]  571 	jrnc	00101$
+                                    572 ;	main.c: 111: rev_r |= (((r >> (7 - i)) & 1) ? (1 << i) : 0);
+      00023B A6 07            [ 1]  573 	ld	a, #0x07
+      00023D 10 05            [ 1]  574 	sub	a, (0x05, sp)
+      00023F 41               [ 1]  575 	exg	a, xl
+      000240 7B 01            [ 1]  576 	ld	a, (0x01, sp)
+      000242 41               [ 1]  577 	exg	a, xl
+      000243 4D               [ 1]  578 	tnz	a
+      000244 27 06            [ 1]  579 	jreq	00171$
+      000246                        580 00170$:
+      000246 41               [ 1]  581 	exg	a, xl
+      000247 44               [ 1]  582 	srl	a
+      000248 41               [ 1]  583 	exg	a, xl
+      000249 4A               [ 1]  584 	dec	a
+      00024A 26 FA            [ 1]  585 	jrne	00170$
+      00024C                        586 00171$:
+      00024C 54               [ 2]  587 	srlw	x
+      00024D 24 15            [ 1]  588 	jrnc	00115$
+      00024F 7B 05            [ 1]  589 	ld	a, (0x05, sp)
+      000251 41               [ 1]  590 	exg	a, xl
+      000252 A6 01            [ 1]  591 	ld	a, #0x01
+      000254 41               [ 1]  592 	exg	a, xl
+      000255 4D               [ 1]  593 	tnz	a
+      000256 27 06            [ 1]  594 	jreq	00174$
+      000258                        595 00173$:
+      000258 41               [ 1]  596 	exg	a, xl
+      000259 48               [ 1]  597 	sll	a
+      00025A 41               [ 1]  598 	exg	a, xl
+      00025B 4A               [ 1]  599 	dec	a
+      00025C 26 FA            [ 1]  600 	jrne	00173$
+      00025E                        601 00174$:
+      00025E 9F               [ 1]  602 	ld	a, xl
+      00025F 49               [ 1]  603 	rlc	a
+      000260 4F               [ 1]  604 	clr	a
+      000261 A2 00            [ 1]  605 	sbc	a, #0x00
+      000263 21                     606 	.byte 0x21
+      000264                        607 00115$:
+      000264 5F               [ 1]  608 	clrw	x
+      000265                        609 00116$:
+      000265 9F               [ 1]  610 	ld	a, xl
+      000266 1A 02            [ 1]  611 	or	a, (0x02, sp)
+      000268 6B 02            [ 1]  612 	ld	(0x02, sp), a
+                                    613 ;	main.c: 110: for (uint8_t i = 0; i < 8; i++)
+      00026A 0C 05            [ 1]  614 	inc	(0x05, sp)
+      00026C 20 C7            [ 2]  615 	jra	00105$
+      00026E                        616 00101$:
+                                    617 ;	main.c: 112: for (uint8_t i = 0; i < 8; i++)
+      00026E 0F 05            [ 1]  618 	clr	(0x05, sp)
+      000270                        619 00108$:
+      000270 7B 05            [ 1]  620 	ld	a, (0x05, sp)
+      000272 A1 08            [ 1]  621 	cp	a, #0x08
+      000274 24 33            [ 1]  622 	jrnc	00102$
+                                    623 ;	main.c: 113: rev_g |= (((g >> (7 - i)) & 1) ? (1 << i) : 0);
+      000276 A6 07            [ 1]  624 	ld	a, #0x07
+      000278 10 05            [ 1]  625 	sub	a, (0x05, sp)
+      00027A 41               [ 1]  626 	exg	a, xl
+      00027B 7B 08            [ 1]  627 	ld	a, (0x08, sp)
+      00027D 41               [ 1]  628 	exg	a, xl
+      00027E 4D               [ 1]  629 	tnz	a
+      00027F 27 06            [ 1]  630 	jreq	00177$
+      000281                        631 00176$:
+      000281 41               [ 1]  632 	exg	a, xl
+      000282 44               [ 1]  633 	srl	a
+      000283 41               [ 1]  634 	exg	a, xl
+      000284 4A               [ 1]  635 	dec	a
+      000285 26 FA            [ 1]  636 	jrne	00176$
+      000287                        637 00177$:
+      000287 54               [ 2]  638 	srlw	x
+      000288 24 15            [ 1]  639 	jrnc	00117$
+      00028A 7B 05            [ 1]  640 	ld	a, (0x05, sp)
+      00028C 41               [ 1]  641 	exg	a, xl
+      00028D A6 01            [ 1]  642 	ld	a, #0x01
+      00028F 41               [ 1]  643 	exg	a, xl
+      000290 4D               [ 1]  644 	tnz	a
+      000291 27 06            [ 1]  645 	jreq	00180$
+      000293                        646 00179$:
+      000293 41               [ 1]  647 	exg	a, xl
+      000294 48               [ 1]  648 	sll	a
+      000295 41               [ 1]  649 	exg	a, xl
+      000296 4A               [ 1]  650 	dec	a
+      000297 26 FA            [ 1]  651 	jrne	00179$
+      000299                        652 00180$:
+      000299 9F               [ 1]  653 	ld	a, xl
+      00029A 49               [ 1]  654 	rlc	a
+      00029B 4F               [ 1]  655 	clr	a
+      00029C A2 00            [ 1]  656 	sbc	a, #0x00
+      00029E 21                     657 	.byte 0x21
+      00029F                        658 00117$:
+      00029F 5F               [ 1]  659 	clrw	x
+      0002A0                        660 00118$:
+      0002A0 9F               [ 1]  661 	ld	a, xl
+      0002A1 1A 03            [ 1]  662 	or	a, (0x03, sp)
+      0002A3 6B 03            [ 1]  663 	ld	(0x03, sp), a
+                                    664 ;	main.c: 112: for (uint8_t i = 0; i < 8; i++)
+      0002A5 0C 05            [ 1]  665 	inc	(0x05, sp)
+      0002A7 20 C7            [ 2]  666 	jra	00108$
+      0002A9                        667 00102$:
+                                    668 ;	main.c: 114: for (uint8_t i = 0; i < 8; i++)
+      0002A9 0F 05            [ 1]  669 	clr	(0x05, sp)
+      0002AB                        670 00111$:
+      0002AB 7B 05            [ 1]  671 	ld	a, (0x05, sp)
+      0002AD A1 08            [ 1]  672 	cp	a, #0x08
+      0002AF 24 33            [ 1]  673 	jrnc	00103$
+                                    674 ;	main.c: 115: rev_b |= (((b >> (7 - i)) & 1) ? (1 << i) : 0);
+      0002B1 A6 07            [ 1]  675 	ld	a, #0x07
+      0002B3 10 05            [ 1]  676 	sub	a, (0x05, sp)
+      0002B5 41               [ 1]  677 	exg	a, xl
+      0002B6 7B 09            [ 1]  678 	ld	a, (0x09, sp)
+      0002B8 41               [ 1]  679 	exg	a, xl
+      0002B9 4D               [ 1]  680 	tnz	a
+      0002BA 27 06            [ 1]  681 	jreq	00183$
+      0002BC                        682 00182$:
+      0002BC 41               [ 1]  683 	exg	a, xl
+      0002BD 44               [ 1]  684 	srl	a
+      0002BE 41               [ 1]  685 	exg	a, xl
+      0002BF 4A               [ 1]  686 	dec	a
+      0002C0 26 FA            [ 1]  687 	jrne	00182$
+      0002C2                        688 00183$:
+      0002C2 54               [ 2]  689 	srlw	x
+      0002C3 24 15            [ 1]  690 	jrnc	00119$
+      0002C5 7B 05            [ 1]  691 	ld	a, (0x05, sp)
+      0002C7 41               [ 1]  692 	exg	a, xl
+      0002C8 A6 01            [ 1]  693 	ld	a, #0x01
+      0002CA 41               [ 1]  694 	exg	a, xl
+      0002CB 4D               [ 1]  695 	tnz	a
+      0002CC 27 06            [ 1]  696 	jreq	00186$
+      0002CE                        697 00185$:
+      0002CE 41               [ 1]  698 	exg	a, xl
+      0002CF 48               [ 1]  699 	sll	a
+      0002D0 41               [ 1]  700 	exg	a, xl
+      0002D1 4A               [ 1]  701 	dec	a
+      0002D2 26 FA            [ 1]  702 	jrne	00185$
+      0002D4                        703 00186$:
+      0002D4 9F               [ 1]  704 	ld	a, xl
+      0002D5 49               [ 1]  705 	rlc	a
+      0002D6 4F               [ 1]  706 	clr	a
+      0002D7 A2 00            [ 1]  707 	sbc	a, #0x00
+      0002D9 21                     708 	.byte 0x21
+      0002DA                        709 00119$:
+      0002DA 5F               [ 1]  710 	clrw	x
+      0002DB                        711 00120$:
+      0002DB 9F               [ 1]  712 	ld	a, xl
+      0002DC 1A 04            [ 1]  713 	or	a, (0x04, sp)
+      0002DE 6B 04            [ 1]  714 	ld	(0x04, sp), a
+                                    715 ;	main.c: 114: for (uint8_t i = 0; i < 8; i++)
+      0002E0 0C 05            [ 1]  716 	inc	(0x05, sp)
+      0002E2 20 C7            [ 2]  717 	jra	00111$
+      0002E4                        718 00103$:
+                                    719 ;	main.c: 117: number(8, rev_r, rev_g, rev_b);
+      0002E4 7B 04            [ 1]  720 	ld	a, (0x04, sp)
+      0002E6 88               [ 1]  721 	push	a
+      0002E7 7B 04            [ 1]  722 	ld	a, (0x04, sp)
+      0002E9 88               [ 1]  723 	push	a
+      0002EA 7B 04            [ 1]  724 	ld	a, (0x04, sp)
+      0002EC 88               [ 1]  725 	push	a
+      0002ED A6 08            [ 1]  726 	ld	a, #0x08
+      0002EF CDr00r64         [ 4]  727 	call	_number
+                                    728 ;	main.c: 118: }
+      0002F2 1E 06            [ 2]  729 	ldw	x, (6, sp)
+      0002F4 5B 09            [ 2]  730 	addw	sp, #9
+      0002F6 FC               [ 2]  731 	jp	(x)
+                                    732 ;	main.c: 121: void Timer4Config(void)
+                                    733 ;	-----------------------------------------
+                                    734 ;	 function Timer4Config
+                                    735 ;	-----------------------------------------
+      0002F7                        736 _Timer4Config:
+                                    737 ;	main.c: 123: TIM4->PSCR = (uint8_t)0x07;
+      0002F7 35 07 53 47      [ 1]  738 	mov	0x5347+0, #0x07
+                                    739 ;	main.c: 124: TIM4->ARR = (uint8_t)125 - 1;
+      0002FB 35 7C 53 48      [ 1]  740 	mov	0x5348+0, #0x7c
+                                    741 ;	main.c: 126: TIM4->CR1 |= TIM4_CR1_CEN;
+      0002FF 72 10 53 40      [ 1]  742 	bset	0x5340, #0
+                                    743 ;	main.c: 127: }
+      000303 81               [ 4]  744 	ret
+                                    745 ;	main.c: 128: void Timer4DelayMs(uint16_t u16Delay)
+                                    746 ;	-----------------------------------------
+                                    747 ;	 function Timer4DelayMs
+                                    748 ;	-----------------------------------------
+      000304                        749 _Timer4DelayMs:
+                                    750 ;	main.c: 130: while (u16Delay)
+      000304                        751 00104$:
+      000304 5D               [ 2]  752 	tnzw	x
+      000305 26 01            [ 1]  753 	jrne	00130$
+      000307 81               [ 4]  754 	ret
+      000308                        755 00130$:
+                                    756 ;	main.c: 132: TIM4->CNTR = (uint8_t)0;
+      000308 35 00 53 46      [ 1]  757 	mov	0x5346+0, #0x00
+                                    758 ;	main.c: 134: TIM4->SR1 = (uint8_t)(~0x01);
+      00030C 35 FE 53 44      [ 1]  759 	mov	0x5344+0, #0xfe
+                                    760 ;	main.c: 135: while ((TIM4->SR1 & (uint8_t)0x01) == RESET)
+      000310                        761 00101$:
+      000310 72 01 53 44 FB   [ 2]  762 	btjf	0x5344, #0, 00101$
+                                    763 ;	main.c: 138: --u16Delay;
+      000315 5A               [ 2]  764 	decw	x
+      000316 20 EC            [ 2]  765 	jra	00104$
+                                    766 ;	main.c: 140: }
+      000318 81               [ 4]  767 	ret
+                                    768 ;	main.c: 141: void clearLEDs(void)
+                                    769 ;	-----------------------------------------
+                                    770 ;	 function clearLEDs
+                                    771 ;	-----------------------------------------
+      000319                        772 _clearLEDs:
+                                    773 ;	main.c: 143: number(8, 0, 0, 0);
+      000319 4B 00            [ 1]  774 	push	#0x00
+      00031B 4B 00            [ 1]  775 	push	#0x00
+      00031D 4B 00            [ 1]  776 	push	#0x00
+      00031F A6 08            [ 1]  777 	ld	a, #0x08
+      000321 CDr00r64         [ 4]  778 	call	_number
+                                    779 ;	main.c: 144: Timer4DelayMs(50);
+      000324 AE 00 32         [ 2]  780 	ldw	x, #0x0032
+                                    781 ;	main.c: 145: }
+      000327 CCr03r04         [ 2]  782 	jp	_Timer4DelayMs
+                                    783 ;	main.c: 147: void ChayLed1(void)
+                                    784 ;	-----------------------------------------
+                                    785 ;	 function ChayLed1
+                                    786 ;	-----------------------------------------
+      00032A                        787 _ChayLed1:
+                                    788 ;	main.c: 149: r = rand() % 256;
+      00032A CDr00r00         [ 4]  789 	call	_rand
+      00032D 4B 00            [ 1]  790 	push	#0x00
+      00032F 4B 01            [ 1]  791 	push	#0x01
+      000331 CDr00r00         [ 4]  792 	call	__modsint
+      000334 9F               [ 1]  793 	ld	a, xl
+      000335 C7u00u01         [ 1]  794 	ld	_r+0, a
+                                    795 ;	main.c: 150: g = rand() % 256;
+      000338 CDr00r00         [ 4]  796 	call	_rand
+      00033B 4B 00            [ 1]  797 	push	#0x00
+      00033D 4B 01            [ 1]  798 	push	#0x01
+      00033F CDr00r00         [ 4]  799 	call	__modsint
+      000342 9F               [ 1]  800 	ld	a, xl
+      000343 C7u00u02         [ 1]  801 	ld	_g+0, a
+                                    802 ;	main.c: 151: b = rand() % 256;
+      000346 CDr00r00         [ 4]  803 	call	_rand
+      000349 4B 00            [ 1]  804 	push	#0x00
+      00034B 4B 01            [ 1]  805 	push	#0x01
+      00034D CDr00r00         [ 4]  806 	call	__modsint
+      000350 9F               [ 1]  807 	ld	a, xl
+      000351 C7u00u03         [ 1]  808 	ld	_b+0, a
+                                    809 ;	main.c: 152: for (i = 1; i < 9; i++)
+      000354 35 01u00u00      [ 1]  810 	mov	_i+0, #0x01
+      000358                        811 00102$:
+                                    812 ;	main.c: 155: number(i, g, r, b);
+      000358 3Bu00u03         [ 1]  813 	push	_b+0
+      00035B 3Bu00u01         [ 1]  814 	push	_r+0
+      00035E 3Bu00u02         [ 1]  815 	push	_g+0
+      000361 C6u00u00         [ 1]  816 	ld	a, _i+0
+      000364 CDr00r64         [ 4]  817 	call	_number
+                                    818 ;	main.c: 156: Timer4DelayMs(TimeRun);
+      000367 AE 00 28         [ 2]  819 	ldw	x, #0x0028
+      00036A CDr03r04         [ 4]  820 	call	_Timer4DelayMs
+                                    821 ;	main.c: 152: for (i = 1; i < 9; i++)
+      00036D 72 5Cu00u00      [ 1]  822 	inc	_i+0
+      000371 C6u00u00         [ 1]  823 	ld	a, _i+0
+      000374 A1 09            [ 1]  824 	cp	a, #0x09
+      000376 25 E0            [ 1]  825 	jrc	00102$
+                                    826 ;	main.c: 158: }
+      000378 81               [ 4]  827 	ret
+                                    828 ;	main.c: 160: void ChayLed2(void)
+                                    829 ;	-----------------------------------------
+                                    830 ;	 function ChayLed2
+                                    831 ;	-----------------------------------------
+      000379                        832 _ChayLed2:
+                                    833 ;	main.c: 163: for (i = 0; i < 255; i++)
+      000379 72 5Fu00u00      [ 1]  834 	clr	_i+0
+      00037D                        835 00103$:
+                                    836 ;	main.c: 165: number(8, i, 100, i);
+      00037D 3Bu00u00         [ 1]  837 	push	_i+0
+      000380 4B 64            [ 1]  838 	push	#0x64
+      000382 3Bu00u00         [ 1]  839 	push	_i+0
+      000385 A6 08            [ 1]  840 	ld	a, #0x08
+      000387 CDr00r64         [ 4]  841 	call	_number
+                                    842 ;	main.c: 166: Timer4DelayMs(10);
+      00038A AE 00 0A         [ 2]  843 	ldw	x, #0x000a
+      00038D CDr03r04         [ 4]  844 	call	_Timer4DelayMs
+                                    845 ;	main.c: 163: for (i = 0; i < 255; i++)
+      000390 72 5Cu00u00      [ 1]  846 	inc	_i+0
+      000394 C6u00u00         [ 1]  847 	ld	a, _i+0
+      000397 A1 FF            [ 1]  848 	cp	a, #0xff
+      000399 25 E2            [ 1]  849 	jrc	00103$
+                                    850 ;	main.c: 169: for (i = 255; i > 0; i--)
+      00039B 35 FFu00u00      [ 1]  851 	mov	_i+0, #0xff
+      00039F                        852 00105$:
+                                    853 ;	main.c: 171: number(8, i, 100, i);
+      00039F 3Bu00u00         [ 1]  854 	push	_i+0
+      0003A2 4B 64            [ 1]  855 	push	#0x64
+      0003A4 3Bu00u00         [ 1]  856 	push	_i+0
+      0003A7 A6 08            [ 1]  857 	ld	a, #0x08
+      0003A9 CDr00r64         [ 4]  858 	call	_number
+                                    859 ;	main.c: 172: Timer4DelayMs(10);
+      0003AC AE 00 0A         [ 2]  860 	ldw	x, #0x000a
+      0003AF CDr03r04         [ 4]  861 	call	_Timer4DelayMs
+                                    862 ;	main.c: 169: for (i = 255; i > 0; i--)
+      0003B2 72 5Au00u00      [ 1]  863 	dec	_i+0
+      0003B6 C6u00u00         [ 1]  864 	ld	a, _i+0
+      0003B9 26 E4            [ 1]  865 	jrne	00105$
+                                    866 ;	main.c: 174: }
+      0003BB 81               [ 4]  867 	ret
+                                    868 ;	main.c: 175: void ChayLED4(void)
+                                    869 ;	-----------------------------------------
+                                    870 ;	 function ChayLED4
+                                    871 ;	-----------------------------------------
+      0003BC                        872 _ChayLED4:
+                                    873 ;	main.c: 177: for (i = 1; i < 9; i++)
+      0003BC 35 01u00u00      [ 1]  874 	mov	_i+0, #0x01
+      0003C0                        875 00102$:
+                                    876 ;	main.c: 179: number(i, 255, 51, 255);
+      0003C0 4B FF            [ 1]  877 	push	#0xff
+      0003C2 4B 33            [ 1]  878 	push	#0x33
+      0003C4 4B FF            [ 1]  879 	push	#0xff
+      0003C6 C6u00u00         [ 1]  880 	ld	a, _i+0
+      0003C9 CDr00r64         [ 4]  881 	call	_number
+                                    882 ;	main.c: 180: Timer4DelayMs(TimeRun);
+      0003CC AE 00 28         [ 2]  883 	ldw	x, #0x0028
+      0003CF CDr03r04         [ 4]  884 	call	_Timer4DelayMs
+                                    885 ;	main.c: 177: for (i = 1; i < 9; i++)
+      0003D2 72 5Cu00u00      [ 1]  886 	inc	_i+0
+      0003D6 C6u00u00         [ 1]  887 	ld	a, _i+0
+      0003D9 A1 09            [ 1]  888 	cp	a, #0x09
+      0003DB 25 E3            [ 1]  889 	jrc	00102$
+                                    890 ;	main.c: 182: }
+      0003DD 81               [ 4]  891 	ret
+                                    892 ;	main.c: 184: void ChayLED5(void)
+                                    893 ;	-----------------------------------------
+                                    894 ;	 function ChayLED5
+                                    895 ;	-----------------------------------------
+      0003DE                        896 _ChayLED5:
+      0003DE 88               [ 1]  897 	push	a
+                                    898 ;	main.c: 186: r = rand() % 256;
+      0003DF CDr00r00         [ 4]  899 	call	_rand
+      0003E2 4B 00            [ 1]  900 	push	#0x00
+      0003E4 4B 01            [ 1]  901 	push	#0x01
+      0003E6 CDr00r00         [ 4]  902 	call	__modsint
+      0003E9 9F               [ 1]  903 	ld	a, xl
+      0003EA C7u00u01         [ 1]  904 	ld	_r+0, a
+                                    905 ;	main.c: 187: g = rand() % 256;
+      0003ED CDr00r00         [ 4]  906 	call	_rand
+      0003F0 4B 00            [ 1]  907 	push	#0x00
+      0003F2 4B 01            [ 1]  908 	push	#0x01
+      0003F4 CDr00r00         [ 4]  909 	call	__modsint
+      0003F7 9F               [ 1]  910 	ld	a, xl
+      0003F8 C7u00u02         [ 1]  911 	ld	_g+0, a
+                                    912 ;	main.c: 188: b = rand() % 256;
+      0003FB CDr00r00         [ 4]  913 	call	_rand
+      0003FE 4B 00            [ 1]  914 	push	#0x00
+      000400 4B 01            [ 1]  915 	push	#0x01
+      000402 CDr00r00         [ 4]  916 	call	__modsint
+      000405 9F               [ 1]  917 	ld	a, xl
+      000406 C7u00u03         [ 1]  918 	ld	_b+0, a
+                                    919 ;	main.c: 189: for (i = 8; i > 0; i--)
+      000409 35 08u00u00      [ 1]  920 	mov	_i+0, #0x08
+      00040D                        921 00103$:
+                                    922 ;	main.c: 191: number(i - 1, 0, 0, 0);
+      00040D C6u00u00         [ 1]  923 	ld	a, _i+0
+      000410 4A               [ 1]  924 	dec	a
+      000411 4B 00            [ 1]  925 	push	#0x00
+      000413 4B 00            [ 1]  926 	push	#0x00
+      000415 4B 00            [ 1]  927 	push	#0x00
+      000417 CDr00r64         [ 4]  928 	call	_number
+                                    929 ;	main.c: 192: number(9 - i, g, r, b);
+      00041A C6u00u00         [ 1]  930 	ld	a, _i+0
+      00041D 6B 01            [ 1]  931 	ld	(0x01, sp), a
+      00041F A6 09            [ 1]  932 	ld	a, #0x09
+      000421 10 01            [ 1]  933 	sub	a, (0x01, sp)
+      000423 3Bu00u03         [ 1]  934 	push	_b+0
+      000426 3Bu00u01         [ 1]  935 	push	_r+0
+      000429 3Bu00u02         [ 1]  936 	push	_g+0
+      00042C CDr00r64         [ 4]  937 	call	_number
+                                    938 ;	main.c: 193: Timer4DelayMs(100);
+      00042F AE 00 64         [ 2]  939 	ldw	x, #0x0064
+      000432 CDr03r04         [ 4]  940 	call	_Timer4DelayMs
+                                    941 ;	main.c: 189: for (i = 8; i > 0; i--)
+      000435 72 5Au00u00      [ 1]  942 	dec	_i+0
+      000439 C6u00u00         [ 1]  943 	ld	a, _i+0
+      00043C 26 CF            [ 1]  944 	jrne	00103$
+                                    945 ;	main.c: 196: for (i = 1; i < 9; i++)
+      00043E 35 01u00u00      [ 1]  946 	mov	_i+0, #0x01
+      000442                        947 00105$:
+                                    948 ;	main.c: 198: number(i, 0, 0, 0);
+      000442 4B 00            [ 1]  949 	push	#0x00
+      000444 4B 00            [ 1]  950 	push	#0x00
+      000446 4B 00            [ 1]  951 	push	#0x00
+      000448 C6u00u00         [ 1]  952 	ld	a, _i+0
+      00044B CDr00r64         [ 4]  953 	call	_number
+                                    954 ;	main.c: 199: Timer4DelayMs(100);
+      00044E AE 00 64         [ 2]  955 	ldw	x, #0x0064
+      000451 CDr03r04         [ 4]  956 	call	_Timer4DelayMs
+                                    957 ;	main.c: 196: for (i = 1; i < 9; i++)
+      000454 72 5Cu00u00      [ 1]  958 	inc	_i+0
+      000458 C6u00u00         [ 1]  959 	ld	a, _i+0
+      00045B A1 09            [ 1]  960 	cp	a, #0x09
+      00045D 25 E3            [ 1]  961 	jrc	00105$
+                                    962 ;	main.c: 201: }
+      00045F 84               [ 1]  963 	pop	a
+      000460 81               [ 4]  964 	ret
+                                    965 ;	main.c: 203: void NhapNhay1(void)
+                                    966 ;	-----------------------------------------
+                                    967 ;	 function NhapNhay1
+                                    968 ;	-----------------------------------------
+      000461                        969 _NhapNhay1:
+                                    970 ;	main.c: 205: for (i = 0; i < 255; i++)
+      000461 72 5Fu00u00      [ 1]  971 	clr	_i+0
+      000465                        972 00103$:
+                                    973 ;	main.c: 207: number(8, i, 100, i);
+      000465 3Bu00u00         [ 1]  974 	push	_i+0
+      000468 4B 64            [ 1]  975 	push	#0x64
+      00046A 3Bu00u00         [ 1]  976 	push	_i+0
+      00046D A6 08            [ 1]  977 	ld	a, #0x08
+      00046F CDr00r64         [ 4]  978 	call	_number
+                                    979 ;	main.c: 208: Timer4DelayMs(10);
+      000472 AE 00 0A         [ 2]  980 	ldw	x, #0x000a
+      000475 CDr03r04         [ 4]  981 	call	_Timer4DelayMs
+                                    982 ;	main.c: 205: for (i = 0; i < 255; i++)
+      000478 72 5Cu00u00      [ 1]  983 	inc	_i+0
+      00047C C6u00u00         [ 1]  984 	ld	a, _i+0
+      00047F A1 FF            [ 1]  985 	cp	a, #0xff
+      000481 25 E2            [ 1]  986 	jrc	00103$
+                                    987 ;	main.c: 211: for (i = 255; i > 0; i--)
+      000483 35 FFu00u00      [ 1]  988 	mov	_i+0, #0xff
+      000487                        989 00105$:
+                                    990 ;	main.c: 213: number(8, i, 100, i);
+      000487 3Bu00u00         [ 1]  991 	push	_i+0
+      00048A 4B 64            [ 1]  992 	push	#0x64
+      00048C 3Bu00u00         [ 1]  993 	push	_i+0
+      00048F A6 08            [ 1]  994 	ld	a, #0x08
+      000491 CDr00r64         [ 4]  995 	call	_number
+                                    996 ;	main.c: 214: Timer4DelayMs(10);
+      000494 AE 00 0A         [ 2]  997 	ldw	x, #0x000a
+      000497 CDr03r04         [ 4]  998 	call	_Timer4DelayMs
+                                    999 ;	main.c: 211: for (i = 255; i > 0; i--)
+      00049A 72 5Au00u00      [ 1] 1000 	dec	_i+0
+      00049E C6u00u00         [ 1] 1001 	ld	a, _i+0
+      0004A1 26 E4            [ 1] 1002 	jrne	00105$
+                                   1003 ;	main.c: 216: }
+      0004A3 81               [ 4] 1004 	ret
+                                   1005 ;	main.c: 218: void NhapNhayRED(void)
+                                   1006 ;	-----------------------------------------
+                                   1007 ;	 function NhapNhayRED
+                                   1008 ;	-----------------------------------------
+      0004A4                       1009 _NhapNhayRED:
+                                   1010 ;	main.c: 220: for (i = 0; i < 255; i++)
+      0004A4 72 5Fu00u00      [ 1] 1011 	clr	_i+0
+      0004A8                       1012 00103$:
+                                   1013 ;	main.c: 222: number(8, 0, i, 0);
+      0004A8 4B 00            [ 1] 1014 	push	#0x00
+      0004AA 3Bu00u00         [ 1] 1015 	push	_i+0
+      0004AD 4B 00            [ 1] 1016 	push	#0x00
+      0004AF A6 08            [ 1] 1017 	ld	a, #0x08
+      0004B1 CDr00r64         [ 4] 1018 	call	_number
+                                   1019 ;	main.c: 223: Timer4DelayMs(1);
+      0004B4 5F               [ 1] 1020 	clrw	x
+      0004B5 5C               [ 1] 1021 	incw	x
+      0004B6 CDr03r04         [ 4] 1022 	call	_Timer4DelayMs
+                                   1023 ;	main.c: 220: for (i = 0; i < 255; i++)
+      0004B9 72 5Cu00u00      [ 1] 1024 	inc	_i+0
+      0004BD C6u00u00         [ 1] 1025 	ld	a, _i+0
+      0004C0 A1 FF            [ 1] 1026 	cp	a, #0xff
+      0004C2 25 E4            [ 1] 1027 	jrc	00103$
+                                   1028 ;	main.c: 226: for (i = 255; i > 0; i--)
+      0004C4 35 FFu00u00      [ 1] 1029 	mov	_i+0, #0xff
+      0004C8                       1030 00105$:
+                                   1031 ;	main.c: 228: number(8, 0, i, 0);
+      0004C8 4B 00            [ 1] 1032 	push	#0x00
+      0004CA 3Bu00u00         [ 1] 1033 	push	_i+0
+      0004CD 4B 00            [ 1] 1034 	push	#0x00
+      0004CF A6 08            [ 1] 1035 	ld	a, #0x08
+      0004D1 CDr00r64         [ 4] 1036 	call	_number
+                                   1037 ;	main.c: 229: Timer4DelayMs(1);
+      0004D4 5F               [ 1] 1038 	clrw	x
+      0004D5 5C               [ 1] 1039 	incw	x
+      0004D6 CDr03r04         [ 4] 1040 	call	_Timer4DelayMs
+                                   1041 ;	main.c: 226: for (i = 255; i > 0; i--)
+      0004D9 72 5Au00u00      [ 1] 1042 	dec	_i+0
+      0004DD C6u00u00         [ 1] 1043 	ld	a, _i+0
+      0004E0 26 E6            [ 1] 1044 	jrne	00105$
+                                   1045 ;	main.c: 231: }
+      0004E2 81               [ 4] 1046 	ret
+                                   1047 ;	main.c: 233: void HaiMau(void)
+                                   1048 ;	-----------------------------------------
+                                   1049 ;	 function HaiMau
+                                   1050 ;	-----------------------------------------
+      0004E3                       1051 _HaiMau:
+                                   1052 ;	main.c: 235: number(4, 255, 51, 255);
+      0004E3 4B FF            [ 1] 1053 	push	#0xff
+      0004E5 4B 33            [ 1] 1054 	push	#0x33
+      0004E7 4B FF            [ 1] 1055 	push	#0xff
+      0004E9 A6 04            [ 1] 1056 	ld	a, #0x04
+      0004EB CDr00r64         [ 4] 1057 	call	_number
+                                   1058 ;	main.c: 236: number(4, 60, 255, 60);
+      0004EE 4B 3C            [ 1] 1059 	push	#0x3c
+      0004F0 4B FF            [ 1] 1060 	push	#0xff
+      0004F2 4B 3C            [ 1] 1061 	push	#0x3c
+      0004F4 A6 04            [ 1] 1062 	ld	a, #0x04
+      0004F6 CDr00r64         [ 4] 1063 	call	_number
+                                   1064 ;	main.c: 237: }
+      0004F9 81               [ 4] 1065 	ret
+                                   1066 ;	main.c: 239: void Chay1LED(void)
+                                   1067 ;	-----------------------------------------
+                                   1068 ;	 function Chay1LED
+                                   1069 ;	-----------------------------------------
+      0004FA                       1070 _Chay1LED:
+      0004FA 88               [ 1] 1071 	push	a
+                                   1072 ;	main.c: 241: r = rand() % 256;
+      0004FB CDr00r00         [ 4] 1073 	call	_rand
+      0004FE 4B 00            [ 1] 1074 	push	#0x00
+      000500 4B 01            [ 1] 1075 	push	#0x01
+      000502 CDr00r00         [ 4] 1076 	call	__modsint
+      000505 9F               [ 1] 1077 	ld	a, xl
+      000506 C7u00u01         [ 1] 1078 	ld	_r+0, a
+                                   1079 ;	main.c: 242: g = rand() % 256;
+      000509 CDr00r00         [ 4] 1080 	call	_rand
+      00050C 4B 00            [ 1] 1081 	push	#0x00
+      00050E 4B 01            [ 1] 1082 	push	#0x01
+      000510 CDr00r00         [ 4] 1083 	call	__modsint
+      000513 9F               [ 1] 1084 	ld	a, xl
+      000514 C7u00u02         [ 1] 1085 	ld	_g+0, a
+                                   1086 ;	main.c: 243: b = rand() % 256;
+      000517 CDr00r00         [ 4] 1087 	call	_rand
+      00051A 4B 00            [ 1] 1088 	push	#0x00
+      00051C 4B 01            [ 1] 1089 	push	#0x01
+      00051E CDr00r00         [ 4] 1090 	call	__modsint
+      000521 9F               [ 1] 1091 	ld	a, xl
+      000522 C7u00u03         [ 1] 1092 	ld	_b+0, a
+                                   1093 ;	main.c: 244: for (i = 1; i < 9; i++)
+      000525 35 01u00u00      [ 1] 1094 	mov	_i+0, #0x01
+      000529                       1095 00102$:
+                                   1096 ;	main.c: 246: number(i - 1, 0, 0, 0);
+      000529 C6u00u00         [ 1] 1097 	ld	a, _i+0
+      00052C 4A               [ 1] 1098 	dec	a
+      00052D 4B 00            [ 1] 1099 	push	#0x00
+      00052F 4B 00            [ 1] 1100 	push	#0x00
+      000531 4B 00            [ 1] 1101 	push	#0x00
+      000533 CDr00r64         [ 4] 1102 	call	_number
+                                   1103 ;	main.c: 247: number(2, g, r, b);
+      000536 3Bu00u03         [ 1] 1104 	push	_b+0
+      000539 3Bu00u01         [ 1] 1105 	push	_r+0
+      00053C 3Bu00u02         [ 1] 1106 	push	_g+0
+      00053F A6 02            [ 1] 1107 	ld	a, #0x02
+      000541 CDr00r64         [ 4] 1108 	call	_number
+                                   1109 ;	main.c: 248: number(7 - i, 0, 0, 0);
+      000544 C6u00u00         [ 1] 1110 	ld	a, _i+0
+      000547 6B 01            [ 1] 1111 	ld	(0x01, sp), a
+      000549 A6 07            [ 1] 1112 	ld	a, #0x07
+      00054B 10 01            [ 1] 1113 	sub	a, (0x01, sp)
+      00054D 4B 00            [ 1] 1114 	push	#0x00
+      00054F 4B 00            [ 1] 1115 	push	#0x00
+      000551 4B 00            [ 1] 1116 	push	#0x00
+      000553 CDr00r64         [ 4] 1117 	call	_number
+                                   1118 ;	main.c: 249: Timer4DelayMs(100);
+      000556 AE 00 64         [ 2] 1119 	ldw	x, #0x0064
+      000559 CDr03r04         [ 4] 1120 	call	_Timer4DelayMs
+                                   1121 ;	main.c: 244: for (i = 1; i < 9; i++)
+      00055C 72 5Cu00u00      [ 1] 1122 	inc	_i+0
+      000560 C6u00u00         [ 1] 1123 	ld	a, _i+0
+      000563 A1 09            [ 1] 1124 	cp	a, #0x09
+      000565 25 C2            [ 1] 1125 	jrc	00102$
+                                   1126 ;	main.c: 251: }
+      000567 84               [ 1] 1127 	pop	a
+      000568 81               [ 4] 1128 	ret
+                                   1129 ;	main.c: 253: void ChayLEDNgoaiTrong(void)
+                                   1130 ;	-----------------------------------------
+                                   1131 ;	 function ChayLEDNgoaiTrong
+                                   1132 ;	-----------------------------------------
+      000569                       1133 _ChayLEDNgoaiTrong:
+      000569 88               [ 1] 1134 	push	a
+                                   1135 ;	main.c: 255: r = rand() % 256;
+      00056A CDr00r00         [ 4] 1136 	call	_rand
+      00056D 4B 00            [ 1] 1137 	push	#0x00
+      00056F 4B 01            [ 1] 1138 	push	#0x01
+      000571 CDr00r00         [ 4] 1139 	call	__modsint
+      000574 9F               [ 1] 1140 	ld	a, xl
+      000575 C7u00u01         [ 1] 1141 	ld	_r+0, a
+                                   1142 ;	main.c: 256: g = rand() % 256;
+      000578 CDr00r00         [ 4] 1143 	call	_rand
+      00057B 4B 00            [ 1] 1144 	push	#0x00
+      00057D 4B 01            [ 1] 1145 	push	#0x01
+      00057F CDr00r00         [ 4] 1146 	call	__modsint
+      000582 9F               [ 1] 1147 	ld	a, xl
+      000583 C7u00u02         [ 1] 1148 	ld	_g+0, a
+                                   1149 ;	main.c: 257: b = rand() % 256;
+      000586 CDr00r00         [ 4] 1150 	call	_rand
+      000589 4B 00            [ 1] 1151 	push	#0x00
+      00058B 4B 01            [ 1] 1152 	push	#0x01
+      00058D CDr00r00         [ 4] 1153 	call	__modsint
+      000590 9F               [ 1] 1154 	ld	a, xl
+      000591 C7u00u03         [ 1] 1155 	ld	_b+0, a
+                                   1156 ;	main.c: 258: for (i = 1; i < 5; i++)
+      000594 35 01u00u00      [ 1] 1157 	mov	_i+0, #0x01
+      000598                       1158 00103$:
+                                   1159 ;	main.c: 260: number(4 - i, 0, 0, 0);
+      000598 C6u00u00         [ 1] 1160 	ld	a, _i+0
+      00059B 6B 01            [ 1] 1161 	ld	(0x01, sp), a
+      00059D A6 04            [ 1] 1162 	ld	a, #0x04
+      00059F 10 01            [ 1] 1163 	sub	a, (0x01, sp)
+      0005A1 4B 00            [ 1] 1164 	push	#0x00
+      0005A3 4B 00            [ 1] 1165 	push	#0x00
+      0005A5 4B 00            [ 1] 1166 	push	#0x00
+      0005A7 CDr00r64         [ 4] 1167 	call	_number
+                                   1168 ;	main.c: 261: number(1, g, r, b);
+      0005AA 3Bu00u03         [ 1] 1169 	push	_b+0
+      0005AD 3Bu00u01         [ 1] 1170 	push	_r+0
+      0005B0 3Bu00u02         [ 1] 1171 	push	_g+0
+      0005B3 A6 01            [ 1] 1172 	ld	a, #0x01
+      0005B5 CDr00r64         [ 4] 1173 	call	_number
+                                   1174 ;	main.c: 262: number(2 * (i - 1), 0, 0, 0);
+      0005B8 C6u00u00         [ 1] 1175 	ld	a, _i+0
+      0005BB 4A               [ 1] 1176 	dec	a
+      0005BC 48               [ 1] 1177 	sll	a
+      0005BD 4B 00            [ 1] 1178 	push	#0x00
+      0005BF 4B 00            [ 1] 1179 	push	#0x00
+      0005C1 4B 00            [ 1] 1180 	push	#0x00
+      0005C3 CDr00r64         [ 4] 1181 	call	_number
+                                   1182 ;	main.c: 263: number(1, g, r, b);
+      0005C6 3Bu00u03         [ 1] 1183 	push	_b+0
+      0005C9 3Bu00u01         [ 1] 1184 	push	_r+0
+      0005CC 3Bu00u02         [ 1] 1185 	push	_g+0
+      0005CF A6 01            [ 1] 1186 	ld	a, #0x01
+      0005D1 CDr00r64         [ 4] 1187 	call	_number
+                                   1188 ;	main.c: 264: number(4 - i, 0, 0, 0);
+      0005D4 C6u00u00         [ 1] 1189 	ld	a, _i+0
+      0005D7 6B 01            [ 1] 1190 	ld	(0x01, sp), a
+      0005D9 A6 04            [ 1] 1191 	ld	a, #0x04
+      0005DB 10 01            [ 1] 1192 	sub	a, (0x01, sp)
+      0005DD 4B 00            [ 1] 1193 	push	#0x00
+      0005DF 4B 00            [ 1] 1194 	push	#0x00
+      0005E1 4B 00            [ 1] 1195 	push	#0x00
+      0005E3 CDr00r64         [ 4] 1196 	call	_number
+                                   1197 ;	main.c: 265: Timer4DelayMs(200);
+      0005E6 AE 00 C8         [ 2] 1198 	ldw	x, #0x00c8
+      0005E9 CDr03r04         [ 4] 1199 	call	_Timer4DelayMs
+                                   1200 ;	main.c: 258: for (i = 1; i < 5; i++)
+      0005EC 72 5Cu00u00      [ 1] 1201 	inc	_i+0
+      0005F0 C6u00u00         [ 1] 1202 	ld	a, _i+0
+      0005F3 A1 05            [ 1] 1203 	cp	a, #0x05
+      0005F5 25 A1            [ 1] 1204 	jrc	00103$
+                                   1205 ;	main.c: 267: for (i = 4; i > 0; i--)
+      0005F7 35 04u00u00      [ 1] 1206 	mov	_i+0, #0x04
+      0005FB                       1207 00105$:
+                                   1208 ;	main.c: 269: number(4 - i, 0, 0, 0);
+      0005FB C6u00u00         [ 1] 1209 	ld	a, _i+0
+      0005FE 6B 01            [ 1] 1210 	ld	(0x01, sp), a
+      000600 A6 04            [ 1] 1211 	ld	a, #0x04
+      000602 10 01            [ 1] 1212 	sub	a, (0x01, sp)
+      000604 4B 00            [ 1] 1213 	push	#0x00
+      000606 4B 00            [ 1] 1214 	push	#0x00
+      000608 4B 00            [ 1] 1215 	push	#0x00
+      00060A CDr00r64         [ 4] 1216 	call	_number
+                                   1217 ;	main.c: 270: number(1, g, r, b);
+      00060D 3Bu00u03         [ 1] 1218 	push	_b+0
+      000610 3Bu00u01         [ 1] 1219 	push	_r+0
+      000613 3Bu00u02         [ 1] 1220 	push	_g+0
+      000616 A6 01            [ 1] 1221 	ld	a, #0x01
+      000618 CDr00r64         [ 4] 1222 	call	_number
+                                   1223 ;	main.c: 271: number(2 * (i - 1), 0, 0, 0);
+      00061B C6u00u00         [ 1] 1224 	ld	a, _i+0
+      00061E 4A               [ 1] 1225 	dec	a
+      00061F 48               [ 1] 1226 	sll	a
+      000620 4B 00            [ 1] 1227 	push	#0x00
+      000622 4B 00            [ 1] 1228 	push	#0x00
+      000624 4B 00            [ 1] 1229 	push	#0x00
+      000626 CDr00r64         [ 4] 1230 	call	_number
+                                   1231 ;	main.c: 272: number(1, g, r, b);
+      000629 3Bu00u03         [ 1] 1232 	push	_b+0
+      00062C 3Bu00u01         [ 1] 1233 	push	_r+0
+      00062F 3Bu00u02         [ 1] 1234 	push	_g+0
+      000632 A6 01            [ 1] 1235 	ld	a, #0x01
+      000634 CDr00r64         [ 4] 1236 	call	_number
+                                   1237 ;	main.c: 273: number(4 - i, 0, 0, 0);
+      000637 C6u00u00         [ 1] 1238 	ld	a, _i+0
+      00063A 6B 01            [ 1] 1239 	ld	(0x01, sp), a
+      00063C A6 04            [ 1] 1240 	ld	a, #0x04
+      00063E 10 01            [ 1] 1241 	sub	a, (0x01, sp)
+      000640 4B 00            [ 1] 1242 	push	#0x00
+      000642 4B 00            [ 1] 1243 	push	#0x00
+      000644 4B 00            [ 1] 1244 	push	#0x00
+      000646 CDr00r64         [ 4] 1245 	call	_number
+                                   1246 ;	main.c: 274: Timer4DelayMs(200);
+      000649 AE 00 C8         [ 2] 1247 	ldw	x, #0x00c8
+      00064C CDr03r04         [ 4] 1248 	call	_Timer4DelayMs
+                                   1249 ;	main.c: 267: for (i = 4; i > 0; i--)
+      00064F 72 5Au00u00      [ 1] 1250 	dec	_i+0
+      000653 C6u00u00         [ 1] 1251 	ld	a, _i+0
+      000656 26 A3            [ 1] 1252 	jrne	00105$
+                                   1253 ;	main.c: 276: }
+      000658 84               [ 1] 1254 	pop	a
+      000659 81               [ 4] 1255 	ret
+                                   1256 ;	main.c: 278: int main(void)
+                                   1257 ;	-----------------------------------------
+                                   1258 ;	 function main
+                                   1259 ;	-----------------------------------------
+      00065A                       1260 _main:
+                                   1261 ;	main.c: 282: CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_HSIDIV);
+      00065A C6 50 C6         [ 1] 1262 	ld	a, 0x50c6
+      00065D A4 E7            [ 1] 1263 	and	a, #0xe7
+      00065F C7 50 C6         [ 1] 1264 	ld	0x50c6, a
+                                   1265 ;	main.c: 283: CLK->CKDIVR |= (uint8_t)0x00;
+      000662 55 50 C6 50 C6   [ 1] 1266 	mov	0x50c6, 0x50c6
+                                   1267 ;	main.c: 285: GPIOD->ODR = GPIO_ODR_RESET_VALUE; /* Reset Output Data Register */
+      000667 35 00 50 0F      [ 1] 1268 	mov	0x500f+0, #0x00
+                                   1269 ;	main.c: 286: GPIOD->DDR = GPIO_DDR_RESET_VALUE; /* Reset Data Direction Register */
+      00066B 35 00 50 11      [ 1] 1270 	mov	0x5011+0, #0x00
+                                   1271 ;	main.c: 287: GPIOD->CR1 = GPIO_CR1_RESET_VALUE; /* Reset Control Register 1 */
+      00066F 35 00 50 12      [ 1] 1272 	mov	0x5012+0, #0x00
+                                   1273 ;	main.c: 288: GPIOD->CR2 = GPIO_CR2_RESET_VALUE; /* Reset Control Register 2 */
+      000673 35 00 50 13      [ 1] 1274 	mov	0x5013+0, #0x00
+                                   1275 ;	main.c: 290: GPIOD->DDR |= (uint8_t)(1 << 3); /* Set Output mode */
+      000677 72 16 50 11      [ 1] 1276 	bset	0x5011, #3
+                                   1277 ;	main.c: 291: GPIOD->ODR |= (uint8_t)(1 << 3); /* High level */
+      00067B 72 16 50 0F      [ 1] 1278 	bset	0x500f, #3
+                                   1279 ;	main.c: 292: GPIOD->CR1 |= (uint8_t)(1 << 3); /* Pull-Up or Push-Pull */
+      00067F 72 16 50 12      [ 1] 1280 	bset	0x5012, #3
+                                   1281 ;	main.c: 293: GPIOD->CR2 |= (uint8_t)(1 << 3); /* Output speed up to 10 MHz */
+      000683 72 16 50 13      [ 1] 1282 	bset	0x5013, #3
+                                   1283 ;	main.c: 300: EXTI->CR1 = EXTI_CR1_RESET_VALUE;
+      000687 35 00 50 A0      [ 1] 1284 	mov	0x50a0+0, #0x00
+                                   1285 ;	main.c: 301: EXTI->CR2 = EXTI_CR2_RESET_VALUE;
+      00068B 35 00 50 A1      [ 1] 1286 	mov	0x50a1+0, #0x00
+                                   1287 ;	main.c: 303: BUT_PORT->DDR &= (uint8_t)(~(BUT_PIN)); /* Set Input mode */
+      00068F 72 15 50 11      [ 1] 1288 	bres	0x5011, #2
+                                   1289 ;	main.c: 304: BUT_PORT->CR1 |= (uint8_t)BUT_PIN;      /* Pull-Up  */
+      000693 72 14 50 12      [ 1] 1290 	bset	0x5012, #2
+                                   1291 ;	main.c: 305: BUT_PORT->CR2 |= (uint8_t)BUT_PIN;      /* External interrupt enabled */
+      000697 C6 50 13         [ 1] 1292 	ld	a, 0x5013
+      00069A AA 04            [ 1] 1293 	or	a, #0x04
+      00069C C7 50 13         [ 1] 1294 	ld	0x5013, a
+                                   1295 ;	main.c: 306: EXTI->CR1 &= (uint8_t)(~EXTI_CR1_PDIS); /*!< PORTD external interrupt sensitivity bits mask */
+      00069F C6 50 A0         [ 1] 1296 	ld	a, 0x50a0
+      0006A2 A4 3F            [ 1] 1297 	and	a, #0x3f
+      0006A4 C7 50 A0         [ 1] 1298 	ld	0x50a0, a
+                                   1299 ;	main.c: 307: EXTI->CR1 |= (uint8_t)((0x02) << 6);    /*!< Interrupt on Falling edge only */
+      0006A7 C6 50 A0         [ 1] 1300 	ld	a, 0x50a0
+      0006AA AA 80            [ 1] 1301 	or	a, #0x80
+      0006AC C7 50 A0         [ 1] 1302 	ld	0x50a0, a
+                                   1303 ;	main.c: 309: Timer4Config();
+      0006AF CDr02rF7         [ 4] 1304 	call	_Timer4Config
+                                   1305 ;	main.c: 310: enableInterrupts();
+      0006B2 9A               [ 1] 1306 	rim
+                                   1307 ;	main.c: 321: while (mode == 1)
+      0006B3                       1308 00107$:
+      0006B3 C6u00u00         [ 1] 1309 	ld	a, _mode+0
+      0006B6 4A               [ 1] 1310 	dec	a
+      0006B7 27 03            [ 1] 1311 	jreq	00284$
+      0006B9 CCr07r85         [ 2] 1312 	jp	00109$
+      0006BC                       1313 00284$:
+                                   1314 ;	main.c: 324: for (i = 1; i < 9; i++)
+      0006BC 35 01u00u00      [ 1] 1315 	mov	_i+0, #0x01
+      0006C0                       1316 00133$:
+                                   1317 ;	main.c: 326: number(i, 255, 0, 0);
+      0006C0 4B 00            [ 1] 1318 	push	#0x00
+      0006C2 4B 00            [ 1] 1319 	push	#0x00
+      0006C4 4B FF            [ 1] 1320 	push	#0xff
+      0006C6 C6u00u00         [ 1] 1321 	ld	a, _i+0
+      0006C9 CDr00r64         [ 4] 1322 	call	_number
+                                   1323 ;	main.c: 327: Timer4DelayMs(TimeRun);
+      0006CC AE 00 28         [ 2] 1324 	ldw	x, #0x0028
+      0006CF CDr03r04         [ 4] 1325 	call	_Timer4DelayMs
+                                   1326 ;	main.c: 324: for (i = 1; i < 9; i++)
+      0006D2 72 5Cu00u00      [ 1] 1327 	inc	_i+0
+      0006D6 C6u00u00         [ 1] 1328 	ld	a, _i+0
+      0006D9 A1 09            [ 1] 1329 	cp	a, #0x09
+      0006DB 25 E3            [ 1] 1330 	jrc	00133$
+                                   1331 ;	main.c: 329: for (i = 1; i < 9; i++)
+      0006DD 35 01u00u00      [ 1] 1332 	mov	_i+0, #0x01
+      0006E1                       1333 00135$:
+                                   1334 ;	main.c: 331: number(i, 0, 255, 0);
+      0006E1 4B 00            [ 1] 1335 	push	#0x00
+      0006E3 4B FF            [ 1] 1336 	push	#0xff
+      0006E5 4B 00            [ 1] 1337 	push	#0x00
+      0006E7 C6u00u00         [ 1] 1338 	ld	a, _i+0
+      0006EA CDr00r64         [ 4] 1339 	call	_number
+                                   1340 ;	main.c: 332: Timer4DelayMs(TimeRun);
+      0006ED AE 00 28         [ 2] 1341 	ldw	x, #0x0028
+      0006F0 CDr03r04         [ 4] 1342 	call	_Timer4DelayMs
+                                   1343 ;	main.c: 329: for (i = 1; i < 9; i++)
+      0006F3 72 5Cu00u00      [ 1] 1344 	inc	_i+0
+      0006F7 C6u00u00         [ 1] 1345 	ld	a, _i+0
+      0006FA A1 09            [ 1] 1346 	cp	a, #0x09
+      0006FC 25 E3            [ 1] 1347 	jrc	00135$
+                                   1348 ;	main.c: 335: for (i = 1; i < 9; i++)
+      0006FE 35 01u00u00      [ 1] 1349 	mov	_i+0, #0x01
+      000702                       1350 00137$:
+                                   1351 ;	main.c: 337: number(i, 0, 0, 255);
+      000702 4B FF            [ 1] 1352 	push	#0xff
+      000704 4B 00            [ 1] 1353 	push	#0x00
+      000706 4B 00            [ 1] 1354 	push	#0x00
+      000708 C6u00u00         [ 1] 1355 	ld	a, _i+0
+      00070B CDr00r64         [ 4] 1356 	call	_number
+                                   1357 ;	main.c: 338: Timer4DelayMs(TimeRun);
+      00070E AE 00 28         [ 2] 1358 	ldw	x, #0x0028
+      000711 CDr03r04         [ 4] 1359 	call	_Timer4DelayMs
+                                   1360 ;	main.c: 335: for (i = 1; i < 9; i++)
+      000714 72 5Cu00u00      [ 1] 1361 	inc	_i+0
+      000718 C6u00u00         [ 1] 1362 	ld	a, _i+0
+      00071B A1 09            [ 1] 1363 	cp	a, #0x09
+      00071D 25 E3            [ 1] 1364 	jrc	00137$
+                                   1365 ;	main.c: 341: for (i = 1; i < 9; i++)
+      00071F 35 01u00u00      [ 1] 1366 	mov	_i+0, #0x01
+      000723                       1367 00139$:
+                                   1368 ;	main.c: 343: number(i, 0, 255, 255);
+      000723 4B FF            [ 1] 1369 	push	#0xff
+      000725 4B FF            [ 1] 1370 	push	#0xff
+      000727 4B 00            [ 1] 1371 	push	#0x00
+      000729 C6u00u00         [ 1] 1372 	ld	a, _i+0
+      00072C CDr00r64         [ 4] 1373 	call	_number
+                                   1374 ;	main.c: 344: Timer4DelayMs(TimeRun);
+      00072F AE 00 28         [ 2] 1375 	ldw	x, #0x0028
+      000732 CDr03r04         [ 4] 1376 	call	_Timer4DelayMs
+                                   1377 ;	main.c: 341: for (i = 1; i < 9; i++)
+      000735 72 5Cu00u00      [ 1] 1378 	inc	_i+0
+      000739 C6u00u00         [ 1] 1379 	ld	a, _i+0
+      00073C A1 09            [ 1] 1380 	cp	a, #0x09
+      00073E 25 E3            [ 1] 1381 	jrc	00139$
+                                   1382 ;	main.c: 346: for (i = 1; i < 9; i++)
+      000740 35 01u00u00      [ 1] 1383 	mov	_i+0, #0x01
+      000744                       1384 00141$:
+                                   1385 ;	main.c: 348: number(i, 255, 0, 255);
+      000744 4B FF            [ 1] 1386 	push	#0xff
+      000746 4B 00            [ 1] 1387 	push	#0x00
+      000748 4B FF            [ 1] 1388 	push	#0xff
+      00074A C6u00u00         [ 1] 1389 	ld	a, _i+0
+      00074D CDr00r64         [ 4] 1390 	call	_number
+                                   1391 ;	main.c: 349: Timer4DelayMs(TimeRun);
+      000750 AE 00 28         [ 2] 1392 	ldw	x, #0x0028
+      000753 CDr03r04         [ 4] 1393 	call	_Timer4DelayMs
+                                   1394 ;	main.c: 346: for (i = 1; i < 9; i++)
+      000756 72 5Cu00u00      [ 1] 1395 	inc	_i+0
+      00075A C6u00u00         [ 1] 1396 	ld	a, _i+0
+      00075D A1 09            [ 1] 1397 	cp	a, #0x09
+      00075F 25 E3            [ 1] 1398 	jrc	00141$
+                                   1399 ;	main.c: 352: for (i = 1; i < 9; i++)
+      000761 35 01u00u00      [ 1] 1400 	mov	_i+0, #0x01
+      000765                       1401 00143$:
+                                   1402 ;	main.c: 354: number(i, 255, 255, 0);
+      000765 4B 00            [ 1] 1403 	push	#0x00
+      000767 4B FF            [ 1] 1404 	push	#0xff
+      000769 4B FF            [ 1] 1405 	push	#0xff
+      00076B C6u00u00         [ 1] 1406 	ld	a, _i+0
+      00076E CDr00r64         [ 4] 1407 	call	_number
+                                   1408 ;	main.c: 355: Timer4DelayMs(TimeRun);
+      000771 AE 00 28         [ 2] 1409 	ldw	x, #0x0028
+      000774 CDr03r04         [ 4] 1410 	call	_Timer4DelayMs
+                                   1411 ;	main.c: 352: for (i = 1; i < 9; i++)
+      000777 72 5Cu00u00      [ 1] 1412 	inc	_i+0
+      00077B C6u00u00         [ 1] 1413 	ld	a, _i+0
+      00077E A1 09            [ 1] 1414 	cp	a, #0x09
+      000780 25 E3            [ 1] 1415 	jrc	00143$
+      000782 CCr06rB3         [ 2] 1416 	jp	00107$
+      000785                       1417 00109$:
+                                   1418 ;	main.c: 358: if (mode == 2)
+      000785 C6u00u00         [ 1] 1419 	ld	a, _mode+0
+      000788 A1 02            [ 1] 1420 	cp	a, #0x02
+      00078A 26 03            [ 1] 1421 	jrne	00112$
+                                   1422 ;	main.c: 360: ChayLED4();
+      00078C CDr03rBC         [ 4] 1423 	call	_ChayLED4
+                                   1424 ;	main.c: 362: while (mode == 3)
+      00078F                       1425 00112$:
+      00078F C6u00u00         [ 1] 1426 	ld	a, _mode+0
+      000792 A1 03            [ 1] 1427 	cp	a, #0x03
+      000794 26 05            [ 1] 1428 	jrne	00115$
+                                   1429 ;	main.c: 364: NhapNhay1();
+      000796 CDr04r61         [ 4] 1430 	call	_NhapNhay1
+      000799 20 F4            [ 2] 1431 	jra	00112$
+                                   1432 ;	main.c: 366: while (mode == 4)
+      00079B                       1433 00115$:
+      00079B C6u00u00         [ 1] 1434 	ld	a, _mode+0
+      00079E A1 04            [ 1] 1435 	cp	a, #0x04
+      0007A0 26 05            [ 1] 1436 	jrne	00118$
+                                   1437 ;	main.c: 368: NhapNhayRED();
+      0007A2 CDr04rA4         [ 4] 1438 	call	_NhapNhayRED
+      0007A5 20 F4            [ 2] 1439 	jra	00115$
+                                   1440 ;	main.c: 370: while (mode == 5)
+      0007A7                       1441 00118$:
+      0007A7 C6u00u00         [ 1] 1442 	ld	a, _mode+0
+      0007AA A1 05            [ 1] 1443 	cp	a, #0x05
+      0007AC 26 05            [ 1] 1444 	jrne	00121$
+                                   1445 ;	main.c: 372: ChayLED5();
+      0007AE CDr03rDE         [ 4] 1446 	call	_ChayLED5
+      0007B1 20 F4            [ 2] 1447 	jra	00118$
+                                   1448 ;	main.c: 375: while (mode == 6)
+      0007B3                       1449 00121$:
+      0007B3 C6u00u00         [ 1] 1450 	ld	a, _mode+0
+      0007B6 A1 06            [ 1] 1451 	cp	a, #0x06
+      0007B8 26 05            [ 1] 1452 	jrne	00124$
+                                   1453 ;	main.c: 377: Chay1LED();
+      0007BA CDr04rFA         [ 4] 1454 	call	_Chay1LED
+      0007BD 20 F4            [ 2] 1455 	jra	00121$
+                                   1456 ;	main.c: 380: while (mode == 7)
+      0007BF                       1457 00124$:
+      0007BF C6u00u00         [ 1] 1458 	ld	a, _mode+0
+      0007C2 A1 07            [ 1] 1459 	cp	a, #0x07
+      0007C4 26 05            [ 1] 1460 	jrne	00127$
+                                   1461 ;	main.c: 382: ChayLEDNgoaiTrong();
+      0007C6 CDr05r69         [ 4] 1462 	call	_ChayLEDNgoaiTrong
+      0007C9 20 F4            [ 2] 1463 	jra	00124$
+                                   1464 ;	main.c: 384: while (mode == 8)
+      0007CB                       1465 00127$:
+      0007CB C6u00u00         [ 1] 1466 	ld	a, _mode+0
+      0007CE A1 08            [ 1] 1467 	cp	a, #0x08
+      0007D0 27 03            [ 1] 1468 	jreq	00311$
+      0007D2 CCr06rB3         [ 2] 1469 	jp	00107$
+      0007D5                       1470 00311$:
+                                   1471 ;	main.c: 386: HaiMau();
+      0007D5 CDr04rE3         [ 4] 1472 	call	_HaiMau
+                                   1473 ;	main.c: 387: mode = 0;
+      0007D8 72 5Fu00u00      [ 1] 1474 	clr	_mode+0
+      0007DC 20 ED            [ 2] 1475 	jra	00127$
+                                   1476 ;	main.c: 390: }
+      0007DE 81               [ 4] 1477 	ret
+                                   1478 ;	main.c: 391: INTERRUPT_HANDLER(EXTI_PORTD_IRQHandler, 6)
+                                   1479 ;	-----------------------------------------
+                                   1480 ;	 function EXTI_PORTD_IRQHandler
+                                   1481 ;	-----------------------------------------
+      0007DF                       1482 _EXTI_PORTD_IRQHandler:
+                                   1483 ;	main.c: 393: if ((GPIOD->IDR & (1 << 2)) == RESET)
+      0007DF C6 50 10         [ 1] 1484 	ld	a, 0x5010
+      0007E2 A5 04            [ 1] 1485 	bcp	a, #0x04
+      0007E4 26 1A            [ 1] 1486 	jrne	00108$
+                                   1487 ;	main.c: 395: Timer4DelayMs(200);
+      0007E6 AE 00 C8         [ 2] 1488 	ldw	x, #0x00c8
+      0007E9 CDr03r04         [ 4] 1489 	call	_Timer4DelayMs
+                                   1490 ;	main.c: 396: while ((GPIOD->IDR & (1 << 2)) == RESET)
+      0007EC                       1491 00101$:
+      0007EC 72 05 50 10 FB   [ 2] 1492 	btjf	0x5010, #2, 00101$
+                                   1493 ;	main.c: 398: mode++;
+      0007F1 72 5Cu00u00      [ 1] 1494 	inc	_mode+0
+                                   1495 ;	main.c: 399: if (mode > 8)
+      0007F5 C6u00u00         [ 1] 1496 	ld	a, _mode+0
+      0007F8 A1 08            [ 1] 1497 	cp	a, #0x08
+      0007FA 23 04            [ 2] 1498 	jrule	00108$
+                                   1499 ;	main.c: 400: mode = 0;
+      0007FC 72 5Fu00u00      [ 1] 1500 	clr	_mode+0
+      000800                       1501 00108$:
+                                   1502 ;	main.c: 402: }
+      000800 80               [11] 1503 	iret
+                                   1504 	.area CODE
+                                   1505 	.area CONST
+                                   1506 	.area INITIALIZER
+      000000                       1507 __xinit__mode:
+      000000 00                    1508 	.db #0x00	; 0
+                                   1509 	.area CABS (ABS)

@@ -1,0 +1,10 @@
+lib\src\stm8s_gpio.c
+lib\src\stm8s_tim4.c
+main.c
+stm8_interrupt_vector.c
+lib\inc\stm8s.h
+lib\inc\stm8s_gpio.h
+lib\inc\stm8s_tim4.h
+..\..\template stvd cxstm8\thu vien chuan\stm8s_stdperiph_driver\inc\stm8s.h
+..\..\template stvd cxstm8\thu vien chuan\stm8s_stdperiph_driver\inc\stm8s_gpio.h
+d:\stmicroelectronics\cosmic\cxstm8_eval\hstm8\mods0.h

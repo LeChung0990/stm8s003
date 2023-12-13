@@ -1,0 +1,4 @@
+the pitch : goc nghieng
+the roll : goc lan
+Roll là chuyển động quay quanh trục x và pitch là chuyển động quay dọc theo trục y.
+
