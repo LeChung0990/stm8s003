@@ -14,13 +14,46 @@ Trong trường đại học, giả dụ bạn tham gia một nhóm, một phòn
 
 Quay về VĐK STM8 này nó thuộc dòng S tên họ đầy đủ là STM8S003F3P6 20 chân đóng gói dạng SSOP-20, may mà mình cũng tiếp cận hàn từ sớm chứ không mà nghe quả đóng gói chip thế này từ đầu chắc bái bai em này😅.
 
+>>>>>>> Hình dạng đóng gói của chip STM8S003F3P6:
+<div style="text-align: center;">
+<img src = "Package.jpg" width = "400">
+
 Có một điểm đáng quan tâm ở họ STM8, đó là ST đã hỗ trợ cho người phát triển một bộ các hàm thư viện lập trình. Với STM8, mình có thể tiếp cận theo hướng lập trình thanh ghi hoặc cũng có thể đi theo hướng lập trình dựa vào thư viện. Nguồn tham khảo cho STM8 khá phổ biến tài liệu nguồn của ST hỗ trợ khá tốt.
 
-Đi vào phần lập trình cho STM8S, mình sẽ cố gắng sử dụng tối đa những ứng dụng miễn phí. Sẽ không có Raisonance hay IAR xuất hiện ở đây. Thực tế thì những công cụ này đều có phiên bản miễn phí, tuy nhiên chúng bị giới hạn tính năng. Mình cũng đã nói rằng mình vừa ham rẻ, mà lại vừa đòi hỏi nhiều, nên mình không chọn chúng
+Đi vào phần lập trình cho STM8S, mình sẽ cố gắng sử dụng tối đa những ứng dụng miễn phí. Sẽ không có IAR xuất hiện ở đây vì IAR hiện tại 2023 đã không còn miễn phí. Thuở ban đầu mình chọn trình biên dịch SDCC, đây cũng là trình biên dịch giúp mình bắt đầu hiểu thêm về Makefile. 
 
->>>>>>> Hình dạng đóng gói của chip STM8S003F3P6:
+Thực tế thì IAR hay công cụ khác thì đều có phiên bản dùng thử miễn phí, như IAR chúng ta được sử dụng miễn phí 14 ngày tuy nhiên lại bị hạn chế nhiều tính năng. Mình cũng đã nói rằng mình vừa ham rẻ, mà lại vừa đòi hỏi nhiều, nên mình không chọn chúng. 
 
-<img src = "Package.jpg" width = "400px">
+Ngoài SDCC thì còn một trình biên dịch miễn phí khác là Cosmic C được tích hợp IDE là STVD(ST Visual Develop), SDCC không có IDE nó chỉ là trình biên dịch. Lý do chọn SDCC dù có Cosmic C miễn phí là vì mình sử dụng mạch nạp USB ISP 3.0 của anh Ngô Hùng Cường để code cho Attiny24A trước đó nên dùng mạch nạp đó nạp cho STM8S luôn.
+
+Nếu sử dụng STVD mình phải mua St-link v2, sau này mình chuyển qua học STM32 mới sắm St-link v2 thì lúc đó mình mới viết lại 1 số project dùng STVD. Nên trong các thư mục này một số Example hay Project mình có thêm 1 thư mục STVD là do mình bổ sung sau này.
+
+Tham khảo tại: 
+- [SDCC - Small Device C Compiler](https://sdcc.sourceforge.net/)
+- [STVD-STM8](https://www.st.com/en/development-tools/stvd-stm8.html)
+
+<div style="text-align: center;">
+  <img src="machnap.jpg" alt="Hình ảnh" width = "250" />
+</div>
+
+Mạch nạp USB ISP 3.0
+
+<div style="text-align: center;">
+  <img src="stlinkV2.jpg" alt="Hình ảnh" width = "250" />
+</div>
+
+Mạch nạp Stlink-v2
+
+Vậy là sơ qua về compile và mạch nạp, giờ mình dạo qua một số cấu hình của con này.
+
+- Ở STM8S003 thì có bộ nhớ Flash là 8k byte dùng để lưu trữ chương trình trong khi EEPROM thì là 128 bytes dùng để lưu một số thông tin không xóa sau khi Flash hoặc mất điện. Ngoài ra nó có 1KB SRAM.
+- 3 bộ Timer là Timer 1, 2, 4. Trong đó Timer 1 và 2 là thanh ghi 16-bit, timer 4 là thanh ghi 8-bit.
+- Hỗ trợ giao tiếp UART, SPI, I2C, CAN
+- Hỗ trợ 5 kênh ADC 10-bit
+- Điện áp hoạt động 2.95V đến 5.5V 
+- Thạch anh nội 16Mhz
+
+
 
  GPIO, Timer, Ngắt ngoài, giao tiếp UART, I2C, SPI, ...Ngoài ra kèm theo code là tài liệu của chip và phần chạy code trong thực tế*
 
