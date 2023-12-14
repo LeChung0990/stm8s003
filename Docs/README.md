@@ -19,7 +19,8 @@ Có một điểm đáng quan tâm ở họ STM8, đó là ST đã hỗ trợ ch
 Đi vào phần lập trình cho STM8S, mình sẽ cố gắng sử dụng tối đa những ứng dụng miễn phí. Sẽ không có Raisonance hay IAR xuất hiện ở đây. Thực tế thì những công cụ này đều có phiên bản miễn phí, tuy nhiên chúng bị giới hạn tính năng. Mình cũng đã nói rằng mình vừa ham rẻ, mà lại vừa đòi hỏi nhiều, nên mình không chọn chúng
 
 >>>>>>> Hình dạng đóng gói của chip STM8S003F3P6:
-<img src = "Package.jpg">
+
+<img src = "Package.jpg" width = "400px">
 
  GPIO, Timer, Ngắt ngoài, giao tiếp UART, I2C, SPI, ...Ngoài ra kèm theo code là tài liệu của chip và phần chạy code trong thực tế*
 
