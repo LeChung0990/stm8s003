@@ -50,103 +50,128 @@
  267  0007               f_EXTI_PORTC_IRQHandler:
  271                     ; 144 }
  274  0007 80            	iret
- 297                     ; 151 INTERRUPT_HANDLER(EXTI_PORTD_IRQHandler, 6)
- 297                     ; 152 {
- 298                     	switch	.text
- 299  0008               f_EXTI_PORTD_IRQHandler:
- 303                     ; 156 }
- 306  0008 80            	iret
- 329                     ; 163 INTERRUPT_HANDLER(EXTI_PORTE_IRQHandler, 7)
- 329                     ; 164 {
- 330                     	switch	.text
- 331  0009               f_EXTI_PORTE_IRQHandler:
- 335                     ; 168 }
- 338  0009 80            	iret
- 360                     ; 215 INTERRUPT_HANDLER(SPI_IRQHandler, 10)
- 360                     ; 216 {
- 361                     	switch	.text
- 362  000a               f_SPI_IRQHandler:
- 366                     ; 220 }
- 369  000a 80            	iret
- 392                     ; 227 INTERRUPT_HANDLER(TIM1_UPD_OVF_TRG_BRK_IRQHandler, 11)
- 392                     ; 228 {
- 393                     	switch	.text
- 394  000b               f_TIM1_UPD_OVF_TRG_BRK_IRQHandler:
- 398                     ; 232 }
- 401  000b 80            	iret
- 424                     ; 239 INTERRUPT_HANDLER(TIM1_CAP_COM_IRQHandler, 12)
- 424                     ; 240 {
- 425                     	switch	.text
- 426  000c               f_TIM1_CAP_COM_IRQHandler:
- 430                     ; 244 }
- 433  000c 80            	iret
- 456                     ; 277  INTERRUPT_HANDLER(TIM2_UPD_OVF_BRK_IRQHandler, 13)
- 456                     ; 278  {
- 457                     	switch	.text
- 458  000d               f_TIM2_UPD_OVF_BRK_IRQHandler:
- 462                     ; 282  }
- 465  000d 80            	iret
- 488                     ; 289  INTERRUPT_HANDLER(TIM2_CAP_COM_IRQHandler, 14)
- 488                     ; 290  {
- 489                     	switch	.text
- 490  000e               f_TIM2_CAP_COM_IRQHandler:
- 494                     ; 294  }
- 497  000e 80            	iret
- 520                     ; 331  INTERRUPT_HANDLER(UART1_TX_IRQHandler, 17)
- 520                     ; 332  {
- 521                     	switch	.text
- 522  000f               f_UART1_TX_IRQHandler:
- 526                     ; 336  }
- 529  000f 80            	iret
- 552                     ; 343  INTERRUPT_HANDLER(UART1_RX_IRQHandler, 18)
- 552                     ; 344  {
- 553                     	switch	.text
- 554  0010               f_UART1_RX_IRQHandler:
- 558                     ; 348  }
- 561  0010 80            	iret
- 583                     ; 382 INTERRUPT_HANDLER(I2C_IRQHandler, 19)
- 583                     ; 383 {
- 584                     	switch	.text
- 585  0011               f_I2C_IRQHandler:
- 589                     ; 387 }
- 592  0011 80            	iret
- 614                     ; 461  INTERRUPT_HANDLER(ADC1_IRQHandler, 22)
- 614                     ; 462  {
- 615                     	switch	.text
- 616  0012               f_ADC1_IRQHandler:
- 620                     ; 466  }
- 623  0012 80            	iret
- 646                     ; 487  INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
- 646                     ; 488  {
- 647                     	switch	.text
- 648  0013               f_TIM4_UPD_OVF_IRQHandler:
- 652                     ; 492  }
- 655  0013 80            	iret
- 678                     ; 500 INTERRUPT_HANDLER(EEPROM_EEC_IRQHandler, 24)
- 678                     ; 501 {
- 679                     	switch	.text
- 680  0014               f_EEPROM_EEC_IRQHandler:
- 684                     ; 505 }
- 687  0014 80            	iret
- 699                     	xdef	f_EEPROM_EEC_IRQHandler
- 700                     	xdef	f_TIM4_UPD_OVF_IRQHandler
- 701                     	xdef	f_ADC1_IRQHandler
- 702                     	xdef	f_I2C_IRQHandler
- 703                     	xdef	f_UART1_RX_IRQHandler
- 704                     	xdef	f_UART1_TX_IRQHandler
- 705                     	xdef	f_TIM2_CAP_COM_IRQHandler
- 706                     	xdef	f_TIM2_UPD_OVF_BRK_IRQHandler
- 707                     	xdef	f_TIM1_UPD_OVF_TRG_BRK_IRQHandler
- 708                     	xdef	f_TIM1_CAP_COM_IRQHandler
- 709                     	xdef	f_SPI_IRQHandler
- 710                     	xdef	f_EXTI_PORTE_IRQHandler
- 711                     	xdef	f_EXTI_PORTD_IRQHandler
- 712                     	xdef	f_EXTI_PORTC_IRQHandler
- 713                     	xdef	f_EXTI_PORTB_IRQHandler
- 714                     	xdef	f_EXTI_PORTA_IRQHandler
- 715                     	xdef	f_CLK_IRQHandler
- 716                     	xdef	f_AWU_IRQHandler
- 717                     	xdef	f_TLI_IRQHandler
- 718                     	xdef	f_TRAP_IRQHandler
- 719                     	xdef	f_NonHandledInterrupt
- 738                     	end
+ 298                     ; 151 INTERRUPT_HANDLER(EXTI_PORTD_IRQHandler, 6)
+ 298                     ; 152 {
+ 299                     	switch	.text
+ 300  0008               f_EXTI_PORTD_IRQHandler:
+ 302  0008 8a            	push	cc
+ 303  0009 84            	pop	a
+ 304  000a a4bf          	and	a,#191
+ 305  000c 88            	push	a
+ 306  000d 86            	pop	cc
+ 307  000e 3b0002        	push	c_x+2
+ 308  0011 be00          	ldw	x,c_x
+ 309  0013 89            	pushw	x
+ 310  0014 3b0002        	push	c_y+2
+ 311  0017 be00          	ldw	x,c_y
+ 312  0019 89            	pushw	x
+ 315                     ; 156 	GPIO_WriteReverse(GPIOA, GPIO_PIN_3);
+ 317  001a 4b08          	push	#8
+ 318  001c ae5000        	ldw	x,#20480
+ 319  001f cd0000        	call	_GPIO_WriteReverse
+ 321  0022 84            	pop	a
+ 322                     ; 157 }
+ 325  0023 85            	popw	x
+ 326  0024 bf00          	ldw	c_y,x
+ 327  0026 320002        	pop	c_y+2
+ 328  0029 85            	popw	x
+ 329  002a bf00          	ldw	c_x,x
+ 330  002c 320002        	pop	c_x+2
+ 331  002f 80            	iret
+ 354                     ; 164 INTERRUPT_HANDLER(EXTI_PORTE_IRQHandler, 7)
+ 354                     ; 165 {
+ 355                     	switch	.text
+ 356  0030               f_EXTI_PORTE_IRQHandler:
+ 360                     ; 169 }
+ 363  0030 80            	iret
+ 385                     ; 216 INTERRUPT_HANDLER(SPI_IRQHandler, 10)
+ 385                     ; 217 {
+ 386                     	switch	.text
+ 387  0031               f_SPI_IRQHandler:
+ 391                     ; 221 }
+ 394  0031 80            	iret
+ 417                     ; 228 INTERRUPT_HANDLER(TIM1_UPD_OVF_TRG_BRK_IRQHandler, 11)
+ 417                     ; 229 {
+ 418                     	switch	.text
+ 419  0032               f_TIM1_UPD_OVF_TRG_BRK_IRQHandler:
+ 423                     ; 233 }
+ 426  0032 80            	iret
+ 449                     ; 240 INTERRUPT_HANDLER(TIM1_CAP_COM_IRQHandler, 12)
+ 449                     ; 241 {
+ 450                     	switch	.text
+ 451  0033               f_TIM1_CAP_COM_IRQHandler:
+ 455                     ; 245 }
+ 458  0033 80            	iret
+ 481                     ; 278  INTERRUPT_HANDLER(TIM2_UPD_OVF_BRK_IRQHandler, 13)
+ 481                     ; 279  {
+ 482                     	switch	.text
+ 483  0034               f_TIM2_UPD_OVF_BRK_IRQHandler:
+ 487                     ; 283  }
+ 490  0034 80            	iret
+ 513                     ; 290  INTERRUPT_HANDLER(TIM2_CAP_COM_IRQHandler, 14)
+ 513                     ; 291  {
+ 514                     	switch	.text
+ 515  0035               f_TIM2_CAP_COM_IRQHandler:
+ 519                     ; 295  }
+ 522  0035 80            	iret
+ 545                     ; 332  INTERRUPT_HANDLER(UART1_TX_IRQHandler, 17)
+ 545                     ; 333  {
+ 546                     	switch	.text
+ 547  0036               f_UART1_TX_IRQHandler:
+ 551                     ; 337  }
+ 554  0036 80            	iret
+ 577                     ; 344  INTERRUPT_HANDLER(UART1_RX_IRQHandler, 18)
+ 577                     ; 345  {
+ 578                     	switch	.text
+ 579  0037               f_UART1_RX_IRQHandler:
+ 583                     ; 349  }
+ 586  0037 80            	iret
+ 608                     ; 383 INTERRUPT_HANDLER(I2C_IRQHandler, 19)
+ 608                     ; 384 {
+ 609                     	switch	.text
+ 610  0038               f_I2C_IRQHandler:
+ 614                     ; 388 }
+ 617  0038 80            	iret
+ 639                     ; 462  INTERRUPT_HANDLER(ADC1_IRQHandler, 22)
+ 639                     ; 463  {
+ 640                     	switch	.text
+ 641  0039               f_ADC1_IRQHandler:
+ 645                     ; 467  }
+ 648  0039 80            	iret
+ 671                     ; 488  INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
+ 671                     ; 489  {
+ 672                     	switch	.text
+ 673  003a               f_TIM4_UPD_OVF_IRQHandler:
+ 677                     ; 493  }
+ 680  003a 80            	iret
+ 703                     ; 501 INTERRUPT_HANDLER(EEPROM_EEC_IRQHandler, 24)
+ 703                     ; 502 {
+ 704                     	switch	.text
+ 705  003b               f_EEPROM_EEC_IRQHandler:
+ 709                     ; 506 }
+ 712  003b 80            	iret
+ 724                     	xdef	f_EEPROM_EEC_IRQHandler
+ 725                     	xdef	f_TIM4_UPD_OVF_IRQHandler
+ 726                     	xdef	f_ADC1_IRQHandler
+ 727                     	xdef	f_I2C_IRQHandler
+ 728                     	xdef	f_UART1_RX_IRQHandler
+ 729                     	xdef	f_UART1_TX_IRQHandler
+ 730                     	xdef	f_TIM2_CAP_COM_IRQHandler
+ 731                     	xdef	f_TIM2_UPD_OVF_BRK_IRQHandler
+ 732                     	xdef	f_TIM1_UPD_OVF_TRG_BRK_IRQHandler
+ 733                     	xdef	f_TIM1_CAP_COM_IRQHandler
+ 734                     	xdef	f_SPI_IRQHandler
+ 735                     	xdef	f_EXTI_PORTE_IRQHandler
+ 736                     	xdef	f_EXTI_PORTD_IRQHandler
+ 737                     	xdef	f_EXTI_PORTC_IRQHandler
+ 738                     	xdef	f_EXTI_PORTB_IRQHandler
+ 739                     	xdef	f_EXTI_PORTA_IRQHandler
+ 740                     	xdef	f_CLK_IRQHandler
+ 741                     	xdef	f_AWU_IRQHandler
+ 742                     	xdef	f_TLI_IRQHandler
+ 743                     	xdef	f_TRAP_IRQHandler
+ 744                     	xdef	f_NonHandledInterrupt
+ 745                     	xref	_GPIO_WriteReverse
+ 746                     	xref.b	c_x
+ 747                     	xref.b	c_y
+ 766                     	end

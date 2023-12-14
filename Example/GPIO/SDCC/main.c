@@ -6,14 +6,15 @@
 #define LED_PIN     GPIO_PIN_3
 #define BUT_PORT    GPIOC
 #define BUT_PIN     GPIO_PIN_7
-// uint32_t clk=0;
-/*CODE THEO THANH GHI*/
+
+/*Ham delay code theo thanh ghi*/
 void Timer4Config(void){
   TIM4->PSCR = (uint8_t)0x07;
   TIM4->ARR = (uint8_t)125 - 1;
   /*Enables the TIM4 peripheral*/
   TIM4->CR1 |= TIM4_CR1_CEN;
 }
+
 void Timer4DelayMs(uint16_t u16Delay){
   while(u16Delay){
     TIM4->CNTR = (uint8_t)0;
@@ -23,8 +24,6 @@ void Timer4DelayMs(uint16_t u16Delay){
     --u16Delay;
   }
 }
-// void GPIO_Setup(void);
-
 void main (void)
 {
     /*Using HSI clock 16Mhz*/
@@ -42,18 +41,9 @@ void main (void)
     LED_PORT->CR1 |= (uint8_t)LED_PIN; /* Pull-Up or Push-Pull */
     LED_PORT->CR2 |= (uint8_t)LED_PIN; /* Interrupt or Slow slope */
     Timer4Config();
-
-    GPIO_Pin_TypeDef pin;
-
-    pin.GPIO_PIN_0
-    /* OUT: output, PP: push-pull, LOW: first logic is '0', FAST: Output speed up to 10 MHz 
-    Thoi gian dap ung tren chan nhanh hon nhung se ton nang luong hon*/
-    // GPIO_Setup();
-    // clk = CLK_GetClockFreq();
-    
     while (1)
     {
-        Timer4DelayMs(10);
+        Timer4DelayMs(1000);
         LED_PORT->ODR ^= (uint8_t)LED_PIN;
         
         /*Nhan Nut Dao trang thai LED*/
@@ -77,15 +67,4 @@ void main (void)
         // }
     }
 }
-
-
-// void GPIO_Setup(void){
-//     /*Su dung port nao thi reset port do*/
-//     GPIO_DeInit(LED_PORT);
-//     GPIO_DeInit(BUT_PORT);
-
-//     GPIO_Init(LED_PORT, LED_PIN, GPIO_MODE_OUT_PP_HIGH_FAST);
-//     /*input pull-up*/
-//     GPIO_Init(BUT_PORT, BUT_PIN, GPIO_MODE_IN_PU_NO_IT);
-// }
 

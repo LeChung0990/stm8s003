@@ -1,5 +1,24 @@
-# Bước đầu lập trình STM8S003F3P6
-**Các branch trong source code này phục vụ cho các project liên quan đến VĐK STM8** 
+# Bước đầu lập trình STM8S
+
+## 1. Tại sao chọn STM8S?
+
+Sau một thời gian tiếp cận vi điều khiển họ PIC và AVR mình vẫn thấy một điều cản trở mình đi sâu vào các dòng khác thuộc 2 họ này đó là giá cả. Vì vậy mình bước qua tiếp cận họ ARM, đầu tiên là nghĩ đến STM32 vì mình đã nghe qua về nó khá nhiều. 
+
+Tuy nhiên khi mới chập chững viết code và hiểu cấu trúc về vi điều khiển 8-bits mà phải lựa chọn sang một cấu trúc 32-bits thì không phải là điều dễ dàng, nhưng may sao tình cờ mình vô tình biết qua một họ vi điều khiển ARM cũng của hãng ST là STM8.
+
+Không do dự mình tìm trên các web cửa hàng linh kiện để mua nó về học, ban đầu mình thấy giá nó khá rẻ so với AVR và PIC. Giá 17k cho STM8S003F3P6 tại **icdayroi** mình còn nhớ trước đó mình code trên AVR thì chỉ mua thêm 1 con Attiny24A vỏn vẹn có 2K Flash thôi mà tận 22k🙂, sót tiền vcl =))). 
+
+Thấy số tiền bỏ ra xứng đáng vì mình đã sử hữu một con VĐK có tương đối đầy đủ các chức năng và kết nối cơ bản từ ADC, UART, I2C, SPI, v.v… khá phù hợp với người vừa ham rẻ, lại vừa đòi hỏi như mình. Mình là sinh viên biết đến VĐK không lâu nên chỉ làm một số ứng dụng cỏn con nên là sắm cho mình một con VĐK kha khá nặng đô kiểu ATMega328 hay PIC16F877A giá tầm năm – sáu chục cành một em thì mình không thích. 
+
+Trong trường đại học, giả dụ bạn tham gia một nhóm, một phòng lab, có thể sẽ được hỗ trợ thiết bị. Nhưng nếu bạn không có điều kiện đó, hoặc chỉ là làm theo thú vui, chi phí là một vấn đề đáng lưu tâm.
+
+Quay về VĐK STM8 này nó thuộc dòng S tên họ đầy đủ là STM8S003F3P6 20 chân đóng gói dạng SSOP-20, may mà mình cũng tiếp cận hàn từ sớm chứ không mà nghe quả đóng gói chip thế này từ đầu chắc bái bai em này🙂.
+
+>>>>>>> Hình dạng đóng gói của chip STM8S003F3P6:
+
+![Alt text](Package-1.jpg)
+
+
 *Các branch là các bài code cơ bản trước khi tìm hiểu một vi điều khiển mới bao gồm GPIO, Timer, Ngắt ngoài, giao tiếp UART, I2C, SPI, ...Ngoài ra kèm theo code là tài liệu của chip và phần chạy code trong thực tế*
 
 
