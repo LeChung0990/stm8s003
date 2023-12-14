@@ -12,14 +12,16 @@ Thấy số tiền bỏ ra xứng đáng vì mình đã sử hữu một con VĐ
 
 Trong trường đại học, giả dụ bạn tham gia một nhóm, một phòng lab, có thể sẽ được hỗ trợ thiết bị. Nhưng nếu bạn không có điều kiện đó, hoặc chỉ là làm theo thú vui, chi phí là một vấn đề đáng lưu tâm.
 
-Quay về VĐK STM8 này nó thuộc dòng S tên họ đầy đủ là STM8S003F3P6 20 chân đóng gói dạng SSOP-20, may mà mình cũng tiếp cận hàn từ sớm chứ không mà nghe quả đóng gói chip thế này từ đầu chắc bái bai em này🙂.
+Quay về VĐK STM8 này nó thuộc dòng S tên họ đầy đủ là STM8S003F3P6 20 chân đóng gói dạng SSOP-20, may mà mình cũng tiếp cận hàn từ sớm chứ không mà nghe quả đóng gói chip thế này từ đầu chắc bái bai em này😅.
+
+Có một điểm đáng quan tâm ở họ STM8, đó là ST đã hỗ trợ cho người phát triển một bộ các hàm thư viện lập trình. Với STM8, mình có thể tiếp cận theo hướng lập trình thanh ghi hoặc cũng có thể đi theo hướng lập trình dựa vào thư viện. Nguồn tham khảo cho STM8 khá phổ biến tài liệu nguồn của ST hỗ trợ khá tốt.
+
+Đi vào phần lập trình cho STM8S, mình sẽ cố gắng sử dụng tối đa những ứng dụng miễn phí. Sẽ không có Raisonance hay IAR xuất hiện ở đây. Thực tế thì những công cụ này đều có phiên bản miễn phí, tuy nhiên chúng bị giới hạn tính năng. Mình cũng đã nói rằng mình vừa ham rẻ, mà lại vừa đòi hỏi nhiều, nên mình không chọn chúng
 
 >>>>>>> Hình dạng đóng gói của chip STM8S003F3P6:
+<img src = "Package.jpg">
 
-![Alt text](Package-1.jpg)
-
-
-*Các branch là các bài code cơ bản trước khi tìm hiểu một vi điều khiển mới bao gồm GPIO, Timer, Ngắt ngoài, giao tiếp UART, I2C, SPI, ...Ngoài ra kèm theo code là tài liệu của chip và phần chạy code trong thực tế*
+ GPIO, Timer, Ngắt ngoài, giao tiếp UART, I2C, SPI, ...Ngoài ra kèm theo code là tài liệu của chip và phần chạy code trong thực tế*
 
 
 [Thư viện tham khảo ](https://github.com/timypik/STM8S-Library/tree/master)
