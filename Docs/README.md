@@ -17,6 +17,7 @@ Quay về VĐK STM8 này nó thuộc dòng S tên họ đầy đủ là STM8S003
 >>>>>>> Hình dạng đóng gói của chip STM8S003F3P6:
 <div style="text-align: center;">
 <img src = "Package.jpg" width = "400">
+</div>
 
 Có một điểm đáng quan tâm ở họ STM8, đó là ST đã hỗ trợ cho người phát triển một bộ các hàm thư viện lập trình. Với STM8, mình có thể tiếp cận theo hướng lập trình thanh ghi hoặc cũng có thể đi theo hướng lập trình dựa vào thư viện. Nguồn tham khảo cho STM8 khá phổ biến tài liệu nguồn của ST hỗ trợ khá tốt.
 
@@ -44,7 +45,7 @@ Mạch nạp USB ISP 3.0
 
 Mạch nạp Stlink-v2
 
-Vậy là sơ qua về compile và mạch nạp, giờ mình dạo qua một số cấu hình của con này.
+Vậy là sơ qua về compile và mạch nạp, giờ mình dạo qua một số cấu hình của con này:
 
 - Ở STM8S003 thì có bộ nhớ Flash là 8k byte dùng để lưu trữ chương trình trong khi EEPROM thì là 128 bytes dùng để lưu một số thông tin không xóa sau khi Flash hoặc mất điện. Ngoài ra nó có 1KB SRAM.
 - 3 bộ Timer là Timer 1, 2, 4. Trong đó Timer 1 và 2 là thanh ghi 16-bit, timer 4 là thanh ghi 8-bit.
@@ -52,13 +53,13 @@ Vậy là sơ qua về compile và mạch nạp, giờ mình dạo qua một s�
 - Hỗ trợ 5 kênh ADC 10-bit
 - Điện áp hoạt động 2.95V đến 5.5V 
 - Thạch anh nội 16Mhz
+- Còn một số tính năng khác có thể đọc thêm trong thư mục **Datasheet**
 
+Phía trên có thư mục **Library_ST** chứa các thư viện của hãng ST cung cấp, đó là thư viện chuẩn. Mình thấy sử dụng thư viện này đã quá đủ với bộ nhớ 8Kb của con STM8S003F3P6. Với việc sử dụng các trình biên dịch khác nhau thì mình cũng phải sửa lại một chút thư viện để phù hợp, mình có để 2 tệp một cái dành cho SDCC và cái còn lại cho STVD.
 
+Ngoài ra còn có một số thư viện viết cho các ngoại vi khác, có thể [tham khảo tại đây](https://github.com/timypik/STM8S-Library/tree/master)
 
- GPIO, Timer, Ngắt ngoài, giao tiếp UART, I2C, SPI, ...Ngoài ra kèm theo code là tài liệu của chip và phần chạy code trong thực tế*
-
-
-[Thư viện tham khảo ](https://github.com/timypik/STM8S-Library/tree/master)
+### Tổng quan về  lập trình STM8S mà mình gom góp được là như vậy, chi tiết các Example và Project sẽ nằm trong các thư mục
 
 ---
 **Mục Lục**
