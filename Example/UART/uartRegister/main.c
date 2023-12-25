@@ -36,10 +36,15 @@ void uart_init(void){
 	// /*Set baudrate = 9600, BRR1 = 0x68, BRR2 = 0x03*/
 	UART1->BRR2 = (uint8_t)0x03;
 	UART1->BRR1 = (uint8_t)0x68;
-	/*Set baudrate = 57600, BRR1 = 0x11, BRR2 = 0x06 in datasheet*/
+	
+    /*Set baudrate = 19200, BRR1 = 0x34, BRR2 = 0x01 in datasheet*/
 	// UART1->BRR2 = (uint8_t)0x06;
 	// UART1->BRR1 = (uint8_t)0x11;
-  	
+
+    /*Set baudrate = 57600, BRR1 = 0x11, BRR2 = 0x06 in datasheet*/
+	// UART1->BRR2 = (uint8_t)0x06;
+	// UART1->BRR1 = (uint8_t)0x11;
+ 	
 	UART1->CR2 |= (uint8_t)UART1_CR2_TEN; /*Transmit Enable and Receive Enable*/ 
 	UART1->CR2 |= (uint8_t)UART1_CR2_REN;  
     UART1->CR3 &= (uint8_t)(~UART1_CR3_CKEN); /*Sync mode Disable, SLK pin Disable*/

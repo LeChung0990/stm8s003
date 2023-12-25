@@ -21,9 +21,9 @@ int main()
 	while (1)
 	{
 			GPIO_WriteLow(LED_PORT,LED1_PIN);//goi muc 0 ra LED1
-			delay_ms(1000);
+			delay_ms(10);
 			GPIO_WriteHigh(LED_PORT,LED1_PIN);//goi muc 1 ra LED1
-			delay_ms(1000);
+			delay_ms(10);
 	}
 }
 

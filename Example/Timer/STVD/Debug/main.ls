@@ -17,16 +17,16 @@
   73  0009 ae5000        	ldw	x,#20480
   74  000c cd0000        	call	_GPIO_WriteLow
   76  000f 84            	pop	a
-  77                     ; 24 			delay_ms(1000);
-  79  0010 ae03e8        	ldw	x,#1000
+  77                     ; 24 			delay_ms(10);
+  79  0010 ae000a        	ldw	x,#10
   80  0013 cd0000        	call	_delay_ms
   82                     ; 25 			GPIO_WriteHigh(LED_PORT,LED1_PIN);//goi muc 1 ra LED1
   84  0016 4b08          	push	#8
   85  0018 ae5000        	ldw	x,#20480
   86  001b cd0000        	call	_GPIO_WriteHigh
   88  001e 84            	pop	a
-  89                     ; 26 			delay_ms(1000);
-  91  001f ae03e8        	ldw	x,#1000
+  89                     ; 26 			delay_ms(10);
+  91  001f ae000a        	ldw	x,#10
   92  0022 cd0000        	call	_delay_ms
   95  0025 20e0          	jra	L12
  120                     ; 30 void Clock_setup()
