@@ -1,0 +1,2 @@
+dien ap do duoc tai cam bien 1.3mV  khi khong co vat nang
+qua mach kd vi sai nang do loi len 200 lan, 0.26V khi khong co vat nang

@@ -11,8 +11,9 @@
 /*
 		
 ___SYNC______|-0.3ms-|___0.97ms____|---
-
-
+* sync : 10ms
+* Bit 0: 1: 0.3ms ; 0: 1ms;
+* Bit 1: 1: 1ms ; 0: 0.3ms
 */
 uint32_t rf_decode(void)
 {
@@ -21,11 +22,12 @@ uint32_t rf_decode(void)
 	uint32_t timevalue = 0;
 	uint32_t result = 0;
 	
+	/*Neu Chan tin hieu o muc */
 	if(RF_IN){
 		return 0;
 	}
 	timeout = 1;
-	TIM4_SetCounter(0);
+	TIM4_SetCounter(0); 
 	while(TIM4_GetCounter() < SYNC_MAX){
 		if(RF_IN){
 			timeout = 0;

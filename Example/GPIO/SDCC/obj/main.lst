@@ -101,67 +101,67 @@
       000008 72 10 53 40      [ 1]  101 	bset	0x5340, #0
                                     102 ;	main.c: 16: }
       00000C 81               [ 4]  103 	ret
-                                    104 ;	main.c: 17: void Timer4DelayMs(uint16_t u16Delay){
+                                    104 ;	main.c: 18: void Timer4DelayMs(uint16_t u16Delay){
                                     105 ;	-----------------------------------------
                                     106 ;	 function Timer4DelayMs
                                     107 ;	-----------------------------------------
       00000D                        108 _Timer4DelayMs:
-                                    109 ;	main.c: 18: while(u16Delay){
+                                    109 ;	main.c: 19: while(u16Delay){
       00000D                        110 00104$:
       00000D 5D               [ 2]  111 	tnzw	x
       00000E 26 01            [ 1]  112 	jrne	00130$
       000010 81               [ 4]  113 	ret
       000011                        114 00130$:
-                                    115 ;	main.c: 19: TIM4->CNTR = (uint8_t)0;
+                                    115 ;	main.c: 20: TIM4->CNTR = (uint8_t)0;
       000011 35 00 53 46      [ 1]  116 	mov	0x5346+0, #0x00
-                                    117 ;	main.c: 21: TIM4->SR1 = (uint8_t)(~0x01);
+                                    117 ;	main.c: 22: TIM4->SR1 = (uint8_t)(~0x01);
       000015 35 FE 53 44      [ 1]  118 	mov	0x5344+0, #0xfe
-                                    119 ;	main.c: 22: while((TIM4->SR1 & (uint8_t)0x01) == RESET){}
+                                    119 ;	main.c: 23: while((TIM4->SR1 & (uint8_t)0x01) == RESET){}
       000019                        120 00101$:
       000019 72 01 53 44 FB   [ 2]  121 	btjf	0x5344, #0, 00101$
-                                    122 ;	main.c: 23: --u16Delay;
+                                    122 ;	main.c: 24: --u16Delay;
       00001E 5A               [ 2]  123 	decw	x
       00001F 20 EC            [ 2]  124 	jra	00104$
-                                    125 ;	main.c: 25: }
+                                    125 ;	main.c: 26: }
       000021 81               [ 4]  126 	ret
-                                    127 ;	main.c: 28: void main (void)
+                                    127 ;	main.c: 27: void main (void)
                                     128 ;	-----------------------------------------
                                     129 ;	 function main
                                     130 ;	-----------------------------------------
       000022                        131 _main:
-                                    132 ;	main.c: 32: CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_HSIDIV);
+                                    132 ;	main.c: 31: CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_HSIDIV);
       000022 C6 50 C6         [ 1]  133 	ld	a, 0x50c6
       000025 A4 E7            [ 1]  134 	and	a, #0xe7
       000027 C7 50 C6         [ 1]  135 	ld	0x50c6, a
-                                    136 ;	main.c: 33: CLK->CKDIVR |= (uint8_t)CLK_PRESCALER_HSIDIV1;
+                                    136 ;	main.c: 32: CLK->CKDIVR |= (uint8_t)CLK_PRESCALER_HSIDIV1;
       00002A 55 50 C6 50 C6   [ 1]  137 	mov	0x50c6, 0x50c6
-                                    138 ;	main.c: 35: LED_PORT->ODR = GPIO_ODR_RESET_VALUE; /* Reset Output Data Register */
+                                    138 ;	main.c: 34: LED_PORT->ODR = GPIO_ODR_RESET_VALUE; /* Reset Output Data Register */
       00002F 35 00 50 0F      [ 1]  139 	mov	0x500f+0, #0x00
-                                    140 ;	main.c: 36: LED_PORT->DDR = GPIO_DDR_RESET_VALUE; /* Reset Data Direction Register */
+                                    140 ;	main.c: 35: LED_PORT->DDR = GPIO_DDR_RESET_VALUE; /* Reset Data Direction Register */
       000033 35 00 50 11      [ 1]  141 	mov	0x5011+0, #0x00
-                                    142 ;	main.c: 37: LED_PORT->CR1 = GPIO_CR1_RESET_VALUE; /* Reset Control Register 1 */
+                                    142 ;	main.c: 36: LED_PORT->CR1 = GPIO_CR1_RESET_VALUE; /* Reset Control Register 1 */
       000037 35 00 50 12      [ 1]  143 	mov	0x5012+0, #0x00
-                                    144 ;	main.c: 38: LED_PORT->CR2 = GPIO_CR2_RESET_VALUE; /* Reset Control Register 2 */
+                                    144 ;	main.c: 37: LED_PORT->CR2 = GPIO_CR2_RESET_VALUE; /* Reset Control Register 2 */
       00003B 35 00 50 13      [ 1]  145 	mov	0x5013+0, #0x00
-                                    146 ;	main.c: 40: LED_PORT->DDR |= (uint8_t)LED_PIN; /* Set Output mode */
+                                    146 ;	main.c: 39: LED_PORT->DDR |= (uint8_t)LED_PIN; /* Set Output mode */
       00003F 72 16 50 11      [ 1]  147 	bset	0x5011, #3
-                                    148 ;	main.c: 41: LED_PORT->ODR |= (uint8_t)LED_PIN; /* High level */
+                                    148 ;	main.c: 40: LED_PORT->ODR |= (uint8_t)LED_PIN; /* High level */
       000043 72 16 50 0F      [ 1]  149 	bset	0x500f, #3
-                                    150 ;	main.c: 42: LED_PORT->CR1 |= (uint8_t)LED_PIN; /* Pull-Up or Push-Pull */
+                                    150 ;	main.c: 41: LED_PORT->CR1 |= (uint8_t)LED_PIN; /* Pull-Up or Push-Pull */
       000047 72 16 50 12      [ 1]  151 	bset	0x5012, #3
-                                    152 ;	main.c: 43: LED_PORT->CR2 |= (uint8_t)LED_PIN; /* Interrupt or Slow slope */
+                                    152 ;	main.c: 42: LED_PORT->CR2 |= (uint8_t)LED_PIN; /* Interrupt or Slow slope */
       00004B 72 16 50 13      [ 1]  153 	bset	0x5013, #3
-                                    154 ;	main.c: 44: Timer4Config();
+                                    154 ;	main.c: 43: Timer4Config();
       00004F CDr00r00         [ 4]  155 	call	_Timer4Config
-                                    156 ;	main.c: 50: while (1)
+                                    156 ;	main.c: 44: while (1)
       000052                        157 00102$:
-                                    158 ;	main.c: 52: Timer4DelayMs(10);
-      000052 AE 00 0A         [ 2]  159 	ldw	x, #0x000a
+                                    158 ;	main.c: 46: Timer4DelayMs(1000);
+      000052 AE 03 E8         [ 2]  159 	ldw	x, #0x03e8
       000055 CDr00r0D         [ 4]  160 	call	_Timer4DelayMs
-                                    161 ;	main.c: 53: LED_PORT->ODR ^= (uint8_t)LED_PIN;
+                                    161 ;	main.c: 47: LED_PORT->ODR ^= (uint8_t)LED_PIN;
       000058 90 16 50 0F      [ 1]  162 	bcpl	0x500f, #3
       00005C 20 F4            [ 2]  163 	jra	00102$
-                                    164 ;	main.c: 75: }
+                                    164 ;	main.c: 69: }
       00005E 81               [ 4]  165 	ret
                                     166 	.area CODE
                                     167 	.area CONST

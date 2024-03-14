@@ -12,63 +12,63 @@
   65                     ; 20 	delay_config();
   67  0004 cd0000        	call	_delay_config
   69  0007               L12:
-  70                     ; 23 			GPIO_WriteLow(LED_PORT,LED1_PIN);//goi muc 0 ra LED1
-  72  0007 4b08          	push	#8
-  73  0009 ae5000        	ldw	x,#20480
+  70                     ; 25 			GPIO_WriteLow(LED_PORT,LED1_PIN);//goi muc 0 ra LED1
+  72  0007 4b20          	push	#32
+  73  0009 ae5005        	ldw	x,#20485
   74  000c cd0000        	call	_GPIO_WriteLow
   76  000f 84            	pop	a
-  77                     ; 24 			delay_ms(10);
-  79  0010 ae000a        	ldw	x,#10
+  77                     ; 26 			delay_ms(500);
+  79  0010 ae01f4        	ldw	x,#500
   80  0013 cd0000        	call	_delay_ms
-  82                     ; 25 			GPIO_WriteHigh(LED_PORT,LED1_PIN);//goi muc 1 ra LED1
-  84  0016 4b08          	push	#8
-  85  0018 ae5000        	ldw	x,#20480
+  82                     ; 27 			GPIO_WriteHigh(LED_PORT,LED1_PIN);//goi muc 1 ra LED1
+  84  0016 4b20          	push	#32
+  85  0018 ae5005        	ldw	x,#20485
   86  001b cd0000        	call	_GPIO_WriteHigh
   88  001e 84            	pop	a
-  89                     ; 26 			delay_ms(10);
-  91  001f ae000a        	ldw	x,#10
+  89                     ; 28 			delay_ms(500);
+  91  001f ae01f4        	ldw	x,#500
   92  0022 cd0000        	call	_delay_ms
   95  0025 20e0          	jra	L12
- 120                     ; 30 void Clock_setup()
- 120                     ; 31 {
+ 120                     ; 32 void Clock_setup()
+ 120                     ; 33 {
  121                     	switch	.text
  122  0027               _Clock_setup:
- 126                     ; 33 			CLK_DeInit();   
+ 126                     ; 35 			CLK_DeInit();   
  128  0027 cd0000        	call	_CLK_DeInit
- 130                     ; 34 			CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
+ 130                     ; 36 			CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
  132  002a 4f            	clr	a
  133  002b cd0000        	call	_CLK_HSIPrescalerConfig
- 135                     ; 35 }
+ 135                     ; 37 }
  138  002e 81            	ret
- 163                     ; 36 void GPIO_setup()
- 163                     ; 37 {
+ 163                     ; 38 void GPIO_setup()
+ 163                     ; 39 {
  164                     	switch	.text
  165  002f               _GPIO_setup:
- 169                     ; 39 	    GPIO_DeInit(GPIOD);
+ 169                     ; 41 	    GPIO_DeInit(GPIOD);
  171  002f ae500f        	ldw	x,#20495
  172  0032 cd0000        	call	_GPIO_DeInit
- 174                     ; 40       GPIO_DeInit(GPIOC);
+ 174                     ; 42       GPIO_DeInit(GPIOC);
  176  0035 ae500a        	ldw	x,#20490
  177  0038 cd0000        	call	_GPIO_DeInit
- 179                     ; 41       GPIO_DeInit(GPIOA);
+ 179                     ; 43       GPIO_DeInit(GPIOA);
  181  003b ae5000        	ldw	x,#20480
  182  003e cd0000        	call	_GPIO_DeInit
- 184                     ; 42       GPIO_DeInit(GPIOE);
+ 184                     ; 44       GPIO_DeInit(GPIOE);
  186  0041 ae5014        	ldw	x,#20500
  187  0044 cd0000        	call	_GPIO_DeInit
- 189                     ; 43       GPIO_DeInit(GPIOB);   
+ 189                     ; 45       GPIO_DeInit(GPIOB);   
  191  0047 ae5005        	ldw	x,#20485
  192  004a cd0000        	call	_GPIO_DeInit
- 194                     ; 44       GPIO_DeInit(GPIOF);
+ 194                     ; 46       GPIO_DeInit(GPIOF);
  196  004d ae5019        	ldw	x,#20505
  197  0050 cd0000        	call	_GPIO_DeInit
- 199                     ; 46       GPIO_Init(LED_PORT,LED1_PIN,GPIO_MODE_OUT_PP_LOW_FAST);
- 201  0053 4be0          	push	#224
- 202  0055 4b08          	push	#8
- 203  0057 ae5000        	ldw	x,#20480
+ 199                     ; 48       GPIO_Init(LED_PORT,LED1_PIN,GPIO_MODE_OUT_OD_LOW_SLOW);
+ 201  0053 4b80          	push	#128
+ 202  0055 4b20          	push	#32
+ 203  0057 ae5005        	ldw	x,#20485
  204  005a cd0000        	call	_GPIO_Init
  206  005d 85            	popw	x
- 207                     ; 47 }
+ 207                     ; 49 }
  210  005e 81            	ret
  223                     	xdef	_main
  224                     	xdef	_GPIO_setup

@@ -22,7 +22,7 @@ void Timer4DelayMs(uint16_t u16Delay){
 void main (void)
 {
     CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
-    GPIO_DeInit(GPIOD);
+    GPIO_DeInit(GPIOB);
     GPIO_Init(GPIOD, GPIO_PIN_3, GPIO_MODE_OUT_PP_HIGH_FAST);
 
     /*Thet lap ngat cho timer4*/

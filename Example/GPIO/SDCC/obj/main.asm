@@ -101,67 +101,67 @@ _Timer4Config:
 	bset	0x5340, #0
 ;	main.c: 16: }
 	ret
-;	main.c: 17: void Timer4DelayMs(uint16_t u16Delay){
+;	main.c: 18: void Timer4DelayMs(uint16_t u16Delay){
 ;	-----------------------------------------
 ;	 function Timer4DelayMs
 ;	-----------------------------------------
 _Timer4DelayMs:
-;	main.c: 18: while(u16Delay){
+;	main.c: 19: while(u16Delay){
 00104$:
 	tnzw	x
 	jrne	00130$
 	ret
 00130$:
-;	main.c: 19: TIM4->CNTR = (uint8_t)0;
+;	main.c: 20: TIM4->CNTR = (uint8_t)0;
 	mov	0x5346+0, #0x00
-;	main.c: 21: TIM4->SR1 = (uint8_t)(~0x01);
+;	main.c: 22: TIM4->SR1 = (uint8_t)(~0x01);
 	mov	0x5344+0, #0xfe
-;	main.c: 22: while((TIM4->SR1 & (uint8_t)0x01) == RESET){}
+;	main.c: 23: while((TIM4->SR1 & (uint8_t)0x01) == RESET){}
 00101$:
 	btjf	0x5344, #0, 00101$
-;	main.c: 23: --u16Delay;
+;	main.c: 24: --u16Delay;
 	decw	x
 	jra	00104$
-;	main.c: 25: }
+;	main.c: 26: }
 	ret
-;	main.c: 28: void main (void)
+;	main.c: 27: void main (void)
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
-;	main.c: 32: CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_HSIDIV);
+;	main.c: 31: CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_HSIDIV);
 	ld	a, 0x50c6
 	and	a, #0xe7
 	ld	0x50c6, a
-;	main.c: 33: CLK->CKDIVR |= (uint8_t)CLK_PRESCALER_HSIDIV1;
+;	main.c: 32: CLK->CKDIVR |= (uint8_t)CLK_PRESCALER_HSIDIV1;
 	mov	0x50c6, 0x50c6
-;	main.c: 35: LED_PORT->ODR = GPIO_ODR_RESET_VALUE; /* Reset Output Data Register */
+;	main.c: 34: LED_PORT->ODR = GPIO_ODR_RESET_VALUE; /* Reset Output Data Register */
 	mov	0x500f+0, #0x00
-;	main.c: 36: LED_PORT->DDR = GPIO_DDR_RESET_VALUE; /* Reset Data Direction Register */
+;	main.c: 35: LED_PORT->DDR = GPIO_DDR_RESET_VALUE; /* Reset Data Direction Register */
 	mov	0x5011+0, #0x00
-;	main.c: 37: LED_PORT->CR1 = GPIO_CR1_RESET_VALUE; /* Reset Control Register 1 */
+;	main.c: 36: LED_PORT->CR1 = GPIO_CR1_RESET_VALUE; /* Reset Control Register 1 */
 	mov	0x5012+0, #0x00
-;	main.c: 38: LED_PORT->CR2 = GPIO_CR2_RESET_VALUE; /* Reset Control Register 2 */
+;	main.c: 37: LED_PORT->CR2 = GPIO_CR2_RESET_VALUE; /* Reset Control Register 2 */
 	mov	0x5013+0, #0x00
-;	main.c: 40: LED_PORT->DDR |= (uint8_t)LED_PIN; /* Set Output mode */
+;	main.c: 39: LED_PORT->DDR |= (uint8_t)LED_PIN; /* Set Output mode */
 	bset	0x5011, #3
-;	main.c: 41: LED_PORT->ODR |= (uint8_t)LED_PIN; /* High level */
+;	main.c: 40: LED_PORT->ODR |= (uint8_t)LED_PIN; /* High level */
 	bset	0x500f, #3
-;	main.c: 42: LED_PORT->CR1 |= (uint8_t)LED_PIN; /* Pull-Up or Push-Pull */
+;	main.c: 41: LED_PORT->CR1 |= (uint8_t)LED_PIN; /* Pull-Up or Push-Pull */
 	bset	0x5012, #3
-;	main.c: 43: LED_PORT->CR2 |= (uint8_t)LED_PIN; /* Interrupt or Slow slope */
+;	main.c: 42: LED_PORT->CR2 |= (uint8_t)LED_PIN; /* Interrupt or Slow slope */
 	bset	0x5013, #3
-;	main.c: 44: Timer4Config();
+;	main.c: 43: Timer4Config();
 	call	_Timer4Config
-;	main.c: 50: while (1)
+;	main.c: 44: while (1)
 00102$:
-;	main.c: 52: Timer4DelayMs(10);
-	ldw	x, #0x000a
+;	main.c: 46: Timer4DelayMs(1000);
+	ldw	x, #0x03e8
 	call	_Timer4DelayMs
-;	main.c: 53: LED_PORT->ODR ^= (uint8_t)LED_PIN;
+;	main.c: 47: LED_PORT->ODR ^= (uint8_t)LED_PIN;
 	bcpl	0x500f, #3
 	jra	00102$
-;	main.c: 75: }
+;	main.c: 69: }
 	ret
 	.area CODE
 	.area CONST

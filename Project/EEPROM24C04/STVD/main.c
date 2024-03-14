@@ -28,11 +28,11 @@ int main()
 	initMPU6050();
 	while (1)
 	{
-		//DataEEprom = I2C_Read_Eeprom();
+		DataEEprom = I2C_Read_Eeprom();
 		DataMPU = I2C_Read_MPU6050();
 		
-		//AccX = DataMPU/4096.0;
-		//AccX = AccX * 100;
+		AccX = DataMPU/4096.0;
+		AccX = AccX * 100;
 		uart1_number((int)DataMPU);
 		uart1_nline();
 		delay_ms(1000);

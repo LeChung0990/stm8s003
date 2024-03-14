@@ -14,18 +14,18 @@ Trong trường đại học, giả dụ bạn tham gia một nhóm, một phòn
 
 Quay về VĐK STM8 này nó thuộc dòng S tên họ đầy đủ là STM8S003F3P6 20 chân đóng gói dạng SSOP-20, may mà mình cũng tiếp cận hàn từ sớm chứ không mà nghe quả đóng gói chip thế này từ đầu chắc bái bai em này😅.
 
->>>>>>> Hình dạng đóng gói của chip STM8S003F3P6:
+        Hình dạng đóng gói của chip STM8S003F3P6:
 <div style="text-align: center;">
 <img src = "Package.jpg" width = "400">
 </div>
 
-Có một điểm đáng quan tâm ở họ STM8, đó là ST đã hỗ trợ cho người phát triển một bộ các hàm thư viện lập trình. Với STM8, mình có thể tiếp cận theo hướng lập trình thanh ghi hoặc cũng có thể đi theo hướng lập trình dựa vào thư viện. Nguồn tham khảo cho STM8 khá phổ biến tài liệu nguồn của ST hỗ trợ khá tốt.
+Có một điểm đáng quan tâm ở họ STM8, đó là ST đã hỗ trợ cho người phát triển một bộ các hàm thư viện lập trình. Với STM8, mình có thể tiếp cận theo hướng lập trình thanh ghi hoặc cũng có thể đi theo hướng lập trình dựa vào thư viện. Nguồn tham khảo cho STM8 khá phổ biến do ST hỗ trợ khá tốt.
 
 Đi vào phần lập trình cho STM8S, mình sẽ cố gắng sử dụng tối đa những ứng dụng miễn phí. Sẽ không có IAR xuất hiện ở đây vì IAR hiện tại 2023 đã không còn miễn phí. Thuở ban đầu mình chọn trình biên dịch SDCC, đây cũng là trình biên dịch giúp mình bắt đầu hiểu thêm về Makefile. 
 
 Thực tế thì IAR hay công cụ khác thì đều có phiên bản dùng thử miễn phí, như IAR chúng ta được sử dụng miễn phí 14 ngày tuy nhiên lại bị hạn chế nhiều tính năng. Mình cũng đã nói rằng mình vừa ham rẻ, mà lại vừa đòi hỏi nhiều, nên mình không chọn chúng. 
 
-Ngoài SDCC thì còn một trình biên dịch miễn phí khác là Cosmic C được tích hợp IDE là STVD(ST Visual Develop), SDCC không có IDE nó chỉ là trình biên dịch. Lý do chọn SDCC dù có Cosmic C miễn phí là vì mình sử dụng mạch nạp USB ISP 3.0 của anh Ngô Hùng Cường để code cho Attiny24A trước đó nên dùng mạch nạp đó nạp cho STM8S luôn.
+Ngoài SDCC thì còn một trình biên dịch miễn phí khác là Cosmic C được tích hợp IDE là STVD(ST Visual Develop), SDCC không có IDE nó chỉ là trình biên dịch. Lý do chọn SDCC dù có Cosmic C miễn phí là vì mình sử dụng mạch nạp USB ISP 3.0 của anh Ngô Hùng Cường để code cho Attiny24A trước đó nên dùng mạch nạp đó nạp cho STM8S luôn. Dĩ nhiên là mạch nạp đó không thể sử dụng với ST Visual Programmer nên mình dùng SDCC biên dịch ra file hex rồi dùng tool nạp của anh Cường để nạp cho chip.
 
 Nếu sử dụng STVD mình phải mua St-link v2, sau này mình chuyển qua học STM32 mới sắm St-link v2 thì lúc đó mình mới viết lại 1 số project dùng STVD. Nên trong các thư mục này một số Example hay Project mình có thêm 1 thư mục STVD là do mình bổ sung sau này.
 
@@ -33,17 +33,16 @@ Tham khảo tại:
 - [SDCC - Small Device C Compiler](https://sdcc.sourceforge.net/)
 - [STVD-STM8](https://www.st.com/en/development-tools/stvd-stm8.html)
 
+Mạch nạp USB ISP 3.0
 <div style="text-align: center;">
   <img src="machnap.jpg" alt="Hình ảnh" width = "250" />
 </div>
 
-Mạch nạp USB ISP 3.0
+Mạch nạp Stlink-v2
 
 <div style="text-align: center;">
   <img src="stlinkV2.jpg" alt="Hình ảnh" width = "250" />
 </div>
-
-Mạch nạp Stlink-v2
 
 Vậy là sơ qua về compile và mạch nạp, giờ mình dạo qua một số cấu hình của con này:
 
@@ -55,15 +54,16 @@ Vậy là sơ qua về compile và mạch nạp, giờ mình dạo qua một s�
 - Thạch anh nội 16Mhz
 - Còn một số tính năng khác có thể đọc thêm trong thư mục **Datasheet**
 
-Phía trên có thư mục **Library_ST** chứa các thư viện của hãng ST cung cấp, đó là thư viện chuẩn. Mình thấy sử dụng thư viện này đã quá đủ với bộ nhớ 8Kb của con STM8S003F3P6. Với việc sử dụng các trình biên dịch khác nhau thì mình cũng phải sửa lại một chút thư viện để phù hợp, mình có để 2 tệp một cái dành cho SDCC và cái còn lại cho STVD.
+Phía trên có thư mục **Library_ST** chứa các thư viện của hãng ST cung cấp, đó là thư viện chuẩn. Mình thấy sử dụng thư viện này đã quá đủ với bộ nhớ 8Kb của con STM8S003F3P6. Với việc sử dụng các trình biên dịch khác nhau thì mình cũng phải sửa lại một chút thư viện để phù hợp, mình có để 2 tệp một dành cho SDCC và cái còn lại cho STVD.
 
 Ngoài ra còn có một số thư viện viết cho các ngoại vi khác, có thể [tham khảo tại đây](https://github.com/timypik/STM8S-Library/tree/master)
 
-### Tổng quan về  lập trình STM8S mà mình gom góp được là như vậy, chi tiết các Example và Project sẽ nằm trong các thư mục
++ Tổng quan về  lập trình STM8S mà mình gom góp được là như vậy, chi tiết các Example và Project sẽ nằm trong các thư mục.
 
 ---
 **Mục Lục**
 ---
+[Môi trường lập trình cho STM8S003F3P6 ](#A-cai-dat-moi-truong-lap-trinh)
 [Thư viện sử dụng cho lập trình STM8S003](#1-các-thư-viện)
 [Set dao động cho VĐK](#2-set-clock-cho-stm8s003f3p6)
 [Cấu hình ngõ vào ngõ ra cho VĐK](#3-gpio)
@@ -73,6 +73,95 @@ Ngoài ra còn có một số thư viện viết cho các ngoại vi khác, có 
 [Giao tiếp UART](#7-uart)
 
 ---
+## A. Cài đặt môi trường lập trình
+Trong quá trình mình code STM8, mình có sử dụng 2 trình biên dịch miễn phí là COSMIC và SDCC
+- Đối với SDCC mình có tìm được 1 thư mục template nên việc biên dịch đơn giản và nhanh gọn vì chỉ chạy 
+lệnh "make" trên commandWindow 
+- Tuy nhiên với IDE ST Visual Develop thì cần theo các bước sau mới có thể tạo project template
++ Ban đầu chọn File -> NewWorkspace 
+
+<div style="text-align: center;">
+  <img src="image.png" alt="Hình ảnh" width = "250" />
+</div>
+
++ Creater New WorkSpace
+
+<div style="text-align: center;">
+  <img src="image-1.png" alt="Hình ảnh" width = "250" />
+</div>
+
++ Chọn tên workSpace và thư mục chứa Project 
+
+<div style="text-align: center;">
+  <img src="image-2.png" alt="Hình ảnh" width = "250" />
+</div>
+
++ Ghi tên Project và chọn ToolChain STM8 Cosmic
+
+<div style="text-align: center;">
+  <img src="image-3.png" alt="Hình ảnh" width = "250" />
+</div>
+
++ Chọn MCU STM8S003F3P6
+
+<div style="text-align: center;">
+  <img src="image-4.png" alt="Hình ảnh" width = "250" />
+</div>
+
++ Cấu trúc thư mục của Project như sau, bao gồm thư viện chuẩn  Std và các file interrupt, định nghĩa vecto ngắt và file conf để thêm các header của thư viện chuẩn
+
+<div style="text-align: center;">
+  <img src="image-5.png" alt="Hình ảnh" width = "250" />
+</div>
+
++ Khi tạo bằng phần mềm thì thư mục sẽ trống khá nhiều nên cần copy các thư mục cần thiết 
+
+<div style="text-align: center;">
+  <img src="image-6.png" alt="Hình ảnh" width = "250" />
+</div>
+
++ Như thế này
+
+<div style="text-align: center;">
+  <img src="image-7.png" alt="Hình ảnh" width = "250" />
+</div>
+
++ Tiếp theo vào phần cài đặt Project
+
+<div style="text-align: center;">
+  <img src="image-8.png" alt="Hình ảnh" width = "250" />
+</div>
+
++ Ghi SMT8S003  vào mục Preprocessor
+
+<div style="text-align: center;">
+  <img src="image-9.png" alt="Hình ảnh" width = "250" />
+</div>
+
++ Tiếp theo add file stm8.h vào Include Files
+
+<div style="text-align: center;">
+  <img src="image-10.png" alt="Hình ảnh" width = "250" />
+</div>
+
++ Và add các file .c vào Source Files
+
+<div style="text-align: center;">
+  <img src="image-11.png" alt="Hình ảnh" width = "250" />
+</div>
+
++ Sau đó Build chương trình sẽ xuất hiện lỗi, lỗi này do chưa add file .c của GPIO và Timer, ta cần chọn Source Files và add file cần thiết
+
+<div style="text-align: center;">
+  <img src="image-12.png" alt="Hình ảnh" width = "250" />
+</div>
+
++ Sau khi add file nguồn gpio, timer4 và clk thì chương trình build không lỗi
+
+<div style="text-align: center;">
+  <img src="image-13.png" alt="Hình ảnh" width = "250" />
+</div>
+
 ## 1. Các thư viện
 - **Nghiên cứu các thư viện này:**
 ```c

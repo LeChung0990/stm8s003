@@ -6,9 +6,9 @@
 
 #include "main.h"
 //===========================khai bao cac chan vao ra======================//
-#define LED_PORT  GPIOA//khai bao lED o PORTB
-#define LED_PIN  GPIO_PIN_3//khai bao LED1 o chan PB0
-#define BUT_PORT	GPIOC
+#define LED_PORT	GPIOD//khai bao lED o PORTB
+#define LED_PIN 	GPIO_PIN_3//khai bao LED1 o chan PD3
+#define BUT_PORT	GPIOD
 #define BUT_PIN  	GPIO_PIN_4//khai bao BUTTON o chan PC7
 //============================khai bao bien va hang==========================//
 
@@ -25,13 +25,18 @@ int main()
 	while (1)
 	{
 		/*Nhan Nut Dao trang thai LED*/
+		
+		/*
 		if(GPIO_ReadInputPin(BUT_PORT, BUT_PIN)== RESET)
 		{
 			delay_ms(200);
 			while(GPIO_ReadInputPin(BUT_PORT, BUT_PIN)== RESET);
 			GPIO_WriteReverse(LED_PORT, LED_PIN);
 		}
+		*/
 		
+		GPIO_WriteReverse(LED_PORT, LED_PIN);
+		delay_ms(100);
 		
 		/*Nhan nut led sang, tha ra LED tat*/
 		/*
@@ -71,6 +76,7 @@ void GPIO_setup(void)
 	GPIO_DeInit(GPIOF);
 	//KHAI BAO CAC CHAN VAO RA
 	GPIO_Init(LED_PORT,LED_PIN,GPIO_MODE_OUT_PP_LOW_FAST);
+	GPIO_Init(BUT_PORT,BUT_PIN,GPIO_MODE_IN_PU_IT);
 }
 
 

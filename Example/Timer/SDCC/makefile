@@ -13,7 +13,7 @@ SRC += stm8s_gpio.c
 SRC += stm8s_tim4.c
 SRC += stm8s_clk.c
 SRC += stm8s_exti.c
-SRC += LCD1602.c
+#SRC += LCD1602.c
 
 VPATH = lib/src
 
