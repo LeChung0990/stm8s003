@@ -44,7 +44,7 @@ Mạch nạp Stlink-v2
   <img src="stlinkV2.jpg" alt="Hình ảnh" width = "250" />
 </div>
 
-Sơ đồ mạch ra chân tự làm:
+**Sơ đồ mạch ra chân tự làm:**
 <div style="text-align: center;">
         <img src ="image.png" alt="anh board stm8s003f3p6" width="250" />
 </div>
