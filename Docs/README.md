@@ -46,7 +46,7 @@ Mạch nạp Stlink-v2
 
 Sơ đồ mạch ra chân tự làm:
 <div style="text-align: center;">
-        <img src ="Docs/image.png" alt="anh board stm8s003f3p6" width="250" />
+        <img src ="image.png" alt="anh board stm8s003f3p6" width="250" />
 </div>
 Vậy là sơ qua về compile và mạch nạp, giờ mình dạo qua một số cấu hình của con này:
 
