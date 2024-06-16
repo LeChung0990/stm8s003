@@ -47,7 +47,9 @@ Mạch nạp Stlink-v2
 **Sơ đồ mạch ra chân tự làm:**
 <div style="text-align: center;">
         <img src ="image.png" alt="anh board stm8s003f3p6" width="250" />
+        <img src ="board2.png" alt="anh board stm8s003f3p6" width="250" />
 </div>
+
 Vậy là sơ qua về compile và mạch nạp, giờ mình dạo qua một số cấu hình của con này:
 
 - Ở STM8S003 thì có bộ nhớ Flash là 8k byte dùng để lưu trữ chương trình trong khi EEPROM thì là 128 bytes dùng để lưu một số thông tin không xóa sau khi Flash hoặc mất điện. Ngoài ra nó có 1KB SRAM.
