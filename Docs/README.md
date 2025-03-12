@@ -16,7 +16,7 @@ Quay về VĐK STM8 này nó thuộc dòng S tên họ đầy đủ là STM8S003
 
         Hình dạng đóng gói của chip STM8S003F3P6:
 <div style="text-align: center;">
-<img src = "Package.jpg" width = "400">
+<img src = "image/Package.jpg" width = "400">
 </div>
 
 Có một điểm đáng quan tâm ở họ STM8, đó là ST đã hỗ trợ cho người phát triển một bộ các hàm thư viện lập trình. Với STM8, mình có thể tiếp cận theo hướng lập trình thanh ghi hoặc cũng có thể đi theo hướng lập trình dựa vào thư viện. Nguồn tham khảo cho STM8 khá phổ biến do ST hỗ trợ khá tốt.
@@ -35,19 +35,19 @@ Tham khảo tại:
 
 Mạch nạp USB ISP 3.0
 <div style="text-align: center;">
-  <img src="machnap.jpg" alt="Hình ảnh" width = "250" />
+  <img src="image/machnap.jpg" alt="Hình ảnh" width = "250" />
 </div>
 
 Mạch nạp Stlink-v2
 
 <div style="text-align: center;">
-  <img src="stlinkV2.jpg" alt="Hình ảnh" width = "250" />
+  <img src="image/stlinkV2.jpg" alt="Hình ảnh" width = "250" />
 </div>
 
 **Sơ đồ mạch ra chân tự làm:**
 <div style="text-align: center;">
-        <img src ="image.png" alt="anh board stm8s003f3p6" width="250" />
-        <img src ="board2.png" alt="anh board stm8s003f3p6" width="250" />
+	<img src ="image/image.png" alt="anh board stm8s003f3p6" width="250" />
+       	<img src ="image/board2.png" alt="anh board stm8s003f3p6" width="250" />
 </div>
 
 Vậy là sơ qua về compile và mạch nạp, giờ mình dạo qua một số cấu hình của con này:
@@ -87,85 +87,85 @@ lệnh "make" trên commandWindow
 + Ban đầu chọn File -> NewWorkspace 
 
 <div style="text-align: center;">
-  <img src="image.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image.png" alt="Hình ảnh" width = "250" />
 </div>
 
 + Creater New WorkSpace
 
 <div style="text-align: center;">
-  <img src="image-1.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image-1.png" alt="Hình ảnh" width = "250" />
 </div>
 
 + Chọn tên workSpace và thư mục chứa Project 
 
 <div style="text-align: center;">
-  <img src="image-2.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image-2.png" alt="Hình ảnh" width = "250" />
 </div>
 
 + Ghi tên Project và chọn ToolChain STM8 Cosmic
 
 <div style="text-align: center;">
-  <img src="image-3.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image-3.png" alt="Hình ảnh" width = "250" />
 </div>
 
 + Chọn MCU STM8S003F3P6
 
 <div style="text-align: center;">
-  <img src="image-4.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image-4.png" alt="Hình ảnh" width = "250" />
 </div>
 
 + Cấu trúc thư mục của Project như sau, bao gồm thư viện chuẩn  Std và các file interrupt, định nghĩa vecto ngắt và file conf để thêm các header của thư viện chuẩn
 
 <div style="text-align: center;">
-  <img src="image-5.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image-5.png" alt="Hình ảnh" width = "250" />
 </div>
 
 + Khi tạo bằng phần mềm thì thư mục sẽ trống khá nhiều nên cần copy các thư mục cần thiết 
 
 <div style="text-align: center;">
-  <img src="image-6.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image-6.png" alt="Hình ảnh" width = "250" />
 </div>
 
 + Như thế này
 
 <div style="text-align: center;">
-  <img src="image-7.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image-7.png" alt="Hình ảnh" width = "250" />
 </div>
 
 + Tiếp theo vào phần cài đặt Project
 
 <div style="text-align: center;">
-  <img src="image-8.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image-8.png" alt="Hình ảnh" width = "250" />
 </div>
 
 + Ghi SMT8S003  vào mục Preprocessor
 
 <div style="text-align: center;">
-  <img src="image-9.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image-9.png" alt="Hình ảnh" width = "250" />
 </div>
 
 + Tiếp theo add file stm8.h vào Include Files
 
 <div style="text-align: center;">
-  <img src="image-10.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image-10.png" alt="Hình ảnh" width = "250" />
 </div>
 
 + Và add các file .c vào Source Files
 
 <div style="text-align: center;">
-  <img src="image-11.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image-11.png" alt="Hình ảnh" width = "250" />
 </div>
 
 + Sau đó Build chương trình sẽ xuất hiện lỗi, lỗi này do chưa add file .c của GPIO và Timer, ta cần chọn Source Files và add file cần thiết
 
 <div style="text-align: center;">
-  <img src="image-12.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image-12.png" alt="Hình ảnh" width = "250" />
 </div>
 
 + Sau khi add file nguồn gpio, timer4 và clk thì chương trình build không lỗi
 
 <div style="text-align: center;">
-  <img src="image-13.png" alt="Hình ảnh" width = "250" />
+  <img src="image/image-13.png" alt="Hình ảnh" width = "250" />
 </div>
 
 ## 1. Các thư viện
@@ -352,3 +352,18 @@ INTERRUPT_HANDLER(EXTI_PORTD_IRQHandler, 6)
 Linh tham khảo
 <https://circuitdigest.com/microcontroller-projects/serial-monitor-on-stm8s-using-cosmic-and-stvd>
 <https://b4050n.wordpress.com/2017/05/03/stm8s-8-1-wire-bus-tren-stm8s/>
+
+1. https://laptrinharmst.blogspot.com/2022/03/13-flash-va-eeprom-trong-stm8s.html
+2. https://deviot.vn/tutorials/avr.07957098/giao-tiep-1-wire-voi-cam-bien-nhiet-do-ds18b20.15391999
+3. https://laptrinharmst.blogspot.com/2017/12/bai-01-huong-dan-tao-project-trong.html
+4. http://laptrinharmst.blogspot.com/2018/01/timer-base-va-ngat-timer.html
+5. http://laptrinharmst.blogspot.com/2018/01/bai-11-i2c-voi-ic-ds1307.html
+6. https://www.slideshare.net/gouravkumar220/build-process-in-st-visual-develop
+7. https://www.slideshare.net/huynhvany/huong-dan-su-dung-iar-cho-stm820-feb2013
+8. https://circuitdigest.com/microcontroller-projects/i2c-communication-on-stm8s-using-cosmic-c-compiler-reading-mlx90614-sensor-values
+9. https://www.edaboard.com/threads/stm8s003-getting-reset-with-noise.369663/
+10. https://circuitdigest.com/tags/stm8
+11. https://b4050n.wordpress.com/2016/12/17/stm8s-0-khoi-dau-voi-stm8s-tren-linux/
+12. https://b4050n.wordpress.com/2017/05/03/stm8s-8-1-wire-bus-tren-stm8s/
+
+
