@@ -1,0 +1,1340 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 3.5.0 #9253 (Apr  3 2018) (Linux)
+                                      4 ; This file was generated Fri Mar 21 14:03:42 2025
+                                      5 ;--------------------------------------------------------
+                                      6 	.module mpu6050
+                                      7 	.optsdcc -mstm8
+                                      8 	
+                                      9 ;--------------------------------------------------------
+                                     10 ; Public variables in this module
+                                     11 ;--------------------------------------------------------
+                                     12 	.globl _segmentMap
+                                     13 	.globl _main
+                                     14 	.globl _getMPU6050
+                                     15 	.globl _initMPU6050
+                                     16 	.globl _tm1637DisplayDecimal
+                                     17 	.globl _tm1637Init
+                                     18 	.globl _InitializeUART
+                                     19 	.globl _InitializeI2C
+                                     20 	.globl _i2c_read_register
+                                     21 	.globl _print_byte_hex
+                                     22 	.globl _i2c_set_start_ack
+                                     23 	.globl _i2c_send_address
+                                     24 	.globl _UARTPrintF
+                                     25 	.globl _i2c_send_reg
+                                     26 	.globl _i2c_set_stop
+                                     27 	.globl _i2c_set_nak
+                                     28 	.globl _i2c_read
+                                     29 	.globl _delay
+                                     30 	.globl _InitializeSystemClock
+                                     31 	.globl _delayTenMicro
+                                     32 	.globl _tm1637SetBrightness
+                                     33 	.globl __tm1637Start
+                                     34 	.globl __tm1637Stop
+                                     35 	.globl __tm1637ReadResult
+                                     36 	.globl __tm1637WriteByte
+                                     37 	.globl __tm1637ClkHigh
+                                     38 	.globl __tm1637ClkLow
+                                     39 	.globl __tm1637DioHigh
+                                     40 	.globl __tm1637DioLow
+                                     41 ;--------------------------------------------------------
+                                     42 ; ram data
+                                     43 ;--------------------------------------------------------
+                                     44 	.area DATA
+                                     45 ;--------------------------------------------------------
+                                     46 ; ram data
+                                     47 ;--------------------------------------------------------
+                                     48 	.area INITIALIZED
+                                     49 ;--------------------------------------------------------
+                                     50 ; Stack segment in internal ram 
+                                     51 ;--------------------------------------------------------
+                                     52 	.area	SSEG
+      000001                         53 __start__stack:
+      000001                         54 	.ds	1
+                                     55 
+                                     56 ;--------------------------------------------------------
+                                     57 ; absolute external ram data
+                                     58 ;--------------------------------------------------------
+                                     59 	.area DABS (ABS)
+                                     60 ;--------------------------------------------------------
+                                     61 ; interrupt vector 
+                                     62 ;--------------------------------------------------------
+                                     63 	.area HOME
+      008000                         64 __interrupt_vect:
+      008000 82 00 80 83             65 	int s_GSINIT ;reset
+      008004 82 00 00 00             66 	int 0x0000 ;trap
+      008008 82 00 00 00             67 	int 0x0000 ;int0
+      00800C 82 00 00 00             68 	int 0x0000 ;int1
+      008010 82 00 00 00             69 	int 0x0000 ;int2
+      008014 82 00 00 00             70 	int 0x0000 ;int3
+      008018 82 00 00 00             71 	int 0x0000 ;int4
+      00801C 82 00 00 00             72 	int 0x0000 ;int5
+      008020 82 00 00 00             73 	int 0x0000 ;int6
+      008024 82 00 00 00             74 	int 0x0000 ;int7
+      008028 82 00 00 00             75 	int 0x0000 ;int8
+      00802C 82 00 00 00             76 	int 0x0000 ;int9
+      008030 82 00 00 00             77 	int 0x0000 ;int10
+      008034 82 00 00 00             78 	int 0x0000 ;int11
+      008038 82 00 00 00             79 	int 0x0000 ;int12
+      00803C 82 00 00 00             80 	int 0x0000 ;int13
+      008040 82 00 00 00             81 	int 0x0000 ;int14
+      008044 82 00 00 00             82 	int 0x0000 ;int15
+      008048 82 00 00 00             83 	int 0x0000 ;int16
+      00804C 82 00 00 00             84 	int 0x0000 ;int17
+      008050 82 00 00 00             85 	int 0x0000 ;int18
+      008054 82 00 00 00             86 	int 0x0000 ;int19
+      008058 82 00 00 00             87 	int 0x0000 ;int20
+      00805C 82 00 00 00             88 	int 0x0000 ;int21
+      008060 82 00 00 00             89 	int 0x0000 ;int22
+      008064 82 00 00 00             90 	int 0x0000 ;int23
+      008068 82 00 00 00             91 	int 0x0000 ;int24
+      00806C 82 00 00 00             92 	int 0x0000 ;int25
+      008070 82 00 00 00             93 	int 0x0000 ;int26
+      008074 82 00 00 00             94 	int 0x0000 ;int27
+      008078 82 00 00 00             95 	int 0x0000 ;int28
+      00807C 82 00 00 00             96 	int 0x0000 ;int29
+                                     97 ;--------------------------------------------------------
+                                     98 ; global & static initialisations
+                                     99 ;--------------------------------------------------------
+                                    100 	.area HOME
+                                    101 	.area GSINIT
+                                    102 	.area GSFINAL
+                                    103 	.area GSINIT
+      008083                        104 __sdcc_gs_init_startup:
+      008083                        105 __sdcc_init_data:
+                                    106 ; stm8_genXINIT() start
+      008083 AE 00 00         [ 2]  107 	ldw x, #l_DATA
+      008086 27 07            [ 1]  108 	jreq	00002$
+      008088                        109 00001$:
+      008088 72 4F 00 00      [ 1]  110 	clr (s_DATA - 1, x)
+      00808C 5A               [ 2]  111 	decw x
+      00808D 26 F9            [ 1]  112 	jrne	00001$
+      00808F                        113 00002$:
+      00808F AE 00 00         [ 2]  114 	ldw	x, #l_INITIALIZER
+      008092 27 09            [ 1]  115 	jreq	00004$
+      008094                        116 00003$:
+      008094 D6 8B C8         [ 1]  117 	ld	a, (s_INITIALIZER - 1, x)
+      008097 D7 00 00         [ 1]  118 	ld	(s_INITIALIZED - 1, x), a
+      00809A 5A               [ 2]  119 	decw	x
+      00809B 26 F7            [ 1]  120 	jrne	00003$
+      00809D                        121 00004$:
+                                    122 ; stm8_genXINIT() end
+                                    123 	.area GSFINAL
+      00809D CC 80 80         [ 2]  124 	jp	__sdcc_program_startup
+                                    125 ;--------------------------------------------------------
+                                    126 ; Home
+                                    127 ;--------------------------------------------------------
+                                    128 	.area HOME
+                                    129 	.area HOME
+      008080                        130 __sdcc_program_startup:
+      008080 CC 85 2E         [ 2]  131 	jp	_main
+                                    132 ;	return from main will return to caller
+                                    133 ;--------------------------------------------------------
+                                    134 ; code
+                                    135 ;--------------------------------------------------------
+                                    136 	.area CODE
+                                    137 ;	mpu6050.c: 17: void delayTenMicro (void) {
+                                    138 ;	-----------------------------------------
+                                    139 ;	 function delayTenMicro
+                                    140 ;	-----------------------------------------
+      0080A0                        141 _delayTenMicro:
+                                    142 ;	mpu6050.c: 19: for (a = 0; a < 50; ++a)
+      0080A0 A6 32            [ 1]  143 	ld	a, #0x32
+      0080A2 95               [ 1]  144 	ld	xh, a
+      0080A3                        145 00104$:
+                                    146 ;	mpu6050.c: 20: __asm__("nop");
+      0080A3 9D               [ 1]  147 	nop
+      0080A4 9E               [ 1]  148 	ld	a, xh
+      0080A5 4A               [ 1]  149 	dec	a
+      0080A6 95               [ 1]  150 	ld	xh, a
+                                    151 ;	mpu6050.c: 19: for (a = 0; a < 50; ++a)
+      0080A7 4D               [ 1]  152 	tnz	a
+      0080A8 26 F9            [ 1]  153 	jrne	00104$
+      0080AA 81               [ 4]  154 	ret
+                                    155 ;	mpu6050.c: 23: void InitializeSystemClock() {
+                                    156 ;	-----------------------------------------
+                                    157 ;	 function InitializeSystemClock
+                                    158 ;	-----------------------------------------
+      0080AB                        159 _InitializeSystemClock:
+                                    160 ;	mpu6050.c: 24: CLK_ICKR = 0;                       //  Reset the Internal Clock Register.
+      0080AB 35 00 50 C0      [ 1]  161 	mov	0x50c0+0, #0x00
+                                    162 ;	mpu6050.c: 25: CLK_ICKR = CLK_HSIEN;               //  Enable the HSI.
+      0080AF 35 01 50 C0      [ 1]  163 	mov	0x50c0+0, #0x01
+                                    164 ;	mpu6050.c: 26: CLK_ECKR = 0;                       //  Disable the external clock.
+      0080B3 35 00 50 C1      [ 1]  165 	mov	0x50c1+0, #0x00
+                                    166 ;	mpu6050.c: 27: while ((CLK_ICKR & CLK_HSIRDY) == 0);       //  Wait for the HSI to be ready for use.
+      0080B7                        167 00101$:
+      0080B7 AE 50 C0         [ 2]  168 	ldw	x, #0x50c0
+      0080BA F6               [ 1]  169 	ld	a, (x)
+      0080BB A5 02            [ 1]  170 	bcp	a, #0x02
+      0080BD 27 F8            [ 1]  171 	jreq	00101$
+                                    172 ;	mpu6050.c: 28: CLK_CKDIVR = 0;                     //  Ensure the clocks are running at full speed.
+      0080BF 35 00 50 C6      [ 1]  173 	mov	0x50c6+0, #0x00
+                                    174 ;	mpu6050.c: 29: CLK_PCKENR1 = 0xff;                 //  Enable all peripheral clocks.
+      0080C3 35 FF 50 C7      [ 1]  175 	mov	0x50c7+0, #0xff
+                                    176 ;	mpu6050.c: 30: CLK_PCKENR2 = 0xff;                 //  Ditto.
+      0080C7 35 FF 50 CA      [ 1]  177 	mov	0x50ca+0, #0xff
+                                    178 ;	mpu6050.c: 31: CLK_CCOR = 0;                       //  Turn off CCO.
+      0080CB 35 00 50 C9      [ 1]  179 	mov	0x50c9+0, #0x00
+                                    180 ;	mpu6050.c: 32: CLK_HSITRIMR = 0;                   //  Turn off any HSIU trimming.
+      0080CF 35 00 50 CC      [ 1]  181 	mov	0x50cc+0, #0x00
+                                    182 ;	mpu6050.c: 33: CLK_SWIMCCR = 0;                    //  Set SWIM to run at clock / 2.
+      0080D3 35 00 50 CD      [ 1]  183 	mov	0x50cd+0, #0x00
+                                    184 ;	mpu6050.c: 34: CLK_SWR = 0xe1;                     //  Use HSI as the clock source.
+      0080D7 35 E1 50 C4      [ 1]  185 	mov	0x50c4+0, #0xe1
+                                    186 ;	mpu6050.c: 35: CLK_SWCR = 0;                       //  Reset the clock switch control register.
+      0080DB 35 00 50 C5      [ 1]  187 	mov	0x50c5+0, #0x00
+                                    188 ;	mpu6050.c: 36: CLK_SWCR = CLK_SWEN;                //  Enable switching.
+      0080DF 35 02 50 C5      [ 1]  189 	mov	0x50c5+0, #0x02
+                                    190 ;	mpu6050.c: 37: while ((CLK_SWCR & CLK_SWBSY) != 0);        //  Pause while the clock switch is busy.
+      0080E3                        191 00104$:
+      0080E3 AE 50 C5         [ 2]  192 	ldw	x, #0x50c5
+      0080E6 F6               [ 1]  193 	ld	a, (x)
+      0080E7 44               [ 1]  194 	srl	a
+      0080E8 25 F9            [ 1]  195 	jrc	00104$
+      0080EA 81               [ 4]  196 	ret
+                                    197 ;	mpu6050.c: 39: void delay (int time_ms) {
+                                    198 ;	-----------------------------------------
+                                    199 ;	 function delay
+                                    200 ;	-----------------------------------------
+      0080EB                        201 _delay:
+      0080EB 52 0A            [ 2]  202 	sub	sp, #10
+                                    203 ;	mpu6050.c: 41: for (x = 0; x < 1036*time_ms; ++x)
+      0080ED 5F               [ 1]  204 	clrw	x
+      0080EE 1F 03            [ 2]  205 	ldw	(0x03, sp), x
+      0080F0 1F 01            [ 2]  206 	ldw	(0x01, sp), x
+      0080F2 1E 0D            [ 2]  207 	ldw	x, (0x0d, sp)
+      0080F4 89               [ 2]  208 	pushw	x
+      0080F5 4B 0C            [ 1]  209 	push	#0x0c
+      0080F7 4B 04            [ 1]  210 	push	#0x04
+      0080F9 CD 88 16         [ 4]  211 	call	__mulint
+      0080FC 5B 04            [ 2]  212 	addw	sp, #4
+      0080FE 1F 09            [ 2]  213 	ldw	(0x09, sp), x
+      008100                        214 00103$:
+      008100 16 09            [ 2]  215 	ldw	y, (0x09, sp)
+      008102 17 07            [ 2]  216 	ldw	(0x07, sp), y
+      008104 7B 07            [ 1]  217 	ld	a, (0x07, sp)
+      008106 49               [ 1]  218 	rlc	a
+      008107 4F               [ 1]  219 	clr	a
+      008108 A2 00            [ 1]  220 	sbc	a, #0x00
+      00810A 6B 06            [ 1]  221 	ld	(0x06, sp), a
+      00810C 6B 05            [ 1]  222 	ld	(0x05, sp), a
+      00810E 1E 03            [ 2]  223 	ldw	x, (0x03, sp)
+      008110 13 07            [ 2]  224 	cpw	x, (0x07, sp)
+      008112 7B 02            [ 1]  225 	ld	a, (0x02, sp)
+      008114 12 06            [ 1]  226 	sbc	a, (0x06, sp)
+      008116 7B 01            [ 1]  227 	ld	a, (0x01, sp)
+      008118 12 05            [ 1]  228 	sbc	a, (0x05, sp)
+      00811A 2E 17            [ 1]  229 	jrsge	00105$
+                                    230 ;	mpu6050.c: 42: __asm__("nop");
+      00811C 9D               [ 1]  231 	nop
+                                    232 ;	mpu6050.c: 41: for (x = 0; x < 1036*time_ms; ++x)
+      00811D 16 03            [ 2]  233 	ldw	y, (0x03, sp)
+      00811F 72 A9 00 01      [ 2]  234 	addw	y, #0x0001
+      008123 7B 02            [ 1]  235 	ld	a, (0x02, sp)
+      008125 A9 00            [ 1]  236 	adc	a, #0x00
+      008127 97               [ 1]  237 	ld	xl, a
+      008128 7B 01            [ 1]  238 	ld	a, (0x01, sp)
+      00812A A9 00            [ 1]  239 	adc	a, #0x00
+      00812C 95               [ 1]  240 	ld	xh, a
+      00812D 17 03            [ 2]  241 	ldw	(0x03, sp), y
+      00812F 1F 01            [ 2]  242 	ldw	(0x01, sp), x
+      008131 20 CD            [ 2]  243 	jra	00103$
+      008133                        244 00105$:
+      008133 5B 0A            [ 2]  245 	addw	sp, #10
+      008135 81               [ 4]  246 	ret
+                                    247 ;	mpu6050.c: 44: void i2c_read (unsigned char *x) {
+                                    248 ;	-----------------------------------------
+                                    249 ;	 function i2c_read
+                                    250 ;	-----------------------------------------
+      008136                        251 _i2c_read:
+                                    252 ;	mpu6050.c: 45: while ((I2C_SR1 & I2C_RXNE) == 0);
+      008136                        253 00101$:
+      008136 AE 52 17         [ 2]  254 	ldw	x, #0x5217
+      008139 F6               [ 1]  255 	ld	a, (x)
+      00813A A5 40            [ 1]  256 	bcp	a, #0x40
+      00813C 27 F8            [ 1]  257 	jreq	00101$
+                                    258 ;	mpu6050.c: 46: *x = I2C_DR;
+      00813E 16 03            [ 2]  259 	ldw	y, (0x03, sp)
+      008140 AE 52 16         [ 2]  260 	ldw	x, #0x5216
+      008143 F6               [ 1]  261 	ld	a, (x)
+      008144 90 F7            [ 1]  262 	ld	(y), a
+      008146 81               [ 4]  263 	ret
+                                    264 ;	mpu6050.c: 48: void i2c_set_nak (void) {
+                                    265 ;	-----------------------------------------
+                                    266 ;	 function i2c_set_nak
+                                    267 ;	-----------------------------------------
+      008147                        268 _i2c_set_nak:
+                                    269 ;	mpu6050.c: 49: I2C_CR2 &= ~I2C_ACK;
+      008147 AE 52 11         [ 2]  270 	ldw	x, #0x5211
+      00814A F6               [ 1]  271 	ld	a, (x)
+      00814B A4 FB            [ 1]  272 	and	a, #0xfb
+      00814D F7               [ 1]  273 	ld	(x), a
+      00814E 81               [ 4]  274 	ret
+                                    275 ;	mpu6050.c: 51: void i2c_set_stop (void) {
+                                    276 ;	-----------------------------------------
+                                    277 ;	 function i2c_set_stop
+                                    278 ;	-----------------------------------------
+      00814F                        279 _i2c_set_stop:
+                                    280 ;	mpu6050.c: 52: I2C_CR2 |= I2C_STOP;
+      00814F AE 52 11         [ 2]  281 	ldw	x, #0x5211
+      008152 F6               [ 1]  282 	ld	a, (x)
+      008153 AA 02            [ 1]  283 	or	a, #0x02
+      008155 F7               [ 1]  284 	ld	(x), a
+      008156 81               [ 4]  285 	ret
+                                    286 ;	mpu6050.c: 54: void i2c_send_reg (UCHAR addr) {
+                                    287 ;	-----------------------------------------
+                                    288 ;	 function i2c_send_reg
+                                    289 ;	-----------------------------------------
+      008157                        290 _i2c_send_reg:
+      008157 52 02            [ 2]  291 	sub	sp, #2
+                                    292 ;	mpu6050.c: 56: reg = I2C_SR1;
+      008159 AE 52 17         [ 2]  293 	ldw	x, #0x5217
+      00815C F6               [ 1]  294 	ld	a, (x)
+      00815D 5F               [ 1]  295 	clrw	x
+      00815E 97               [ 1]  296 	ld	xl, a
+      00815F 1F 01            [ 2]  297 	ldw	(0x01, sp), x
+                                    298 ;	mpu6050.c: 57: reg = I2C_SR3;
+      008161 AE 52 19         [ 2]  299 	ldw	x, #0x5219
+      008164 F6               [ 1]  300 	ld	a, (x)
+      008165 5F               [ 1]  301 	clrw	x
+      008166 97               [ 1]  302 	ld	xl, a
+      008167 1F 01            [ 2]  303 	ldw	(0x01, sp), x
+                                    304 ;	mpu6050.c: 58: I2C_DR = addr;
+      008169 AE 52 16         [ 2]  305 	ldw	x, #0x5216
+      00816C 7B 05            [ 1]  306 	ld	a, (0x05, sp)
+      00816E F7               [ 1]  307 	ld	(x), a
+                                    308 ;	mpu6050.c: 59: while ((I2C_SR1 & I2C_TXE) == 0);
+      00816F                        309 00101$:
+      00816F AE 52 17         [ 2]  310 	ldw	x, #0x5217
+      008172 F6               [ 1]  311 	ld	a, (x)
+      008173 4D               [ 1]  312 	tnz	a
+      008174 2A F9            [ 1]  313 	jrpl	00101$
+      008176 5B 02            [ 2]  314 	addw	sp, #2
+      008178 81               [ 4]  315 	ret
+                                    316 ;	mpu6050.c: 63: void UARTPrintF (char *message) {
+                                    317 ;	-----------------------------------------
+                                    318 ;	 function UARTPrintF
+                                    319 ;	-----------------------------------------
+      008179                        320 _UARTPrintF:
+                                    321 ;	mpu6050.c: 64: char *ch = message;
+      008179 16 03            [ 2]  322 	ldw	y, (0x03, sp)
+                                    323 ;	mpu6050.c: 65: while (*ch) {
+      00817B                        324 00104$:
+      00817B 90 F6            [ 1]  325 	ld	a, (y)
+      00817D 4D               [ 1]  326 	tnz	a
+      00817E 27 0F            [ 1]  327 	jreq	00107$
+                                    328 ;	mpu6050.c: 66: UART1_DR = (unsigned char) *ch;     //  Put the next character into the data transmission register.
+      008180 AE 52 31         [ 2]  329 	ldw	x, #0x5231
+      008183 F7               [ 1]  330 	ld	(x), a
+                                    331 ;	mpu6050.c: 67: while ((UART1_SR & SR_TXE) == 0);   //  Wait for transmission to complete.
+      008184                        332 00101$:
+      008184 AE 52 30         [ 2]  333 	ldw	x, #0x5230
+      008187 F6               [ 1]  334 	ld	a, (x)
+      008188 4D               [ 1]  335 	tnz	a
+      008189 2A F9            [ 1]  336 	jrpl	00101$
+                                    337 ;	mpu6050.c: 68: ch++;                               //  Grab the next character.
+      00818B 90 5C            [ 2]  338 	incw	y
+      00818D 20 EC            [ 2]  339 	jra	00104$
+      00818F                        340 00107$:
+      00818F 81               [ 4]  341 	ret
+                                    342 ;	mpu6050.c: 74: void i2c_send_address (UCHAR addr, UCHAR mode) {
+                                    343 ;	-----------------------------------------
+                                    344 ;	 function i2c_send_address
+                                    345 ;	-----------------------------------------
+      008190                        346 _i2c_send_address:
+      008190 52 03            [ 2]  347 	sub	sp, #3
+                                    348 ;	mpu6050.c: 76: reg = I2C_SR1;
+      008192 AE 52 17         [ 2]  349 	ldw	x, #0x5217
+      008195 F6               [ 1]  350 	ld	a, (x)
+      008196 5F               [ 1]  351 	clrw	x
+      008197 97               [ 1]  352 	ld	xl, a
+      008198 1F 01            [ 2]  353 	ldw	(0x01, sp), x
+                                    354 ;	mpu6050.c: 77: I2C_DR = (addr << 1) | mode;
+      00819A 7B 06            [ 1]  355 	ld	a, (0x06, sp)
+      00819C 48               [ 1]  356 	sll	a
+      00819D 1A 07            [ 1]  357 	or	a, (0x07, sp)
+      00819F AE 52 16         [ 2]  358 	ldw	x, #0x5216
+      0081A2 F7               [ 1]  359 	ld	(x), a
+                                    360 ;	mpu6050.c: 78: if (mode == I2C_READ) {
+      0081A3 7B 07            [ 1]  361 	ld	a, (0x07, sp)
+      0081A5 A1 01            [ 1]  362 	cp	a, #0x01
+      0081A7 26 06            [ 1]  363 	jrne	00127$
+      0081A9 A6 01            [ 1]  364 	ld	a, #0x01
+      0081AB 6B 03            [ 1]  365 	ld	(0x03, sp), a
+      0081AD 20 02            [ 2]  366 	jra	00128$
+      0081AF                        367 00127$:
+      0081AF 0F 03            [ 1]  368 	clr	(0x03, sp)
+      0081B1                        369 00128$:
+      0081B1 0D 03            [ 1]  370 	tnz	(0x03, sp)
+      0081B3 27 08            [ 1]  371 	jreq	00103$
+                                    372 ;	mpu6050.c: 79: I2C_OARL = 0;
+      0081B5 35 00 52 13      [ 1]  373 	mov	0x5213+0, #0x00
+                                    374 ;	mpu6050.c: 80: I2C_OARH = 0;
+      0081B9 35 00 52 14      [ 1]  375 	mov	0x5214+0, #0x00
+                                    376 ;	mpu6050.c: 83: while ((I2C_SR1 & I2C_ADDR) == 0);
+      0081BD                        377 00103$:
+                                    378 ;	mpu6050.c: 76: reg = I2C_SR1;
+      0081BD AE 52 17         [ 2]  379 	ldw	x, #0x5217
+      0081C0 F6               [ 1]  380 	ld	a, (x)
+                                    381 ;	mpu6050.c: 83: while ((I2C_SR1 & I2C_ADDR) == 0);
+      0081C1 A5 02            [ 1]  382 	bcp	a, #0x02
+      0081C3 27 F8            [ 1]  383 	jreq	00103$
+                                    384 ;	mpu6050.c: 84: if (mode == I2C_READ)
+      0081C5 0D 03            [ 1]  385 	tnz	(0x03, sp)
+      0081C7 27 06            [ 1]  386 	jreq	00108$
+                                    387 ;	mpu6050.c: 85: UNSET (I2C_SR1, I2C_ADDR);
+      0081C9 A4 FD            [ 1]  388 	and	a, #0xfd
+      0081CB AE 52 17         [ 2]  389 	ldw	x, #0x5217
+      0081CE F7               [ 1]  390 	ld	(x), a
+      0081CF                        391 00108$:
+      0081CF 5B 03            [ 2]  392 	addw	sp, #3
+      0081D1 81               [ 4]  393 	ret
+                                    394 ;	mpu6050.c: 88: void i2c_set_start_ack (void) {
+                                    395 ;	-----------------------------------------
+                                    396 ;	 function i2c_set_start_ack
+                                    397 ;	-----------------------------------------
+      0081D2                        398 _i2c_set_start_ack:
+                                    399 ;	mpu6050.c: 89: I2C_CR2 = I2C_ACK | I2C_START;
+      0081D2 35 05 52 11      [ 1]  400 	mov	0x5211+0, #0x05
+                                    401 ;	mpu6050.c: 90: while ((I2C_SR1 & I2C_SB) == 0);
+      0081D6                        402 00101$:
+      0081D6 AE 52 17         [ 2]  403 	ldw	x, #0x5217
+      0081D9 F6               [ 1]  404 	ld	a, (x)
+      0081DA 44               [ 1]  405 	srl	a
+      0081DB 24 F9            [ 1]  406 	jrnc	00101$
+      0081DD 81               [ 4]  407 	ret
+                                    408 ;	mpu6050.c: 97: void print_byte_hex (unsigned char buffer) {
+                                    409 ;	-----------------------------------------
+                                    410 ;	 function print_byte_hex
+                                    411 ;	-----------------------------------------
+      0081DE                        412 _print_byte_hex:
+      0081DE 52 0E            [ 2]  413 	sub	sp, #14
+                                    414 ;	mpu6050.c: 100: a = (buffer >> 4);
+      0081E0 7B 11            [ 1]  415 	ld	a, (0x11, sp)
+      0081E2 4E               [ 1]  416 	swap	a
+      0081E3 A4 0F            [ 1]  417 	and	a, #0x0f
+      0081E5 5F               [ 1]  418 	clrw	x
+      0081E6 97               [ 1]  419 	ld	xl, a
+                                    420 ;	mpu6050.c: 101: if (a > 9)
+      0081E7 A3 00 09         [ 2]  421 	cpw	x, #0x0009
+      0081EA 2D 07            [ 1]  422 	jrsle	00102$
+                                    423 ;	mpu6050.c: 102: a = a + 'a' - 10;
+      0081EC 1C 00 57         [ 2]  424 	addw	x, #0x0057
+      0081EF 1F 0B            [ 2]  425 	ldw	(0x0b, sp), x
+      0081F1 20 05            [ 2]  426 	jra	00103$
+      0081F3                        427 00102$:
+                                    428 ;	mpu6050.c: 104: a += '0'; 
+      0081F3 1C 00 30         [ 2]  429 	addw	x, #0x0030
+      0081F6 1F 0B            [ 2]  430 	ldw	(0x0b, sp), x
+      0081F8                        431 00103$:
+                                    432 ;	mpu6050.c: 105: b = buffer & 0x0f;
+      0081F8 7B 11            [ 1]  433 	ld	a, (0x11, sp)
+      0081FA A4 0F            [ 1]  434 	and	a, #0x0f
+      0081FC 5F               [ 1]  435 	clrw	x
+      0081FD 97               [ 1]  436 	ld	xl, a
+                                    437 ;	mpu6050.c: 106: if (b > 9)
+      0081FE A3 00 09         [ 2]  438 	cpw	x, #0x0009
+      008201 2D 07            [ 1]  439 	jrsle	00105$
+                                    440 ;	mpu6050.c: 107: b = b + 'a' - 10;
+      008203 1C 00 57         [ 2]  441 	addw	x, #0x0057
+      008206 1F 09            [ 2]  442 	ldw	(0x09, sp), x
+      008208 20 05            [ 2]  443 	jra	00106$
+      00820A                        444 00105$:
+                                    445 ;	mpu6050.c: 109: b += '0'; 
+      00820A 1C 00 30         [ 2]  446 	addw	x, #0x0030
+      00820D 1F 09            [ 2]  447 	ldw	(0x09, sp), x
+      00820F                        448 00106$:
+                                    449 ;	mpu6050.c: 110: message[0] = a;
+      00820F 96               [ 1]  450 	ldw	x, sp
+      008210 5C               [ 2]  451 	incw	x
+      008211 1F 0D            [ 2]  452 	ldw	(0x0d, sp), x
+      008213 7B 0C            [ 1]  453 	ld	a, (0x0c, sp)
+      008215 1E 0D            [ 2]  454 	ldw	x, (0x0d, sp)
+      008217 F7               [ 1]  455 	ld	(x), a
+                                    456 ;	mpu6050.c: 111: message[1] = b;
+      008218 1E 0D            [ 2]  457 	ldw	x, (0x0d, sp)
+      00821A 5C               [ 2]  458 	incw	x
+      00821B 7B 0A            [ 1]  459 	ld	a, (0x0a, sp)
+      00821D F7               [ 1]  460 	ld	(x), a
+                                    461 ;	mpu6050.c: 112: message[2] = 0;
+      00821E 1E 0D            [ 2]  462 	ldw	x, (0x0d, sp)
+      008220 5C               [ 2]  463 	incw	x
+      008221 5C               [ 2]  464 	incw	x
+      008222 7F               [ 1]  465 	clr	(x)
+                                    466 ;	mpu6050.c: 113: UARTPrintF (message);
+      008223 1E 0D            [ 2]  467 	ldw	x, (0x0d, sp)
+      008225 89               [ 2]  468 	pushw	x
+      008226 CD 81 79         [ 4]  469 	call	_UARTPrintF
+      008229 5B 10            [ 2]  470 	addw	sp, #16
+      00822B 81               [ 4]  471 	ret
+                                    472 ;	mpu6050.c: 117: unsigned char i2c_read_register (UCHAR addr, UCHAR rg) {
+                                    473 ;	-----------------------------------------
+                                    474 ;	 function i2c_read_register
+                                    475 ;	-----------------------------------------
+      00822C                        476 _i2c_read_register:
+      00822C 52 02            [ 2]  477 	sub	sp, #2
+                                    478 ;	mpu6050.c: 120: i2c_set_start_ack ();
+      00822E CD 81 D2         [ 4]  479 	call	_i2c_set_start_ack
+                                    480 ;	mpu6050.c: 121: i2c_send_address (addr, I2C_WRITE);
+      008231 4B 00            [ 1]  481 	push	#0x00
+      008233 7B 06            [ 1]  482 	ld	a, (0x06, sp)
+      008235 88               [ 1]  483 	push	a
+      008236 CD 81 90         [ 4]  484 	call	_i2c_send_address
+      008239 5B 02            [ 2]  485 	addw	sp, #2
+                                    486 ;	mpu6050.c: 122: i2c_send_reg (rg);
+      00823B 7B 06            [ 1]  487 	ld	a, (0x06, sp)
+      00823D 88               [ 1]  488 	push	a
+      00823E CD 81 57         [ 4]  489 	call	_i2c_send_reg
+      008241 84               [ 1]  490 	pop	a
+                                    491 ;	mpu6050.c: 123: i2c_set_start_ack ();
+      008242 CD 81 D2         [ 4]  492 	call	_i2c_set_start_ack
+                                    493 ;	mpu6050.c: 124: i2c_send_address (addr, I2C_READ);
+      008245 4B 01            [ 1]  494 	push	#0x01
+      008247 7B 06            [ 1]  495 	ld	a, (0x06, sp)
+      008249 88               [ 1]  496 	push	a
+      00824A CD 81 90         [ 4]  497 	call	_i2c_send_address
+      00824D 5B 02            [ 2]  498 	addw	sp, #2
+                                    499 ;	mpu6050.c: 125: reg = I2C_SR1;
+      00824F AE 52 17         [ 2]  500 	ldw	x, #0x5217
+      008252 F6               [ 1]  501 	ld	a, (x)
+      008253 6B 02            [ 1]  502 	ld	(0x02, sp), a
+                                    503 ;	mpu6050.c: 126: reg = I2C_SR3;
+      008255 AE 52 19         [ 2]  504 	ldw	x, #0x5219
+      008258 F6               [ 1]  505 	ld	a, (x)
+      008259 6B 02            [ 1]  506 	ld	(0x02, sp), a
+                                    507 ;	mpu6050.c: 127: i2c_set_nak ();
+      00825B CD 81 47         [ 4]  508 	call	_i2c_set_nak
+                                    509 ;	mpu6050.c: 128: i2c_set_stop ();
+      00825E CD 81 4F         [ 4]  510 	call	_i2c_set_stop
+                                    511 ;	mpu6050.c: 129: i2c_read (&x);
+      008261 96               [ 1]  512 	ldw	x, sp
+      008262 5C               [ 2]  513 	incw	x
+      008263 89               [ 2]  514 	pushw	x
+      008264 CD 81 36         [ 4]  515 	call	_i2c_read
+      008267 5B 02            [ 2]  516 	addw	sp, #2
+                                    517 ;	mpu6050.c: 130: return (x);
+      008269 7B 01            [ 1]  518 	ld	a, (0x01, sp)
+      00826B 5B 02            [ 2]  519 	addw	sp, #2
+      00826D 81               [ 4]  520 	ret
+                                    521 ;	mpu6050.c: 133: void InitializeI2C (void) {
+                                    522 ;	-----------------------------------------
+                                    523 ;	 function InitializeI2C
+                                    524 ;	-----------------------------------------
+      00826E                        525 _InitializeI2C:
+                                    526 ;	mpu6050.c: 134: I2C_CR1 = 0;   //  Disable I2C before configuration starts. PE bit is bit 0
+      00826E 35 00 52 10      [ 1]  527 	mov	0x5210+0, #0x00
+                                    528 ;	mpu6050.c: 138: I2C_FREQR = 16;                     //  Set the internal clock frequency (MHz).
+      008272 35 10 52 12      [ 1]  529 	mov	0x5212+0, #0x10
+                                    530 ;	mpu6050.c: 139: UNSET (I2C_CCRH, I2C_FS);           //  I2C running is standard mode.
+      008276 72 1F 52 1C      [ 1]  531 	bres	0x521c, #7
+                                    532 ;	mpu6050.c: 141: I2C_CCRL = 0xa0;                    //  SCL clock speed is 50 kHz.
+      00827A 35 A0 52 1B      [ 1]  533 	mov	0x521b+0, #0xa0
+                                    534 ;	mpu6050.c: 143: I2C_CCRH &= 0x00;	// Clears lower 4 bits "CCR"
+      00827E 35 00 52 1C      [ 1]  535 	mov	0x521c+0, #0x00
+                                    536 ;	mpu6050.c: 147: UNSET (I2C_OARH, I2C_ADDMODE);      //  7 bit address mode.
+      008282 72 1F 52 14      [ 1]  537 	bres	0x5214, #7
+                                    538 ;	mpu6050.c: 148: SET (I2C_OARH, I2C_ADDCONF);        //  Docs say this must always be 1.
+      008286 AE 52 14         [ 2]  539 	ldw	x, #0x5214
+      008289 F6               [ 1]  540 	ld	a, (x)
+      00828A AA 40            [ 1]  541 	or	a, #0x40
+      00828C F7               [ 1]  542 	ld	(x), a
+                                    543 ;	mpu6050.c: 152: I2C_TRISER = 17;
+      00828D 35 11 52 1D      [ 1]  544 	mov	0x521d+0, #0x11
+                                    545 ;	mpu6050.c: 160: I2C_CR1 = I2C_PE;	// Enables port
+      008291 35 01 52 10      [ 1]  546 	mov	0x5210+0, #0x01
+      008295 81               [ 4]  547 	ret
+                                    548 ;	mpu6050.c: 166: void InitializeUART() {
+                                    549 ;	-----------------------------------------
+                                    550 ;	 function InitializeUART
+                                    551 ;	-----------------------------------------
+      008296                        552 _InitializeUART:
+                                    553 ;	mpu6050.c: 176: UART1_CR1 = 0;
+      008296 35 00 52 34      [ 1]  554 	mov	0x5234+0, #0x00
+                                    555 ;	mpu6050.c: 177: UART1_CR2 = 0;
+      00829A 35 00 52 35      [ 1]  556 	mov	0x5235+0, #0x00
+                                    557 ;	mpu6050.c: 178: UART1_CR4 = 0;
+      00829E 35 00 52 37      [ 1]  558 	mov	0x5237+0, #0x00
+                                    559 ;	mpu6050.c: 179: UART1_CR3 = 0;
+      0082A2 35 00 52 36      [ 1]  560 	mov	0x5236+0, #0x00
+                                    561 ;	mpu6050.c: 180: UART1_CR5 = 0;
+      0082A6 35 00 52 38      [ 1]  562 	mov	0x5238+0, #0x00
+                                    563 ;	mpu6050.c: 181: UART1_GTR = 0;
+      0082AA 35 00 52 39      [ 1]  564 	mov	0x5239+0, #0x00
+                                    565 ;	mpu6050.c: 182: UART1_PSCR = 0;
+      0082AE 35 00 52 3A      [ 1]  566 	mov	0x523a+0, #0x00
+                                    567 ;	mpu6050.c: 186: UNSET (UART1_CR1, CR1_M);        //  8 Data bits.
+      0082B2 AE 52 34         [ 2]  568 	ldw	x, #0x5234
+      0082B5 F6               [ 1]  569 	ld	a, (x)
+      0082B6 A4 EF            [ 1]  570 	and	a, #0xef
+      0082B8 F7               [ 1]  571 	ld	(x), a
+                                    572 ;	mpu6050.c: 187: UNSET (UART1_CR1, CR1_PCEN);     //  Disable parity.
+      0082B9 AE 52 34         [ 2]  573 	ldw	x, #0x5234
+      0082BC F6               [ 1]  574 	ld	a, (x)
+      0082BD A4 FB            [ 1]  575 	and	a, #0xfb
+      0082BF F7               [ 1]  576 	ld	(x), a
+                                    577 ;	mpu6050.c: 188: UNSET (UART1_CR3, CR3_STOPH);    //  1 stop bit.
+      0082C0 AE 52 36         [ 2]  578 	ldw	x, #0x5236
+      0082C3 F6               [ 1]  579 	ld	a, (x)
+      0082C4 A4 DF            [ 1]  580 	and	a, #0xdf
+      0082C6 F7               [ 1]  581 	ld	(x), a
+                                    582 ;	mpu6050.c: 189: UNSET (UART1_CR3, CR3_STOPL);    //  1 stop bit.
+      0082C7 AE 52 36         [ 2]  583 	ldw	x, #0x5236
+      0082CA F6               [ 1]  584 	ld	a, (x)
+      0082CB A4 EF            [ 1]  585 	and	a, #0xef
+      0082CD F7               [ 1]  586 	ld	(x), a
+                                    587 ;	mpu6050.c: 190: UART1_BRR2 = 0x0a;      //  Set the baud rate registers to 115200 baud
+      0082CE 35 0A 52 33      [ 1]  588 	mov	0x5233+0, #0x0a
+                                    589 ;	mpu6050.c: 191: UART1_BRR1 = 0x08;      //  based upon a 16 MHz system clock.
+      0082D2 35 08 52 32      [ 1]  590 	mov	0x5232+0, #0x08
+                                    591 ;	mpu6050.c: 195: UNSET (UART1_CR2, CR2_TEN);      //  Disable transmit.
+      0082D6 AE 52 35         [ 2]  592 	ldw	x, #0x5235
+      0082D9 F6               [ 1]  593 	ld	a, (x)
+      0082DA A4 F7            [ 1]  594 	and	a, #0xf7
+      0082DC F7               [ 1]  595 	ld	(x), a
+                                    596 ;	mpu6050.c: 196: UNSET (UART1_CR2, CR2_REN);      //  Disable receive.
+      0082DD AE 52 35         [ 2]  597 	ldw	x, #0x5235
+      0082E0 F6               [ 1]  598 	ld	a, (x)
+      0082E1 A4 FB            [ 1]  599 	and	a, #0xfb
+      0082E3 F7               [ 1]  600 	ld	(x), a
+                                    601 ;	mpu6050.c: 200: SET (UART1_CR3, CR3_CPOL);
+      0082E4 AE 52 36         [ 2]  602 	ldw	x, #0x5236
+      0082E7 F6               [ 1]  603 	ld	a, (x)
+      0082E8 AA 04            [ 1]  604 	or	a, #0x04
+      0082EA F7               [ 1]  605 	ld	(x), a
+                                    606 ;	mpu6050.c: 201: SET (UART1_CR3, CR3_CPHA);
+      0082EB AE 52 36         [ 2]  607 	ldw	x, #0x5236
+      0082EE F6               [ 1]  608 	ld	a, (x)
+      0082EF AA 02            [ 1]  609 	or	a, #0x02
+      0082F1 F7               [ 1]  610 	ld	(x), a
+                                    611 ;	mpu6050.c: 202: SET (UART1_CR3, CR3_LBCL);
+      0082F2 72 10 52 36      [ 1]  612 	bset	0x5236, #0
+                                    613 ;	mpu6050.c: 206: SET (UART1_CR2, CR2_TEN);
+      0082F6 AE 52 35         [ 2]  614 	ldw	x, #0x5235
+      0082F9 F6               [ 1]  615 	ld	a, (x)
+      0082FA AA 08            [ 1]  616 	or	a, #0x08
+      0082FC F7               [ 1]  617 	ld	(x), a
+                                    618 ;	mpu6050.c: 207: SET (UART1_CR2, CR2_REN);
+      0082FD AE 52 35         [ 2]  619 	ldw	x, #0x5235
+      008300 F6               [ 1]  620 	ld	a, (x)
+      008301 AA 04            [ 1]  621 	or	a, #0x04
+      008303 F7               [ 1]  622 	ld	(x), a
+                                    623 ;	mpu6050.c: 208: UART1_CR3 = CR3_CLKEN;
+      008304 35 08 52 36      [ 1]  624 	mov	0x5236+0, #0x08
+      008308 81               [ 4]  625 	ret
+                                    626 ;	mpu6050.c: 236: void tm1637Init(void)
+                                    627 ;	-----------------------------------------
+                                    628 ;	 function tm1637Init
+                                    629 ;	-----------------------------------------
+      008309                        630 _tm1637Init:
+                                    631 ;	mpu6050.c: 238: tm1637SetBrightness(8);
+      008309 4B 08            [ 1]  632 	push	#0x08
+      00830B CD 83 A6         [ 4]  633 	call	_tm1637SetBrightness
+      00830E 84               [ 1]  634 	pop	a
+      00830F 81               [ 4]  635 	ret
+                                    636 ;	mpu6050.c: 243: void tm1637DisplayDecimal(long TT,unsigned int displaySeparator)
+                                    637 ;	-----------------------------------------
+                                    638 ;	 function tm1637DisplayDecimal
+                                    639 ;	-----------------------------------------
+      008310                        640 _tm1637DisplayDecimal:
+      008310 52 0D            [ 2]  641 	sub	sp, #13
+                                    642 ;	mpu6050.c: 245: unsigned int v = TT & 0x0000FFFF;
+      008312 16 12            [ 2]  643 	ldw	y, (0x12, sp)
+      008314 5F               [ 1]  644 	clrw	x
+      008315 17 01            [ 2]  645 	ldw	(0x01, sp), y
+                                    646 ;	mpu6050.c: 251: for (ii = 0; ii < 4; ++ii) {
+      008317 96               [ 1]  647 	ldw	x, sp
+      008318 1C 00 05         [ 2]  648 	addw	x, #5
+      00831B 1F 0C            [ 2]  649 	ldw	(0x0c, sp), x
+      00831D AE 86 B4         [ 2]  650 	ldw	x, #_segmentMap+0
+      008320 1F 0A            [ 2]  651 	ldw	(0x0a, sp), x
+      008322 5F               [ 1]  652 	clrw	x
+      008323 1F 03            [ 2]  653 	ldw	(0x03, sp), x
+      008325                        654 00106$:
+                                    655 ;	mpu6050.c: 252: digitArr[ii] = segmentMap[v % 10];
+      008325 1E 0C            [ 2]  656 	ldw	x, (0x0c, sp)
+      008327 72 FB 03         [ 2]  657 	addw	x, (0x03, sp)
+      00832A 89               [ 2]  658 	pushw	x
+      00832B 1E 03            [ 2]  659 	ldw	x, (0x03, sp)
+      00832D 90 AE 00 0A      [ 2]  660 	ldw	y, #0x000a
+      008331 65               [ 2]  661 	divw	x, y
+      008332 90 9F            [ 1]  662 	ld	a, yl
+      008334 85               [ 2]  663 	popw	x
+      008335 90 97            [ 1]  664 	ld	yl, a
+      008337 72 F9 0A         [ 2]  665 	addw	y, (0x0a, sp)
+      00833A 90 F6            [ 1]  666 	ld	a, (y)
+      00833C F7               [ 1]  667 	ld	(x), a
+                                    668 ;	mpu6050.c: 253: if (ii == 2 && displaySeparator) {
+      00833D 89               [ 2]  669 	pushw	x
+      00833E 1E 05            [ 2]  670 	ldw	x, (0x05, sp)
+      008340 A3 00 02         [ 2]  671 	cpw	x, #0x0002
+      008343 85               [ 2]  672 	popw	x
+      008344 26 08            [ 1]  673 	jrne	00102$
+      008346 16 14            [ 2]  674 	ldw	y, (0x14, sp)
+      008348 27 04            [ 1]  675 	jreq	00102$
+                                    676 ;	mpu6050.c: 254: digitArr[ii] |= 1 << 7;
+      00834A F6               [ 1]  677 	ld	a, (x)
+      00834B AA 80            [ 1]  678 	or	a, #0x80
+      00834D F7               [ 1]  679 	ld	(x), a
+      00834E                        680 00102$:
+                                    681 ;	mpu6050.c: 256: v /= 10;
+      00834E 1E 01            [ 2]  682 	ldw	x, (0x01, sp)
+      008350 90 AE 00 0A      [ 2]  683 	ldw	y, #0x000a
+      008354 65               [ 2]  684 	divw	x, y
+      008355 1F 01            [ 2]  685 	ldw	(0x01, sp), x
+                                    686 ;	mpu6050.c: 251: for (ii = 0; ii < 4; ++ii) {
+      008357 1E 03            [ 2]  687 	ldw	x, (0x03, sp)
+      008359 5C               [ 2]  688 	incw	x
+      00835A 1F 03            [ 2]  689 	ldw	(0x03, sp), x
+      00835C 1E 03            [ 2]  690 	ldw	x, (0x03, sp)
+      00835E A3 00 04         [ 2]  691 	cpw	x, #0x0004
+      008361 25 C2            [ 1]  692 	jrc	00106$
+                                    693 ;	mpu6050.c: 259: _tm1637Start();
+      008363 CD 83 B8         [ 4]  694 	call	__tm1637Start
+                                    695 ;	mpu6050.c: 260: _tm1637WriteByte(0x40);
+      008366 4B 40            [ 1]  696 	push	#0x40
+      008368 CD 84 0C         [ 4]  697 	call	__tm1637WriteByte
+      00836B 84               [ 1]  698 	pop	a
+                                    699 ;	mpu6050.c: 261: _tm1637ReadResult();
+      00836C CD 83 F1         [ 4]  700 	call	__tm1637ReadResult
+                                    701 ;	mpu6050.c: 262: _tm1637Stop();
+      00836F CD 83 CA         [ 4]  702 	call	__tm1637Stop
+                                    703 ;	mpu6050.c: 264: _tm1637Start();
+      008372 CD 83 B8         [ 4]  704 	call	__tm1637Start
+                                    705 ;	mpu6050.c: 265: _tm1637WriteByte(0xc0);
+      008375 4B C0            [ 1]  706 	push	#0xc0
+      008377 CD 84 0C         [ 4]  707 	call	__tm1637WriteByte
+      00837A 84               [ 1]  708 	pop	a
+                                    709 ;	mpu6050.c: 266: _tm1637ReadResult();
+      00837B CD 83 F1         [ 4]  710 	call	__tm1637ReadResult
+                                    711 ;	mpu6050.c: 268: for (ii = 0; ii < 4; ++ii) {
+      00837E 5F               [ 1]  712 	clrw	x
+      00837F                        713 00108$:
+                                    714 ;	mpu6050.c: 269: _tm1637WriteByte(digitArr[3 - ii]);
+      00837F 41               [ 1]  715 	exg	a, xl
+      008380 6B 09            [ 1]  716 	ld	(0x09, sp), a
+      008382 41               [ 1]  717 	exg	a, xl
+      008383 A6 03            [ 1]  718 	ld	a, #0x03
+      008385 10 09            [ 1]  719 	sub	a, (0x09, sp)
+      008387 90 5F            [ 1]  720 	clrw	y
+      008389 90 97            [ 1]  721 	ld	yl, a
+      00838B 72 F9 0C         [ 2]  722 	addw	y, (0x0c, sp)
+      00838E 90 F6            [ 1]  723 	ld	a, (y)
+      008390 89               [ 2]  724 	pushw	x
+      008391 88               [ 1]  725 	push	a
+      008392 CD 84 0C         [ 4]  726 	call	__tm1637WriteByte
+      008395 84               [ 1]  727 	pop	a
+      008396 CD 83 F1         [ 4]  728 	call	__tm1637ReadResult
+      008399 85               [ 2]  729 	popw	x
+                                    730 ;	mpu6050.c: 268: for (ii = 0; ii < 4; ++ii) {
+      00839A 5C               [ 2]  731 	incw	x
+      00839B A3 00 04         [ 2]  732 	cpw	x, #0x0004
+      00839E 25 DF            [ 1]  733 	jrc	00108$
+                                    734 ;	mpu6050.c: 273: _tm1637Stop();
+      0083A0 CD 83 CA         [ 4]  735 	call	__tm1637Stop
+      0083A3 5B 0D            [ 2]  736 	addw	sp, #13
+      0083A5 81               [ 4]  737 	ret
+                                    738 ;	mpu6050.c: 278: void tm1637SetBrightness(char brightness)
+                                    739 ;	-----------------------------------------
+                                    740 ;	 function tm1637SetBrightness
+                                    741 ;	-----------------------------------------
+      0083A6                        742 _tm1637SetBrightness:
+                                    743 ;	mpu6050.c: 285: _tm1637Start();
+      0083A6 CD 83 B8         [ 4]  744 	call	__tm1637Start
+                                    745 ;	mpu6050.c: 286: _tm1637WriteByte(0x87 + brightness);
+      0083A9 7B 03            [ 1]  746 	ld	a, (0x03, sp)
+      0083AB AB 87            [ 1]  747 	add	a, #0x87
+      0083AD 88               [ 1]  748 	push	a
+      0083AE CD 84 0C         [ 4]  749 	call	__tm1637WriteByte
+      0083B1 84               [ 1]  750 	pop	a
+                                    751 ;	mpu6050.c: 287: _tm1637ReadResult();
+      0083B2 CD 83 F1         [ 4]  752 	call	__tm1637ReadResult
+                                    753 ;	mpu6050.c: 288: _tm1637Stop();
+      0083B5 CC 83 CA         [ 2]  754 	jp	__tm1637Stop
+                                    755 ;	mpu6050.c: 291: void _tm1637Start(void)
+                                    756 ;	-----------------------------------------
+                                    757 ;	 function _tm1637Start
+                                    758 ;	-----------------------------------------
+      0083B8                        759 __tm1637Start:
+                                    760 ;	mpu6050.c: 293: _tm1637ClkHigh();
+      0083B8 CD 84 4A         [ 4]  761 	call	__tm1637ClkHigh
+                                    762 ;	mpu6050.c: 294: _tm1637DioHigh();
+      0083BB CD 84 5A         [ 4]  763 	call	__tm1637DioHigh
+                                    764 ;	mpu6050.c: 295: delay(5);
+      0083BE 4B 05            [ 1]  765 	push	#0x05
+      0083C0 4B 00            [ 1]  766 	push	#0x00
+      0083C2 CD 80 EB         [ 4]  767 	call	_delay
+      0083C5 5B 02            [ 2]  768 	addw	sp, #2
+                                    769 ;	mpu6050.c: 296: _tm1637DioLow();
+      0083C7 CC 84 62         [ 2]  770 	jp	__tm1637DioLow
+                                    771 ;	mpu6050.c: 299: void _tm1637Stop(void)
+                                    772 ;	-----------------------------------------
+                                    773 ;	 function _tm1637Stop
+                                    774 ;	-----------------------------------------
+      0083CA                        775 __tm1637Stop:
+                                    776 ;	mpu6050.c: 301: _tm1637ClkLow();
+      0083CA CD 84 52         [ 4]  777 	call	__tm1637ClkLow
+                                    778 ;	mpu6050.c: 302: delay(5);
+      0083CD 4B 05            [ 1]  779 	push	#0x05
+      0083CF 4B 00            [ 1]  780 	push	#0x00
+      0083D1 CD 80 EB         [ 4]  781 	call	_delay
+      0083D4 5B 02            [ 2]  782 	addw	sp, #2
+                                    783 ;	mpu6050.c: 303: _tm1637DioLow();
+      0083D6 CD 84 62         [ 4]  784 	call	__tm1637DioLow
+                                    785 ;	mpu6050.c: 304: delay(5);
+      0083D9 4B 05            [ 1]  786 	push	#0x05
+      0083DB 4B 00            [ 1]  787 	push	#0x00
+      0083DD CD 80 EB         [ 4]  788 	call	_delay
+      0083E0 5B 02            [ 2]  789 	addw	sp, #2
+                                    790 ;	mpu6050.c: 305: _tm1637ClkHigh();
+      0083E2 CD 84 4A         [ 4]  791 	call	__tm1637ClkHigh
+                                    792 ;	mpu6050.c: 306: delay(5);
+      0083E5 4B 05            [ 1]  793 	push	#0x05
+      0083E7 4B 00            [ 1]  794 	push	#0x00
+      0083E9 CD 80 EB         [ 4]  795 	call	_delay
+      0083EC 5B 02            [ 2]  796 	addw	sp, #2
+                                    797 ;	mpu6050.c: 307: _tm1637DioHigh();
+      0083EE CC 84 5A         [ 2]  798 	jp	__tm1637DioHigh
+                                    799 ;	mpu6050.c: 310: void _tm1637ReadResult(void)
+                                    800 ;	-----------------------------------------
+                                    801 ;	 function _tm1637ReadResult
+                                    802 ;	-----------------------------------------
+      0083F1                        803 __tm1637ReadResult:
+                                    804 ;	mpu6050.c: 312: _tm1637ClkLow();
+      0083F1 CD 84 52         [ 4]  805 	call	__tm1637ClkLow
+                                    806 ;	mpu6050.c: 313: delay(5);
+      0083F4 4B 05            [ 1]  807 	push	#0x05
+      0083F6 4B 00            [ 1]  808 	push	#0x00
+      0083F8 CD 80 EB         [ 4]  809 	call	_delay
+      0083FB 5B 02            [ 2]  810 	addw	sp, #2
+                                    811 ;	mpu6050.c: 315: _tm1637ClkHigh();
+      0083FD CD 84 4A         [ 4]  812 	call	__tm1637ClkHigh
+                                    813 ;	mpu6050.c: 316: delay(5);
+      008400 4B 05            [ 1]  814 	push	#0x05
+      008402 4B 00            [ 1]  815 	push	#0x00
+      008404 CD 80 EB         [ 4]  816 	call	_delay
+      008407 5B 02            [ 2]  817 	addw	sp, #2
+                                    818 ;	mpu6050.c: 317: _tm1637ClkLow();
+      008409 CC 84 52         [ 2]  819 	jp	__tm1637ClkLow
+                                    820 ;	mpu6050.c: 320: void _tm1637WriteByte(unsigned char b)
+                                    821 ;	-----------------------------------------
+                                    822 ;	 function _tm1637WriteByte
+                                    823 ;	-----------------------------------------
+      00840C                        824 __tm1637WriteByte:
+      00840C 52 02            [ 2]  825 	sub	sp, #2
+                                    826 ;	mpu6050.c: 322: for (ii = 0; ii < 8; ++ii) {
+      00840E 5F               [ 1]  827 	clrw	x
+      00840F 1F 01            [ 2]  828 	ldw	(0x01, sp), x
+      008411                        829 00105$:
+                                    830 ;	mpu6050.c: 323: _tm1637ClkLow();
+      008411 CD 84 52         [ 4]  831 	call	__tm1637ClkLow
+                                    832 ;	mpu6050.c: 324: if (b & 0x01) {
+      008414 7B 05            [ 1]  833 	ld	a, (0x05, sp)
+      008416 44               [ 1]  834 	srl	a
+      008417 24 05            [ 1]  835 	jrnc	00102$
+                                    836 ;	mpu6050.c: 325: _tm1637DioHigh();
+      008419 CD 84 5A         [ 4]  837 	call	__tm1637DioHigh
+      00841C 20 03            [ 2]  838 	jra	00103$
+      00841E                        839 00102$:
+                                    840 ;	mpu6050.c: 328: _tm1637DioLow();
+      00841E CD 84 62         [ 4]  841 	call	__tm1637DioLow
+      008421                        842 00103$:
+                                    843 ;	mpu6050.c: 330: delay(15);
+      008421 4B 0F            [ 1]  844 	push	#0x0f
+      008423 4B 00            [ 1]  845 	push	#0x00
+      008425 CD 80 EB         [ 4]  846 	call	_delay
+      008428 5B 02            [ 2]  847 	addw	sp, #2
+                                    848 ;	mpu6050.c: 331: b >>= 1;
+      00842A 7B 05            [ 1]  849 	ld	a, (0x05, sp)
+      00842C 44               [ 1]  850 	srl	a
+      00842D 6B 05            [ 1]  851 	ld	(0x05, sp), a
+                                    852 ;	mpu6050.c: 332: _tm1637ClkHigh();
+      00842F CD 84 4A         [ 4]  853 	call	__tm1637ClkHigh
+                                    854 ;	mpu6050.c: 333: delay(15);
+      008432 4B 0F            [ 1]  855 	push	#0x0f
+      008434 4B 00            [ 1]  856 	push	#0x00
+      008436 CD 80 EB         [ 4]  857 	call	_delay
+      008439 5B 02            [ 2]  858 	addw	sp, #2
+                                    859 ;	mpu6050.c: 322: for (ii = 0; ii < 8; ++ii) {
+      00843B 1E 01            [ 2]  860 	ldw	x, (0x01, sp)
+      00843D 5C               [ 2]  861 	incw	x
+      00843E 1F 01            [ 2]  862 	ldw	(0x01, sp), x
+      008440 1E 01            [ 2]  863 	ldw	x, (0x01, sp)
+      008442 A3 00 08         [ 2]  864 	cpw	x, #0x0008
+      008445 2F CA            [ 1]  865 	jrslt	00105$
+      008447 5B 02            [ 2]  866 	addw	sp, #2
+      008449 81               [ 4]  867 	ret
+                                    868 ;	mpu6050.c: 339: void _tm1637ClkHigh(void)
+                                    869 ;	-----------------------------------------
+                                    870 ;	 function _tm1637ClkHigh
+                                    871 ;	-----------------------------------------
+      00844A                        872 __tm1637ClkHigh:
+                                    873 ;	mpu6050.c: 344: PD_ODR |= 1 << 2;
+      00844A AE 50 0F         [ 2]  874 	ldw	x, #0x500f
+      00844D F6               [ 1]  875 	ld	a, (x)
+      00844E AA 04            [ 1]  876 	or	a, #0x04
+      008450 F7               [ 1]  877 	ld	(x), a
+      008451 81               [ 4]  878 	ret
+                                    879 ;	mpu6050.c: 347: void _tm1637ClkLow(void)
+                                    880 ;	-----------------------------------------
+                                    881 ;	 function _tm1637ClkLow
+                                    882 ;	-----------------------------------------
+      008452                        883 __tm1637ClkLow:
+                                    884 ;	mpu6050.c: 351: PD_ODR &= ~(1 << 2);
+      008452 AE 50 0F         [ 2]  885 	ldw	x, #0x500f
+      008455 F6               [ 1]  886 	ld	a, (x)
+      008456 A4 FB            [ 1]  887 	and	a, #0xfb
+      008458 F7               [ 1]  888 	ld	(x), a
+      008459 81               [ 4]  889 	ret
+                                    890 ;	mpu6050.c: 357: void _tm1637DioHigh(void)
+                                    891 ;	-----------------------------------------
+                                    892 ;	 function _tm1637DioHigh
+                                    893 ;	-----------------------------------------
+      00845A                        894 __tm1637DioHigh:
+                                    895 ;	mpu6050.c: 361: PD_ODR |= 1 << 3;
+      00845A AE 50 0F         [ 2]  896 	ldw	x, #0x500f
+      00845D F6               [ 1]  897 	ld	a, (x)
+      00845E AA 08            [ 1]  898 	or	a, #0x08
+      008460 F7               [ 1]  899 	ld	(x), a
+      008461 81               [ 4]  900 	ret
+                                    901 ;	mpu6050.c: 365: void _tm1637DioLow(void)
+                                    902 ;	-----------------------------------------
+                                    903 ;	 function _tm1637DioLow
+                                    904 ;	-----------------------------------------
+      008462                        905 __tm1637DioLow:
+                                    906 ;	mpu6050.c: 367: PD_ODR &= ~(1 << 3);
+      008462 AE 50 0F         [ 2]  907 	ldw	x, #0x500f
+      008465 F6               [ 1]  908 	ld	a, (x)
+      008466 A4 F7            [ 1]  909 	and	a, #0xf7
+      008468 F7               [ 1]  910 	ld	(x), a
+      008469 81               [ 4]  911 	ret
+                                    912 ;	mpu6050.c: 378: void initMPU6050(){
+                                    913 ;	-----------------------------------------
+                                    914 ;	 function initMPU6050
+                                    915 ;	-----------------------------------------
+      00846A                        916 _initMPU6050:
+                                    917 ;	mpu6050.c: 380: i2c_set_start_ack();
+      00846A CD 81 D2         [ 4]  918 	call	_i2c_set_start_ack
+                                    919 ;	mpu6050.c: 381: i2c_send_address (MPU6050_ADDR, I2C_WRITE);
+      00846D 4B 00            [ 1]  920 	push	#0x00
+      00846F 4B 68            [ 1]  921 	push	#0x68
+      008471 CD 81 90         [ 4]  922 	call	_i2c_send_address
+      008474 5B 02            [ 2]  923 	addw	sp, #2
+                                    924 ;	mpu6050.c: 382: i2c_send_reg(0x6B);
+      008476 4B 6B            [ 1]  925 	push	#0x6b
+      008478 CD 81 57         [ 4]  926 	call	_i2c_send_reg
+      00847B 84               [ 1]  927 	pop	a
+                                    928 ;	mpu6050.c: 383: i2c_send_reg(0x80);
+      00847C 4B 80            [ 1]  929 	push	#0x80
+      00847E CD 81 57         [ 4]  930 	call	_i2c_send_reg
+      008481 84               [ 1]  931 	pop	a
+                                    932 ;	mpu6050.c: 384: i2c_set_stop();
+      008482 CD 81 4F         [ 4]  933 	call	_i2c_set_stop
+                                    934 ;	mpu6050.c: 385: delay(100);
+      008485 4B 64            [ 1]  935 	push	#0x64
+      008487 4B 00            [ 1]  936 	push	#0x00
+      008489 CD 80 EB         [ 4]  937 	call	_delay
+      00848C 5B 02            [ 2]  938 	addw	sp, #2
+                                    939 ;	mpu6050.c: 386: i2c_set_start_ack();
+      00848E CD 81 D2         [ 4]  940 	call	_i2c_set_start_ack
+                                    941 ;	mpu6050.c: 387: i2c_send_address (MPU6050_ADDR, I2C_WRITE);
+      008491 4B 00            [ 1]  942 	push	#0x00
+      008493 4B 68            [ 1]  943 	push	#0x68
+      008495 CD 81 90         [ 4]  944 	call	_i2c_send_address
+      008498 5B 02            [ 2]  945 	addw	sp, #2
+                                    946 ;	mpu6050.c: 388: i2c_send_reg(0x6B);
+      00849A 4B 6B            [ 1]  947 	push	#0x6b
+      00849C CD 81 57         [ 4]  948 	call	_i2c_send_reg
+      00849F 84               [ 1]  949 	pop	a
+                                    950 ;	mpu6050.c: 389: i2c_send_reg(0x00);
+      0084A0 4B 00            [ 1]  951 	push	#0x00
+      0084A2 CD 81 57         [ 4]  952 	call	_i2c_send_reg
+      0084A5 84               [ 1]  953 	pop	a
+                                    954 ;	mpu6050.c: 390: i2c_set_stop();
+      0084A6 CD 81 4F         [ 4]  955 	call	_i2c_set_stop
+                                    956 ;	mpu6050.c: 391: delay(100);
+      0084A9 4B 64            [ 1]  957 	push	#0x64
+      0084AB 4B 00            [ 1]  958 	push	#0x00
+      0084AD CD 80 EB         [ 4]  959 	call	_delay
+      0084B0 5B 02            [ 2]  960 	addw	sp, #2
+                                    961 ;	mpu6050.c: 392: i2c_set_start_ack();
+      0084B2 CD 81 D2         [ 4]  962 	call	_i2c_set_start_ack
+                                    963 ;	mpu6050.c: 393: i2c_send_address (MPU6050_ADDR, I2C_WRITE);
+      0084B5 4B 00            [ 1]  964 	push	#0x00
+      0084B7 4B 68            [ 1]  965 	push	#0x68
+      0084B9 CD 81 90         [ 4]  966 	call	_i2c_send_address
+      0084BC 5B 02            [ 2]  967 	addw	sp, #2
+                                    968 ;	mpu6050.c: 394: i2c_send_reg(0x1A);
+      0084BE 4B 1A            [ 1]  969 	push	#0x1a
+      0084C0 CD 81 57         [ 4]  970 	call	_i2c_send_reg
+      0084C3 84               [ 1]  971 	pop	a
+                                    972 ;	mpu6050.c: 395: i2c_send_reg(0x01);
+      0084C4 4B 01            [ 1]  973 	push	#0x01
+      0084C6 CD 81 57         [ 4]  974 	call	_i2c_send_reg
+      0084C9 84               [ 1]  975 	pop	a
+                                    976 ;	mpu6050.c: 396: i2c_set_stop();
+      0084CA CD 81 4F         [ 4]  977 	call	_i2c_set_stop
+                                    978 ;	mpu6050.c: 397: delay(100);
+      0084CD 4B 64            [ 1]  979 	push	#0x64
+      0084CF 4B 00            [ 1]  980 	push	#0x00
+      0084D1 CD 80 EB         [ 4]  981 	call	_delay
+      0084D4 5B 02            [ 2]  982 	addw	sp, #2
+                                    983 ;	mpu6050.c: 398: i2c_set_start_ack();
+      0084D6 CD 81 D2         [ 4]  984 	call	_i2c_set_start_ack
+                                    985 ;	mpu6050.c: 399: i2c_send_address (MPU6050_ADDR, I2C_WRITE);
+      0084D9 4B 00            [ 1]  986 	push	#0x00
+      0084DB 4B 68            [ 1]  987 	push	#0x68
+      0084DD CD 81 90         [ 4]  988 	call	_i2c_send_address
+      0084E0 5B 02            [ 2]  989 	addw	sp, #2
+                                    990 ;	mpu6050.c: 400: i2c_send_reg(0x1B);
+      0084E2 4B 1B            [ 1]  991 	push	#0x1b
+      0084E4 CD 81 57         [ 4]  992 	call	_i2c_send_reg
+      0084E7 84               [ 1]  993 	pop	a
+                                    994 ;	mpu6050.c: 401: i2c_send_reg(0x01);
+      0084E8 4B 01            [ 1]  995 	push	#0x01
+      0084EA CD 81 57         [ 4]  996 	call	_i2c_send_reg
+      0084ED 84               [ 1]  997 	pop	a
+                                    998 ;	mpu6050.c: 402: i2c_set_stop();
+      0084EE CC 81 4F         [ 2]  999 	jp	_i2c_set_stop
+                                   1000 ;	mpu6050.c: 435: unsigned int getMPU6050(){
+                                   1001 ;	-----------------------------------------
+                                   1002 ;	 function getMPU6050
+                                   1003 ;	-----------------------------------------
+      0084F1                       1004 _getMPU6050:
+      0084F1 52 06            [ 2] 1005 	sub	sp, #6
+                                   1006 ;	mpu6050.c: 439: xh = i2c_read_register (MPU6050_ADDR, 0x43);
+      0084F3 4B 43            [ 1] 1007 	push	#0x43
+      0084F5 4B 68            [ 1] 1008 	push	#0x68
+      0084F7 CD 82 2C         [ 4] 1009 	call	_i2c_read_register
+      0084FA 5B 02            [ 2] 1010 	addw	sp, #2
+      0084FC 6B 02            [ 1] 1011 	ld	(0x02, sp), a
+                                   1012 ;	mpu6050.c: 440: UARTPrintF("read 1 \n\r");
+      0084FE AE 86 C5         [ 2] 1013 	ldw	x, #___str_0+0
+      008501 89               [ 2] 1014 	pushw	x
+      008502 CD 81 79         [ 4] 1015 	call	_UARTPrintF
+      008505 5B 02            [ 2] 1016 	addw	sp, #2
+                                   1017 ;	mpu6050.c: 441: xl = i2c_read_register (MPU6050_ADDR, 0x44);
+      008507 4B 44            [ 1] 1018 	push	#0x44
+      008509 4B 68            [ 1] 1019 	push	#0x68
+      00850B CD 82 2C         [ 4] 1020 	call	_i2c_read_register
+      00850E 5B 02            [ 2] 1021 	addw	sp, #2
+      008510 6B 01            [ 1] 1022 	ld	(0x01, sp), a
+                                   1023 ;	mpu6050.c: 442: UARTPrintF("read 2 \n\r");
+      008512 AE 86 CF         [ 2] 1024 	ldw	x, #___str_1+0
+      008515 89               [ 2] 1025 	pushw	x
+      008516 CD 81 79         [ 4] 1026 	call	_UARTPrintF
+      008519 5B 02            [ 2] 1027 	addw	sp, #2
+                                   1028 ;	mpu6050.c: 443: xx = xh << 8 | xl;
+      00851B 7B 02            [ 1] 1029 	ld	a, (0x02, sp)
+      00851D 95               [ 1] 1030 	ld	xh, a
+      00851E 4F               [ 1] 1031 	clr	a
+      00851F 0F 06            [ 1] 1032 	clr	(0x06, sp)
+      008521 7B 01            [ 1] 1033 	ld	a, (0x01, sp)
+      008523 0F 03            [ 1] 1034 	clr	(0x03, sp)
+      008525 1A 06            [ 1] 1035 	or	a, (0x06, sp)
+      008527 02               [ 1] 1036 	rlwa	x
+      008528 1A 03            [ 1] 1037 	or	a, (0x03, sp)
+      00852A 95               [ 1] 1038 	ld	xh, a
+                                   1039 ;	mpu6050.c: 444: return(xx);
+      00852B 5B 06            [ 2] 1040 	addw	sp, #6
+      00852D 81               [ 4] 1041 	ret
+                                   1042 ;	mpu6050.c: 448: int main () {
+                                   1043 ;	-----------------------------------------
+                                   1044 ;	 function main
+                                   1045 ;	-----------------------------------------
+      00852E                       1046 _main:
+      00852E 52 16            [ 2] 1047 	sub	sp, #22
+                                   1048 ;	mpu6050.c: 455: InitializeSystemClock();
+      008530 CD 80 AB         [ 4] 1049 	call	_InitializeSystemClock
+                                   1050 ;	mpu6050.c: 457: PB_DDR = (0 << 4);
+      008533 35 00 50 07      [ 1] 1051 	mov	0x5007+0, #0x00
+                                   1052 ;	mpu6050.c: 458: PB_DDR = (0 << 5);
+      008537 35 00 50 07      [ 1] 1053 	mov	0x5007+0, #0x00
+                                   1054 ;	mpu6050.c: 463: PD_DDR = (1 << 3) | (1 << 2); // output mode
+      00853B 35 0C 50 11      [ 1] 1055 	mov	0x5011+0, #0x0c
+                                   1056 ;	mpu6050.c: 464: PD_CR2 = (1 << 3) | (1 << 2); // up to 10MHz speed
+      00853F 35 0C 50 13      [ 1] 1057 	mov	0x5013+0, #0x0c
+                                   1058 ;	mpu6050.c: 465: PD_CR1 = 0; // push-pull
+      008543 35 00 50 12      [ 1] 1059 	mov	0x5012+0, #0x00
+                                   1060 ;	mpu6050.c: 466: PD_CR2 = 0; // up to 10MHz speed
+      008547 35 00 50 13      [ 1] 1061 	mov	0x5013+0, #0x00
+                                   1062 ;	mpu6050.c: 467: tm1637Init();
+      00854B CD 83 09         [ 4] 1063 	call	_tm1637Init
+                                   1064 ;	mpu6050.c: 469: InitializeUART();
+      00854E CD 82 96         [ 4] 1065 	call	_InitializeUART
+                                   1066 ;	mpu6050.c: 470: UARTPrintF("uart initialised \n\r");
+      008551 AE 86 D9         [ 2] 1067 	ldw	x, #___str_2+0
+      008554 89               [ 2] 1068 	pushw	x
+      008555 CD 81 79         [ 4] 1069 	call	_UARTPrintF
+      008558 5B 02            [ 2] 1070 	addw	sp, #2
+                                   1071 ;	mpu6050.c: 471: InitializeI2C();
+      00855A CD 82 6E         [ 4] 1072 	call	_InitializeI2C
+                                   1073 ;	mpu6050.c: 472: delay(200);
+      00855D 4B C8            [ 1] 1074 	push	#0xc8
+      00855F 4B 00            [ 1] 1075 	push	#0x00
+      008561 CD 80 EB         [ 4] 1076 	call	_delay
+      008564 5B 02            [ 2] 1077 	addw	sp, #2
+                                   1078 ;	mpu6050.c: 473: UARTPrintF("testing 0 \n\r");
+      008566 AE 86 ED         [ 2] 1079 	ldw	x, #___str_3+0
+      008569 89               [ 2] 1080 	pushw	x
+      00856A CD 81 79         [ 4] 1081 	call	_UARTPrintF
+      00856D 5B 02            [ 2] 1082 	addw	sp, #2
+                                   1083 ;	mpu6050.c: 474: initMPU6050();
+      00856F CD 84 6A         [ 4] 1084 	call	_initMPU6050
+                                   1085 ;	mpu6050.c: 475: delay(200);
+      008572 4B C8            [ 1] 1086 	push	#0xc8
+      008574 4B 00            [ 1] 1087 	push	#0x00
+      008576 CD 80 EB         [ 4] 1088 	call	_delay
+      008579 5B 02            [ 2] 1089 	addw	sp, #2
+                                   1090 ;	mpu6050.c: 478: UARTPrintF("testing 1 \n\r");
+      00857B AE 86 FA         [ 2] 1091 	ldw	x, #___str_4+0
+      00857E 89               [ 2] 1092 	pushw	x
+      00857F CD 81 79         [ 4] 1093 	call	_UARTPrintF
+      008582 5B 02            [ 2] 1094 	addw	sp, #2
+                                   1095 ;	mpu6050.c: 479: while (1) {
+      008584                       1096 00114$:
+                                   1097 ;	mpu6050.c: 480: objTemp = getMPU6050();
+      008584 CD 84 F1         [ 4] 1098 	call	_getMPU6050
+      008587 89               [ 2] 1099 	pushw	x
+      008588 CD 8A F9         [ 4] 1100 	call	___uint2fs
+      00858B 5B 02            [ 2] 1101 	addw	sp, #2
+      00858D 1F 03            [ 2] 1102 	ldw	(0x03, sp), x
+      00858F 17 01            [ 2] 1103 	ldw	(0x01, sp), y
+                                   1104 ;	mpu6050.c: 484: while (objTemp > 1000) {
+      008591 5F               [ 1] 1105 	clrw	x
+      008592 1F 0B            [ 2] 1106 	ldw	(0x0b, sp), x
+      008594                       1107 00101$:
+      008594 5F               [ 1] 1108 	clrw	x
+      008595 89               [ 2] 1109 	pushw	x
+      008596 4B 7A            [ 1] 1110 	push	#0x7a
+      008598 4B 44            [ 1] 1111 	push	#0x44
+      00859A 1E 07            [ 2] 1112 	ldw	x, (0x07, sp)
+      00859C 89               [ 2] 1113 	pushw	x
+      00859D 1E 07            [ 2] 1114 	ldw	x, (0x07, sp)
+      00859F 89               [ 2] 1115 	pushw	x
+      0085A0 CD 87 2A         [ 4] 1116 	call	___fsgt
+      0085A3 5B 08            [ 2] 1117 	addw	sp, #8
+      0085A5 4D               [ 1] 1118 	tnz	a
+      0085A6 27 1C            [ 1] 1119 	jreq	00127$
+                                   1120 ;	mpu6050.c: 485: vierde+=1;
+      0085A8 1E 0B            [ 2] 1121 	ldw	x, (0x0b, sp)
+      0085AA 5C               [ 2] 1122 	incw	x
+      0085AB 1F 0B            [ 2] 1123 	ldw	(0x0b, sp), x
+                                   1124 ;	mpu6050.c: 486: objTemp-=1000;
+      0085AD 5F               [ 1] 1125 	clrw	x
+      0085AE 89               [ 2] 1126 	pushw	x
+      0085AF 4B 7A            [ 1] 1127 	push	#0x7a
+      0085B1 4B 44            [ 1] 1128 	push	#0x44
+      0085B3 1E 07            [ 2] 1129 	ldw	x, (0x07, sp)
+      0085B5 89               [ 2] 1130 	pushw	x
+      0085B6 1E 07            [ 2] 1131 	ldw	x, (0x07, sp)
+      0085B8 89               [ 2] 1132 	pushw	x
+      0085B9 CD 87 07         [ 4] 1133 	call	___fssub
+      0085BC 5B 08            [ 2] 1134 	addw	sp, #8
+      0085BE 1F 03            [ 2] 1135 	ldw	(0x03, sp), x
+      0085C0 17 01            [ 2] 1136 	ldw	(0x01, sp), y
+      0085C2 20 D0            [ 2] 1137 	jra	00101$
+                                   1138 ;	mpu6050.c: 488: while (objTemp > 100) {
+      0085C4                       1139 00127$:
+      0085C4 16 0B            [ 2] 1140 	ldw	y, (0x0b, sp)
+      0085C6 17 13            [ 2] 1141 	ldw	(0x13, sp), y
+      0085C8 5F               [ 1] 1142 	clrw	x
+      0085C9 1F 07            [ 2] 1143 	ldw	(0x07, sp), x
+      0085CB                       1144 00104$:
+      0085CB 5F               [ 1] 1145 	clrw	x
+      0085CC 89               [ 2] 1146 	pushw	x
+      0085CD 4B C8            [ 1] 1147 	push	#0xc8
+      0085CF 4B 42            [ 1] 1148 	push	#0x42
+      0085D1 1E 07            [ 2] 1149 	ldw	x, (0x07, sp)
+      0085D3 89               [ 2] 1150 	pushw	x
+      0085D4 1E 07            [ 2] 1151 	ldw	x, (0x07, sp)
+      0085D6 89               [ 2] 1152 	pushw	x
+      0085D7 CD 87 2A         [ 4] 1153 	call	___fsgt
+      0085DA 5B 08            [ 2] 1154 	addw	sp, #8
+      0085DC 4D               [ 1] 1155 	tnz	a
+      0085DD 27 1C            [ 1] 1156 	jreq	00128$
+                                   1157 ;	mpu6050.c: 489: derde+=1;
+      0085DF 1E 07            [ 2] 1158 	ldw	x, (0x07, sp)
+      0085E1 5C               [ 2] 1159 	incw	x
+      0085E2 1F 07            [ 2] 1160 	ldw	(0x07, sp), x
+                                   1161 ;	mpu6050.c: 490: objTemp-=100;
+      0085E4 5F               [ 1] 1162 	clrw	x
+      0085E5 89               [ 2] 1163 	pushw	x
+      0085E6 4B C8            [ 1] 1164 	push	#0xc8
+      0085E8 4B 42            [ 1] 1165 	push	#0x42
+      0085EA 1E 07            [ 2] 1166 	ldw	x, (0x07, sp)
+      0085EC 89               [ 2] 1167 	pushw	x
+      0085ED 1E 07            [ 2] 1168 	ldw	x, (0x07, sp)
+      0085EF 89               [ 2] 1169 	pushw	x
+      0085F0 CD 87 07         [ 4] 1170 	call	___fssub
+      0085F3 5B 08            [ 2] 1171 	addw	sp, #8
+      0085F5 1F 03            [ 2] 1172 	ldw	(0x03, sp), x
+      0085F7 17 01            [ 2] 1173 	ldw	(0x01, sp), y
+      0085F9 20 D0            [ 2] 1174 	jra	00104$
+                                   1175 ;	mpu6050.c: 492: while (objTemp > 10) {
+      0085FB                       1176 00128$:
+      0085FB 16 07            [ 2] 1177 	ldw	y, (0x07, sp)
+      0085FD 17 15            [ 2] 1178 	ldw	(0x15, sp), y
+      0085FF 5F               [ 1] 1179 	clrw	x
+      008600 1F 05            [ 2] 1180 	ldw	(0x05, sp), x
+      008602                       1181 00107$:
+      008602 5F               [ 1] 1182 	clrw	x
+      008603 89               [ 2] 1183 	pushw	x
+      008604 4B 20            [ 1] 1184 	push	#0x20
+      008606 4B 41            [ 1] 1185 	push	#0x41
+      008608 1E 07            [ 2] 1186 	ldw	x, (0x07, sp)
+      00860A 89               [ 2] 1187 	pushw	x
+      00860B 1E 07            [ 2] 1188 	ldw	x, (0x07, sp)
+      00860D 89               [ 2] 1189 	pushw	x
+      00860E CD 87 2A         [ 4] 1190 	call	___fsgt
+      008611 5B 08            [ 2] 1191 	addw	sp, #8
+      008613 4D               [ 1] 1192 	tnz	a
+      008614 27 1C            [ 1] 1193 	jreq	00129$
+                                   1194 ;	mpu6050.c: 493: tweede+=1;
+      008616 1E 05            [ 2] 1195 	ldw	x, (0x05, sp)
+      008618 5C               [ 2] 1196 	incw	x
+      008619 1F 05            [ 2] 1197 	ldw	(0x05, sp), x
+                                   1198 ;	mpu6050.c: 494: objTemp-=10;
+      00861B 5F               [ 1] 1199 	clrw	x
+      00861C 89               [ 2] 1200 	pushw	x
+      00861D 4B 20            [ 1] 1201 	push	#0x20
+      00861F 4B 41            [ 1] 1202 	push	#0x41
+      008621 1E 07            [ 2] 1203 	ldw	x, (0x07, sp)
+      008623 89               [ 2] 1204 	pushw	x
+      008624 1E 07            [ 2] 1205 	ldw	x, (0x07, sp)
+      008626 89               [ 2] 1206 	pushw	x
+      008627 CD 87 07         [ 4] 1207 	call	___fssub
+      00862A 5B 08            [ 2] 1208 	addw	sp, #8
+      00862C 1F 03            [ 2] 1209 	ldw	(0x03, sp), x
+      00862E 17 01            [ 2] 1210 	ldw	(0x01, sp), y
+      008630 20 D0            [ 2] 1211 	jra	00107$
+                                   1212 ;	mpu6050.c: 496: while (objTemp > 0)
+      008632                       1213 00129$:
+      008632 16 05            [ 2] 1214 	ldw	y, (0x05, sp)
+      008634 17 11            [ 2] 1215 	ldw	(0x11, sp), y
+      008636 5F               [ 1] 1216 	clrw	x
+      008637 1F 09            [ 2] 1217 	ldw	(0x09, sp), x
+      008639                       1218 00110$:
+      008639 5F               [ 1] 1219 	clrw	x
+      00863A 89               [ 2] 1220 	pushw	x
+      00863B 5F               [ 1] 1221 	clrw	x
+      00863C 89               [ 2] 1222 	pushw	x
+      00863D 1E 07            [ 2] 1223 	ldw	x, (0x07, sp)
+      00863F 89               [ 2] 1224 	pushw	x
+      008640 1E 07            [ 2] 1225 	ldw	x, (0x07, sp)
+      008642 89               [ 2] 1226 	pushw	x
+      008643 CD 87 2A         [ 4] 1227 	call	___fsgt
+      008646 5B 08            [ 2] 1228 	addw	sp, #8
+      008648 4D               [ 1] 1229 	tnz	a
+      008649 27 1C            [ 1] 1230 	jreq	00112$
+                                   1231 ;	mpu6050.c: 498: eerste+=1;
+      00864B 1E 09            [ 2] 1232 	ldw	x, (0x09, sp)
+      00864D 5C               [ 2] 1233 	incw	x
+      00864E 1F 09            [ 2] 1234 	ldw	(0x09, sp), x
+                                   1235 ;	mpu6050.c: 499: objTemp-=1;
+      008650 5F               [ 1] 1236 	clrw	x
+      008651 89               [ 2] 1237 	pushw	x
+      008652 4B 80            [ 1] 1238 	push	#0x80
+      008654 4B 3F            [ 1] 1239 	push	#0x3f
+      008656 1E 07            [ 2] 1240 	ldw	x, (0x07, sp)
+      008658 89               [ 2] 1241 	pushw	x
+      008659 1E 07            [ 2] 1242 	ldw	x, (0x07, sp)
+      00865B 89               [ 2] 1243 	pushw	x
+      00865C CD 87 07         [ 4] 1244 	call	___fssub
+      00865F 5B 08            [ 2] 1245 	addw	sp, #8
+      008661 1F 03            [ 2] 1246 	ldw	(0x03, sp), x
+      008663 17 01            [ 2] 1247 	ldw	(0x01, sp), y
+      008665 20 D2            [ 2] 1248 	jra	00110$
+      008667                       1249 00112$:
+                                   1250 ;	mpu6050.c: 510: utemp=vierde*1000+derde*100+tweede*10+eerste;
+      008667 1E 13            [ 2] 1251 	ldw	x, (0x13, sp)
+      008669 89               [ 2] 1252 	pushw	x
+      00866A 4B E8            [ 1] 1253 	push	#0xe8
+      00866C 4B 03            [ 1] 1254 	push	#0x03
+      00866E CD 88 16         [ 4] 1255 	call	__mulint
+      008671 5B 04            [ 2] 1256 	addw	sp, #4
+      008673 1F 0F            [ 2] 1257 	ldw	(0x0f, sp), x
+      008675 1E 15            [ 2] 1258 	ldw	x, (0x15, sp)
+      008677 89               [ 2] 1259 	pushw	x
+      008678 4B 64            [ 1] 1260 	push	#0x64
+      00867A 4B 00            [ 1] 1261 	push	#0x00
+      00867C CD 88 16         [ 4] 1262 	call	__mulint
+      00867F 5B 04            [ 2] 1263 	addw	sp, #4
+      008681 72 FB 0F         [ 2] 1264 	addw	x, (0x0f, sp)
+      008684 1F 0D            [ 2] 1265 	ldw	(0x0d, sp), x
+      008686 1E 11            [ 2] 1266 	ldw	x, (0x11, sp)
+      008688 89               [ 2] 1267 	pushw	x
+      008689 4B 0A            [ 1] 1268 	push	#0x0a
+      00868B 4B 00            [ 1] 1269 	push	#0x00
+      00868D CD 88 16         [ 4] 1270 	call	__mulint
+      008690 5B 04            [ 2] 1271 	addw	sp, #4
+      008692 72 FB 0D         [ 2] 1272 	addw	x, (0x0d, sp)
+      008695 72 FB 09         [ 2] 1273 	addw	x, (0x09, sp)
+      008698 90 5F            [ 1] 1274 	clrw	y
+      00869A 5D               [ 2] 1275 	tnzw	x
+      00869B 2A 02            [ 1] 1276 	jrpl	00162$
+      00869D 90 5A            [ 2] 1277 	decw	y
+      00869F                       1278 00162$:
+                                   1279 ;	mpu6050.c: 513: tm1637DisplayDecimal(utemp, 1); // eg 37:12
+      00869F 4B 01            [ 1] 1280 	push	#0x01
+      0086A1 4B 00            [ 1] 1281 	push	#0x00
+      0086A3 89               [ 2] 1282 	pushw	x
+      0086A4 90 89            [ 2] 1283 	pushw	y
+      0086A6 CD 83 10         [ 4] 1284 	call	_tm1637DisplayDecimal
+      0086A9 5B 06            [ 2] 1285 	addw	sp, #6
+                                   1286 ;	mpu6050.c: 517: delayTenMicro();
+      0086AB CD 80 A0         [ 4] 1287 	call	_delayTenMicro
+      0086AE CC 85 84         [ 2] 1288 	jp	00114$
+      0086B1 5B 16            [ 2] 1289 	addw	sp, #22
+      0086B3 81               [ 4] 1290 	ret
+                                   1291 	.area CODE
+      0086B4                       1292 _segmentMap:
+      0086B4 3F                    1293 	.db #0x3F	;  63
+      0086B5 06                    1294 	.db #0x06	;  6
+      0086B6 5B                    1295 	.db #0x5B	;  91
+      0086B7 4F                    1296 	.db #0x4F	;  79	'O'
+      0086B8 66                    1297 	.db #0x66	;  102	'f'
+      0086B9 6D                    1298 	.db #0x6D	;  109	'm'
+      0086BA 7D                    1299 	.db #0x7D	;  125
+      0086BB 07                    1300 	.db #0x07	;  7
+      0086BC 7F                    1301 	.db #0x7F	;  127
+      0086BD 6F                    1302 	.db #0x6F	;  111	'o'
+      0086BE 77                    1303 	.db #0x77	;  119	'w'
+      0086BF 7C                    1304 	.db #0x7C	;  124
+      0086C0 39                    1305 	.db #0x39	;  57	'9'
+      0086C1 5E                    1306 	.db #0x5E	;  94
+      0086C2 79                    1307 	.db #0x79	;  121	'y'
+      0086C3 71                    1308 	.db #0x71	;  113	'q'
+      0086C4 00                    1309 	.db #0x00	;  0
+      0086C5                       1310 ___str_0:
+      0086C5 72 65 61 64 20 31 20  1311 	.ascii "read 1 "
+      0086CC 0A                    1312 	.db 0x0A
+      0086CD 0D                    1313 	.db 0x0D
+      0086CE 00                    1314 	.db 0x00
+      0086CF                       1315 ___str_1:
+      0086CF 72 65 61 64 20 32 20  1316 	.ascii "read 2 "
+      0086D6 0A                    1317 	.db 0x0A
+      0086D7 0D                    1318 	.db 0x0D
+      0086D8 00                    1319 	.db 0x00
+      0086D9                       1320 ___str_2:
+      0086D9 75 61 72 74 20 69 6E  1321 	.ascii "uart initialised "
+             69 74 69 61 6C 69 73
+             65 64 20
+      0086EA 0A                    1322 	.db 0x0A
+      0086EB 0D                    1323 	.db 0x0D
+      0086EC 00                    1324 	.db 0x00
+      0086ED                       1325 ___str_3:
+      0086ED 74 65 73 74 69 6E 67  1326 	.ascii "testing 0 "
+             20 30 20
+      0086F7 0A                    1327 	.db 0x0A
+      0086F8 0D                    1328 	.db 0x0D
+      0086F9 00                    1329 	.db 0x00
+      0086FA                       1330 ___str_4:
+      0086FA 74 65 73 74 69 6E 67  1331 	.ascii "testing 1 "
+             20 31 20
+      008704 0A                    1332 	.db 0x0A
+      008705 0D                    1333 	.db 0x0D
+      008706 00                    1334 	.db 0x00
+                                   1335 	.area INITIALIZER
+                                   1336 	.area CABS (ABS)
