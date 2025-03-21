@@ -1,4 +1,4 @@
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8)  Page 1
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 1.
 Hexadecimal [24-Bits]
 
 Symbol Table
@@ -26,14 +26,8 @@ Symbol Table
   1 _LastSteps                                                     000028 GR
   1 _LastValue                                                     00001C GR
   2 _Mode                                                          000005 GR
-  8 _OLED_FONT                                                     00000E GR
-  8 _OLED_INIT_CMD                                                 000000 GR
-  A _OLED_clear                                                    0002E4 GR
-  A _OLED_cursor                                                   0002AC GR
-  A _OLED_init                                                     000140 GR
-  A _OLED_printNum                                                 0001C4 GR
-  A _OLED_printOneNumber                                           00026D GR
-  A _OLED_printP                                                   00016C GR
+  8 _OLED_FONT                                                     000352 GR
+  8 _OLED_INIT_CMD                                                 000344 GR
   2 _Steps                                                         000000 GR
   1 _SumValue                                                      000029 GR
   2 _Threshold                                                     000001 GR
@@ -45,25 +39,31 @@ Symbol Table
     ___fsdiv                                                       ****** GX
     ___fsmul                                                       ****** GX
     ___fssub                                                       ****** GX
-    ___sdcc_external_startup                                       ****** GX
     ___sint2fs                                                     ****** GX
+  8 ___str_0                                                       000497 R
+  8 ___str_1                                                       0004B3 R
+  8 ___str_2                                                       0004B7 R
+  8 ___str_3                                                       0004D3 R
   5 __interrupt_vect                                               000000 R
-  6 __sdcc_init_data                                               000009 R
-  5 __sdcc_program_startup                                         000004 R
+  6 __sdcc_gs_init_startup                                         000000 R
+  6 __sdcc_init_data                                               000000 R
+  5 __sdcc_program_startup                                         000080 R
   3 __start__stack                                                 000000 R
   9 __xinit__Mode                                                  000005 R
   9 __xinit__Steps                                                 000000 R
   9 __xinit__Threshold                                             000001 R
-  A _getMPU6050                                                    00037A GR
-  A _initMPU6050                                                   00030E GR
-  A _main                                                          000000 GR
-    _sqrtf                                                         ****** GX
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8)  Page 2
+  1 _a                                                             00002D GR
+    _fabsf                                                         ****** GX
+  8 _getMPU6050                                                    000223 GR
+  8 _initMPU6050                                                   0001A3 GR
+  8 _main                                                          000000 GR
+    _uart1_number                                                  ****** GX
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 2.
 Hexadecimal [24-Bits]
 
 Symbol Table
 
-    _uart1_number                                                  ****** GX
+    _uart1_string                                                  ****** GX
     _uart_init                                                     ****** GX
     l_DATA                                                         ****** GX
     l_INITIALIZER                                                  ****** GX
@@ -72,21 +72,20 @@ Symbol Table
     s_INITIALIZED                                                  ****** GX
     s_INITIALIZER                                                  ****** GX
 
-ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8)  Page 3
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 3.
 Hexadecimal [24-Bits]
 
 Area Table
 
    0 _CODE                                      size      0   flags    0
-   1 DATA                                       size     2D   flags    0
+   1 DATA                                       size     2E   flags    0
    2 INITIALIZED                                size      6   flags    0
    3 SSEG                                       size      1   flags    0
    4 DABS                                       size      0   flags    8
-   5 HOME                                       size      7   flags    0
-   6 GSINIT                                     size     23   flags    0
+   5 HOME                                       size     83   flags    0
+   6 GSINIT                                     size     1A   flags    0
    7 GSFINAL                                    size      3   flags    0
-   8 CONST                                      size    153   flags    0
+   8 CODE                                       size    4F7   flags    0
    9 INITIALIZER                                size      6   flags    0
-   A CODE                                       size    46F   flags    0
-   B CABS                                       size      0   flags    8
+   A CABS                                       size      0   flags    8
 

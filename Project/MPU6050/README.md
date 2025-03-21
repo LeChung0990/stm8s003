@@ -23,3 +23,10 @@ https://controllerstech.com/how-to-interface-mpu6050-gy-521-with-stm32/?fbclid=I
 https://github.com/yuewuo/stm8-mpu6050/tree/master
 
 ![Alt text](image/pich_roll.png)
+
+
+
+![Alt text](image.png)
+
+![Alt text](image-1.png)
+

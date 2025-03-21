@@ -1,0 +1,43 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 1.
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  002710 L
+    .__.ABS.                                                    =  000000 G
+    .__.CPU.                                                    =  000000 L
+    .__.H$L.                                                    =  000001 L
+  7 _I2C_address                                                   00008A GR
+  7 _I2C_init                                                      000027 GR
+  7 _I2C_start                                                     000064 GR
+  7 _I2C_stop                                                      00007A GR
+  7 _I2C_write                                                     0000A5 GR
+  7 _Timer4Config                                                  000000 GR
+  7 _Timer4DelayMs                                                 00000D GR
+    ___fs2sint                                                     ****** GX
+    ___sint2fs                                                     ****** GX
+    __divsint                                                      ****** GX
+    __modsint                                                      ****** GX
+    _fabsf                                                         ****** GX
+  7 _uart1_nline                                                   0001DA GR
+  7 _uart1_number                                                  000123 GR
+  7 _uart1_string                                                  0001C3 GR
+  7 _uart_init                                                     0000BB GR
+
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 2.
+Hexadecimal [24-Bits]
+
+Area Table
+
+   0 _CODE                                      size      0   flags    0
+   1 DATA                                       size      0   flags    0
+   2 INITIALIZED                                size      0   flags    0
+   3 DABS                                       size      0   flags    8
+   4 HOME                                       size      0   flags    0
+   5 GSINIT                                     size      0   flags    0
+   6 GSFINAL                                    size      0   flags    0
+   7 CODE                                       size    1E6   flags    0
+   8 INITIALIZER                                size      0   flags    0
+   9 CABS                                       size      0   flags    8
+
