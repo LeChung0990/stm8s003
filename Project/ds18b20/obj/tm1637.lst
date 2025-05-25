@@ -1,0 +1,413 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 3.5.0 #9253 (Apr  3 2018) (Linux)
+                                      4 ; This file was generated Tue Feb 11 21:25:57 2025
+                                      5 ;--------------------------------------------------------
+                                      6 	.module tm1637
+                                      7 	.optsdcc -mstm8
+                                      8 	
+                                      9 ;--------------------------------------------------------
+                                     10 ; Public variables in this module
+                                     11 ;--------------------------------------------------------
+                                     12 	.globl __digit2segments
+                                     13 	.globl _SEND_WRITE
+                                     14 	.globl _SEND_START
+                                     15 	.globl _SEND_STOP
+                                     16 	.globl _delay_us
+                                     17 	.globl _GPIO_WriteLow
+                                     18 	.globl _GPIO_WriteHigh
+                                     19 	.globl _GPIO_Init
+                                     20 	.globl _TM1637_SEND_COMMAND
+                                     21 	.globl _TM1637_SEND_CONFIG
+                                     22 	.globl _TM1637_INIT
+                                     23 	.globl _TM1637_display_segments
+                                     24 	.globl _TM1637_DISPLAY_DIGIT
+                                     25 	.globl _TM1637_clear
+                                     26 ;--------------------------------------------------------
+                                     27 ; ram data
+                                     28 ;--------------------------------------------------------
+                                     29 	.area DATA
+                                     30 ;--------------------------------------------------------
+                                     31 ; ram data
+                                     32 ;--------------------------------------------------------
+                                     33 	.area INITIALIZED
+      000000                         34 __config:
+      000000                         35 	.ds 1
+      000001                         36 __segments:
+      000001                         37 	.ds 1
+                                     38 ;--------------------------------------------------------
+                                     39 ; absolute external ram data
+                                     40 ;--------------------------------------------------------
+                                     41 	.area DABS (ABS)
+                                     42 ;--------------------------------------------------------
+                                     43 ; global & static initialisations
+                                     44 ;--------------------------------------------------------
+                                     45 	.area HOME
+                                     46 	.area GSINIT
+                                     47 	.area GSFINAL
+                                     48 	.area GSINIT
+                                     49 ;--------------------------------------------------------
+                                     50 ; Home
+                                     51 ;--------------------------------------------------------
+                                     52 	.area HOME
+                                     53 	.area HOME
+                                     54 ;--------------------------------------------------------
+                                     55 ; code
+                                     56 ;--------------------------------------------------------
+                                     57 	.area CODE
+                                     58 ;	lib/src/tm1637.c: 42: void SEND_STOP(void)
+                                     59 ;	-----------------------------------------
+                                     60 ;	 function SEND_STOP
+                                     61 ;	-----------------------------------------
+      000000                         62 _SEND_STOP:
+                                     63 ;	lib/src/tm1637.c: 44: DIO_0; I2C_DELAY;  
+      000000 4B 80            [ 1]   64 	push	#0x80
+      000002 4B 0A            [ 1]   65 	push	#0x0a
+      000004 4B 50            [ 1]   66 	push	#0x50
+      000006 CDr00r00         [ 4]   67 	call	_GPIO_WriteLow
+      000009 5B 03            [ 2]   68 	addw	sp, #3
+      00000B 4B 02            [ 1]   69 	push	#0x02
+      00000D 4B 00            [ 1]   70 	push	#0x00
+      00000F CDr00r00         [ 4]   71 	call	_delay_us
+      000012 5B 02            [ 2]   72 	addw	sp, #2
+                                     73 ;	lib/src/tm1637.c: 45: CLK_1; I2C_DELAY;
+      000014 4B 40            [ 1]   74 	push	#0x40
+      000016 4B 0A            [ 1]   75 	push	#0x0a
+      000018 4B 50            [ 1]   76 	push	#0x50
+      00001A CDr00r00         [ 4]   77 	call	_GPIO_WriteHigh
+      00001D 5B 03            [ 2]   78 	addw	sp, #3
+      00001F 4B 02            [ 1]   79 	push	#0x02
+      000021 4B 00            [ 1]   80 	push	#0x00
+      000023 CDr00r00         [ 4]   81 	call	_delay_us
+      000026 5B 02            [ 2]   82 	addw	sp, #2
+                                     83 ;	lib/src/tm1637.c: 46: DIO_1; I2C_DELAY;
+      000028 4B 80            [ 1]   84 	push	#0x80
+      00002A 4B 0A            [ 1]   85 	push	#0x0a
+      00002C 4B 50            [ 1]   86 	push	#0x50
+      00002E CDr00r00         [ 4]   87 	call	_GPIO_WriteHigh
+      000031 5B 03            [ 2]   88 	addw	sp, #3
+      000033 4B 02            [ 1]   89 	push	#0x02
+      000035 4B 00            [ 1]   90 	push	#0x00
+      000037 CDr00r00         [ 4]   91 	call	_delay_us
+      00003A 5B 02            [ 2]   92 	addw	sp, #2
+      00003C 81               [ 4]   93 	ret
+                                     94 ;	lib/src/tm1637.c: 48: void SEND_START(void)
+                                     95 ;	-----------------------------------------
+                                     96 ;	 function SEND_START
+                                     97 ;	-----------------------------------------
+      00003D                         98 _SEND_START:
+                                     99 ;	lib/src/tm1637.c: 50: CLK_1; I2C_DELAY;
+      00003D 4B 40            [ 1]  100 	push	#0x40
+      00003F 4B 0A            [ 1]  101 	push	#0x0a
+      000041 4B 50            [ 1]  102 	push	#0x50
+      000043 CDr00r00         [ 4]  103 	call	_GPIO_WriteHigh
+      000046 5B 03            [ 2]  104 	addw	sp, #3
+      000048 4B 02            [ 1]  105 	push	#0x02
+      00004A 4B 00            [ 1]  106 	push	#0x00
+      00004C CDr00r00         [ 4]  107 	call	_delay_us
+      00004F 5B 02            [ 2]  108 	addw	sp, #2
+                                    109 ;	lib/src/tm1637.c: 51: DIO_1; I2C_DELAY;
+      000051 4B 80            [ 1]  110 	push	#0x80
+      000053 4B 0A            [ 1]  111 	push	#0x0a
+      000055 4B 50            [ 1]  112 	push	#0x50
+      000057 CDr00r00         [ 4]  113 	call	_GPIO_WriteHigh
+      00005A 5B 03            [ 2]  114 	addw	sp, #3
+      00005C 4B 02            [ 1]  115 	push	#0x02
+      00005E 4B 00            [ 1]  116 	push	#0x00
+      000060 CDr00r00         [ 4]  117 	call	_delay_us
+      000063 5B 02            [ 2]  118 	addw	sp, #2
+                                    119 ;	lib/src/tm1637.c: 52: DIO_0; I2C_DELAY;
+      000065 4B 80            [ 1]  120 	push	#0x80
+      000067 4B 0A            [ 1]  121 	push	#0x0a
+      000069 4B 50            [ 1]  122 	push	#0x50
+      00006B CDr00r00         [ 4]  123 	call	_GPIO_WriteLow
+      00006E 5B 03            [ 2]  124 	addw	sp, #3
+      000070 4B 02            [ 1]  125 	push	#0x02
+      000072 4B 00            [ 1]  126 	push	#0x00
+      000074 CDr00r00         [ 4]  127 	call	_delay_us
+      000077 5B 02            [ 2]  128 	addw	sp, #2
+                                    129 ;	lib/src/tm1637.c: 53: CLK_0; I2C_DELAY;
+      000079 4B 40            [ 1]  130 	push	#0x40
+      00007B 4B 0A            [ 1]  131 	push	#0x0a
+      00007D 4B 50            [ 1]  132 	push	#0x50
+      00007F CDr00r00         [ 4]  133 	call	_GPIO_WriteLow
+      000082 5B 03            [ 2]  134 	addw	sp, #3
+      000084 4B 02            [ 1]  135 	push	#0x02
+      000086 4B 00            [ 1]  136 	push	#0x00
+      000088 CDr00r00         [ 4]  137 	call	_delay_us
+      00008B 5B 02            [ 2]  138 	addw	sp, #2
+      00008D 81               [ 4]  139 	ret
+                                    140 ;	lib/src/tm1637.c: 55: uint8_t SEND_WRITE(uint8_t data)
+                                    141 ;	-----------------------------------------
+                                    142 ;	 function SEND_WRITE
+                                    143 ;	-----------------------------------------
+      00008E                        144 _SEND_WRITE:
+      00008E 88               [ 1]  145 	push	a
+                                    146 ;	lib/src/tm1637.c: 59: for (i = 0; i < 8; ++i)
+      00008F 0F 01            [ 1]  147 	clr	(0x01, sp)
+      000091                        148 00108$:
+                                    149 ;	lib/src/tm1637.c: 61: if (data & 0x01) {DIO_1;}
+      000091 7B 04            [ 1]  150 	ld	a, (0x04, sp)
+      000093 44               [ 1]  151 	srl	a
+      000094 24 0D            [ 1]  152 	jrnc	00102$
+      000096 4B 80            [ 1]  153 	push	#0x80
+      000098 4B 0A            [ 1]  154 	push	#0x0a
+      00009A 4B 50            [ 1]  155 	push	#0x50
+      00009C CDr00r00         [ 4]  156 	call	_GPIO_WriteHigh
+      00009F 5B 03            [ 2]  157 	addw	sp, #3
+      0000A1 20 0B            [ 2]  158 	jra	00103$
+      0000A3                        159 00102$:
+                                    160 ;	lib/src/tm1637.c: 62: else {DIO_0;}
+      0000A3 4B 80            [ 1]  161 	push	#0x80
+      0000A5 4B 0A            [ 1]  162 	push	#0x0a
+      0000A7 4B 50            [ 1]  163 	push	#0x50
+      0000A9 CDr00r00         [ 4]  164 	call	_GPIO_WriteLow
+      0000AC 5B 03            [ 2]  165 	addw	sp, #3
+      0000AE                        166 00103$:
+                                    167 ;	lib/src/tm1637.c: 63: I2C_DELAY;	
+      0000AE 4B 02            [ 1]  168 	push	#0x02
+      0000B0 4B 00            [ 1]  169 	push	#0x00
+      0000B2 CDr00r00         [ 4]  170 	call	_delay_us
+      0000B5 5B 02            [ 2]  171 	addw	sp, #2
+                                    172 ;	lib/src/tm1637.c: 64: CLK_1;
+      0000B7 4B 40            [ 1]  173 	push	#0x40
+      0000B9 4B 0A            [ 1]  174 	push	#0x0a
+      0000BB 4B 50            [ 1]  175 	push	#0x50
+      0000BD CDr00r00         [ 4]  176 	call	_GPIO_WriteHigh
+      0000C0 5B 03            [ 2]  177 	addw	sp, #3
+                                    178 ;	lib/src/tm1637.c: 65: I2C_DELAY;
+      0000C2 4B 02            [ 1]  179 	push	#0x02
+      0000C4 4B 00            [ 1]  180 	push	#0x00
+      0000C6 CDr00r00         [ 4]  181 	call	_delay_us
+      0000C9 5B 02            [ 2]  182 	addw	sp, #2
+                                    183 ;	lib/src/tm1637.c: 66: CLK_0;
+      0000CB 4B 40            [ 1]  184 	push	#0x40
+      0000CD 4B 0A            [ 1]  185 	push	#0x0a
+      0000CF 4B 50            [ 1]  186 	push	#0x50
+      0000D1 CDr00r00         [ 4]  187 	call	_GPIO_WriteLow
+      0000D4 5B 03            [ 2]  188 	addw	sp, #3
+                                    189 ;	lib/src/tm1637.c: 67: data >>= 1;	//1.37u
+      0000D6 04 04            [ 1]  190 	srl	(0x04, sp)
+                                    191 ;	lib/src/tm1637.c: 59: for (i = 0; i < 8; ++i)
+      0000D8 0C 01            [ 1]  192 	inc	(0x01, sp)
+      0000DA 7B 01            [ 1]  193 	ld	a, (0x01, sp)
+      0000DC A1 08            [ 1]  194 	cp	a, #0x08
+      0000DE 25 B1            [ 1]  195 	jrc	00108$
+                                    196 ;	lib/src/tm1637.c: 70: DIO_0;
+      0000E0 4B 80            [ 1]  197 	push	#0x80
+      0000E2 4B 0A            [ 1]  198 	push	#0x0a
+      0000E4 4B 50            [ 1]  199 	push	#0x50
+      0000E6 CDr00r00         [ 4]  200 	call	_GPIO_WriteLow
+      0000E9 5B 03            [ 2]  201 	addw	sp, #3
+                                    202 ;	lib/src/tm1637.c: 71: I2C_DELAY;
+      0000EB 4B 02            [ 1]  203 	push	#0x02
+      0000ED 4B 00            [ 1]  204 	push	#0x00
+      0000EF CDr00r00         [ 4]  205 	call	_delay_us
+      0000F2 5B 02            [ 2]  206 	addw	sp, #2
+                                    207 ;	lib/src/tm1637.c: 73: CLK_1;
+      0000F4 4B 40            [ 1]  208 	push	#0x40
+      0000F6 4B 0A            [ 1]  209 	push	#0x0a
+      0000F8 4B 50            [ 1]  210 	push	#0x50
+      0000FA CDr00r00         [ 4]  211 	call	_GPIO_WriteHigh
+      0000FD 5B 03            [ 2]  212 	addw	sp, #3
+                                    213 ;	lib/src/tm1637.c: 74: I2C_DELAY;
+      0000FF 4B 02            [ 1]  214 	push	#0x02
+      000101 4B 00            [ 1]  215 	push	#0x00
+      000103 CDr00r00         [ 4]  216 	call	_delay_us
+      000106 5B 02            [ 2]  217 	addw	sp, #2
+                                    218 ;	lib/src/tm1637.c: 75: CLK_0;
+      000108 4B 40            [ 1]  219 	push	#0x40
+      00010A 4B 0A            [ 1]  220 	push	#0x0a
+      00010C 4B 50            [ 1]  221 	push	#0x50
+      00010E CDr00r00         [ 4]  222 	call	_GPIO_WriteLow
+      000111 5B 03            [ 2]  223 	addw	sp, #3
+                                    224 ;	lib/src/tm1637.c: 76: I2C_DELAY;
+      000113 4B 02            [ 1]  225 	push	#0x02
+      000115 4B 00            [ 1]  226 	push	#0x00
+      000117 CDr00r00         [ 4]  227 	call	_delay_us
+      00011A 5B 02            [ 2]  228 	addw	sp, #2
+                                    229 ;	lib/src/tm1637.c: 83: I2C_DELAY;
+      00011C 4B 02            [ 1]  230 	push	#0x02
+      00011E 4B 00            [ 1]  231 	push	#0x00
+      000120 CDr00r00         [ 4]  232 	call	_delay_us
+      000123 5B 02            [ 2]  233 	addw	sp, #2
+                                    234 ;	lib/src/tm1637.c: 85: return result;
+      000125 4F               [ 1]  235 	clr	a
+      000126 5B 01            [ 2]  236 	addw	sp, #1
+      000128 81               [ 4]  237 	ret
+                                    238 ;	lib/src/tm1637.c: 88: void TM1637_SEND_COMMAND(const uint8_t value)
+                                    239 ;	-----------------------------------------
+                                    240 ;	 function TM1637_SEND_COMMAND
+                                    241 ;	-----------------------------------------
+      000129                        242 _TM1637_SEND_COMMAND:
+                                    243 ;	lib/src/tm1637.c: 90: SEND_START();
+      000129 CDr00r3D         [ 4]  244 	call	_SEND_START
+                                    245 ;	lib/src/tm1637.c: 91: SEND_WRITE(value);
+      00012C 7B 03            [ 1]  246 	ld	a, (0x03, sp)
+      00012E 88               [ 1]  247 	push	a
+      00012F CDr00r8E         [ 4]  248 	call	_SEND_WRITE
+      000132 84               [ 1]  249 	pop	a
+                                    250 ;	lib/src/tm1637.c: 92: SEND_STOP();
+      000133 CCr00r00         [ 2]  251 	jp	_SEND_STOP
+                                    252 ;	lib/src/tm1637.c: 95: void TM1637_SEND_CONFIG(const uint8_t enable, const uint8_t brightness)
+                                    253 ;	-----------------------------------------
+                                    254 ;	 function TM1637_SEND_CONFIG
+                                    255 ;	-----------------------------------------
+      000136                        256 _TM1637_SEND_CONFIG:
+      000136 88               [ 1]  257 	push	a
+                                    258 ;	lib/src/tm1637.c: 98: _config = (enable ? TM1637_SET_DISPLAY_ON : TM1637_SET_DISPLAY_OFF) |
+      000137 0D 04            [ 1]  259 	tnz	(0x04, sp)
+      000139 27 06            [ 1]  260 	jreq	00103$
+      00013B A6 08            [ 1]  261 	ld	a, #0x08
+      00013D 6B 01            [ 1]  262 	ld	(0x01, sp), a
+      00013F 20 02            [ 2]  263 	jra	00104$
+      000141                        264 00103$:
+      000141 0F 01            [ 1]  265 	clr	(0x01, sp)
+      000143                        266 00104$:
+                                    267 ;	lib/src/tm1637.c: 99: (brightness > TM1637_BRIGHTNESS_MAX ? TM1637_BRIGHTNESS_MAX : brightness);
+      000143 7B 05            [ 1]  268 	ld	a, (0x05, sp)
+      000145 A1 07            [ 1]  269 	cp	a, #0x07
+      000147 23 04            [ 2]  270 	jrule	00105$
+      000149 A6 07            [ 1]  271 	ld	a, #0x07
+      00014B 20 02            [ 2]  272 	jra	00106$
+      00014D                        273 00105$:
+      00014D 7B 05            [ 1]  274 	ld	a, (0x05, sp)
+      00014F                        275 00106$:
+      00014F 1A 01            [ 1]  276 	or	a, (0x01, sp)
+                                    277 ;	lib/src/tm1637.c: 101: TM1637_SEND_COMMAND(TM1637_CMD_SET_DSIPLAY | _config);
+      000151 C7u00u00         [ 1]  278 	ld	__config+0, a
+      000154 AA 80            [ 1]  279 	or	a, #0x80
+      000156 88               [ 1]  280 	push	a
+      000157 CDr01r29         [ 4]  281 	call	_TM1637_SEND_COMMAND
+      00015A 84               [ 1]  282 	pop	a
+      00015B 84               [ 1]  283 	pop	a
+      00015C 81               [ 4]  284 	ret
+                                    285 ;	lib/src/tm1637.c: 104: void TM1637_INIT(uint8_t enable, const uint8_t brightness)
+                                    286 ;	-----------------------------------------
+                                    287 ;	 function TM1637_INIT
+                                    288 ;	-----------------------------------------
+      00015D                        289 _TM1637_INIT:
+                                    290 ;	lib/src/tm1637.c: 106: GPIO_Init(GPIOC, PIN_CLK | PIN_DIO, GPIO_MODE_OUT_OD_HIZ_FAST);
+      00015D 4B B0            [ 1]  291 	push	#0xb0
+      00015F 4B C0            [ 1]  292 	push	#0xc0
+      000161 4B 0A            [ 1]  293 	push	#0x0a
+      000163 4B 50            [ 1]  294 	push	#0x50
+      000165 CDr00r00         [ 4]  295 	call	_GPIO_Init
+      000168 5B 04            [ 2]  296 	addw	sp, #4
+                                    297 ;	lib/src/tm1637.c: 111: TM1637_SEND_CONFIG(enable, brightness);
+      00016A 7B 04            [ 1]  298 	ld	a, (0x04, sp)
+      00016C 88               [ 1]  299 	push	a
+      00016D 7B 04            [ 1]  300 	ld	a, (0x04, sp)
+      00016F 88               [ 1]  301 	push	a
+      000170 CDr01r36         [ 4]  302 	call	_TM1637_SEND_CONFIG
+      000173 5B 02            [ 2]  303 	addw	sp, #2
+      000175 81               [ 4]  304 	ret
+                                    305 ;	lib/src/tm1637.c: 113: void TM1637_display_segments(const uint8_t position, const uint8_t segments)
+                                    306 ;	-----------------------------------------
+                                    307 ;	 function TM1637_display_segments
+                                    308 ;	-----------------------------------------
+      000176                        309 _TM1637_display_segments:
+                                    310 ;	lib/src/tm1637.c: 115: TM1637_SEND_COMMAND(TM1637_CMD_SET_DATA | TM1637_SET_DATA_F_ADDR);
+      000176 4B 44            [ 1]  311 	push	#0x44
+      000178 CDr01r29         [ 4]  312 	call	_TM1637_SEND_COMMAND
+      00017B 84               [ 1]  313 	pop	a
+                                    314 ;	lib/src/tm1637.c: 116: SEND_START();
+      00017C CDr00r3D         [ 4]  315 	call	_SEND_START
+                                    316 ;	lib/src/tm1637.c: 117: SEND_WRITE(TM1637_CMD_SET_ADDR | (position & (TM1637_POSITION_MAX - 1)));
+      00017F 7B 03            [ 1]  317 	ld	a, (0x03, sp)
+      000181 A4 03            [ 1]  318 	and	a, #0x03
+      000183 AA C0            [ 1]  319 	or	a, #0xc0
+      000185 88               [ 1]  320 	push	a
+      000186 CDr00r8E         [ 4]  321 	call	_SEND_WRITE
+      000189 84               [ 1]  322 	pop	a
+                                    323 ;	lib/src/tm1637.c: 118: SEND_WRITE(segments);
+      00018A 7B 04            [ 1]  324 	ld	a, (0x04, sp)
+      00018C 88               [ 1]  325 	push	a
+      00018D CDr00r8E         [ 4]  326 	call	_SEND_WRITE
+      000190 84               [ 1]  327 	pop	a
+                                    328 ;	lib/src/tm1637.c: 119: SEND_STOP();
+      000191 CCr00r00         [ 2]  329 	jp	_SEND_STOP
+                                    330 ;	lib/src/tm1637.c: 123: void TM1637_DISPLAY_DIGIT(const uint8_t position, const uint8_t digit)
+                                    331 ;	-----------------------------------------
+                                    332 ;	 function TM1637_DISPLAY_DIGIT
+                                    333 ;	-----------------------------------------
+      000194                        334 _TM1637_DISPLAY_DIGIT:
+      000194 88               [ 1]  335 	push	a
+                                    336 ;	lib/src/tm1637.c: 126: if (digit < 10)
+      000195 7B 05            [ 1]  337 	ld	a, (0x05, sp)
+      000197 A1 0A            [ 1]  338 	cp	a, #0x0a
+      000199 24 0C            [ 1]  339 	jrnc	00102$
+                                    340 ;	lib/src/tm1637.c: 128: segments = _digit2segments[digit];
+      00019B AEr01rD9         [ 2]  341 	ldw	x, #__digit2segments+0
+      00019E 9F               [ 1]  342 	ld	a, xl
+      00019F 1B 05            [ 1]  343 	add	a, (0x05, sp)
+      0001A1 02               [ 1]  344 	rlwa	x
+      0001A2 A9 00            [ 1]  345 	adc	a, #0x00
+      0001A4 95               [ 1]  346 	ld	xh, a
+      0001A5 F6               [ 1]  347 	ld	a, (x)
+                                    348 ;	lib/src/tm1637.c: 131: segments = 0x00;	
+      0001A6 21                     349 	.byte 0x21
+      0001A7                        350 00102$:
+      0001A7 4F               [ 1]  351 	clr	a
+      0001A8                        352 00103$:
+                                    353 ;	lib/src/tm1637.c: 133: if (position == 1) {
+      0001A8 88               [ 1]  354 	push	a
+      0001A9 7B 05            [ 1]  355 	ld	a, (0x05, sp)
+      0001AB A1 01            [ 1]  356 	cp	a, #0x01
+      0001AD 84               [ 1]  357 	pop	a
+      0001AE 26 0E            [ 1]  358 	jrne	00105$
+                                    359 ;	lib/src/tm1637.c: 134: segments = segments | (_segments & 0x80);
+      0001B0 88               [ 1]  360 	push	a
+      0001B1 C6u00u01         [ 1]  361 	ld	a, __segments+0
+      0001B4 A4 80            [ 1]  362 	and	a, #0x80
+      0001B6 6B 02            [ 1]  363 	ld	(0x02, sp), a
+      0001B8 84               [ 1]  364 	pop	a
+      0001B9 1A 01            [ 1]  365 	or	a, (0x01, sp)
+                                    366 ;	lib/src/tm1637.c: 135: _segments = segments;
+      0001BB C7u00u01         [ 1]  367 	ld	__segments+0, a
+      0001BE                        368 00105$:
+                                    369 ;	lib/src/tm1637.c: 137: TM1637_display_segments(position, segments);
+      0001BE 88               [ 1]  370 	push	a
+      0001BF 7B 05            [ 1]  371 	ld	a, (0x05, sp)
+      0001C1 88               [ 1]  372 	push	a
+      0001C2 CDr01r76         [ 4]  373 	call	_TM1637_display_segments
+      0001C5 5B 03            [ 2]  374 	addw	sp, #3
+      0001C7 81               [ 4]  375 	ret
+                                    376 ;	lib/src/tm1637.c: 140: void TM1637_clear(void)
+                                    377 ;	-----------------------------------------
+                                    378 ;	 function TM1637_clear
+                                    379 ;	-----------------------------------------
+      0001C8                        380 _TM1637_clear:
+                                    381 ;	lib/src/tm1637.c: 144: for (i = 0; i < TM1637_POSITION_MAX; ++i) {
+      0001C8 4F               [ 1]  382 	clr	a
+      0001C9                        383 00102$:
+                                    384 ;	lib/src/tm1637.c: 145: TM1637_display_segments(i, 0x00);
+      0001C9 88               [ 1]  385 	push	a
+      0001CA 4B 00            [ 1]  386 	push	#0x00
+      0001CC 88               [ 1]  387 	push	a
+      0001CD CDr01r76         [ 4]  388 	call	_TM1637_display_segments
+      0001D0 5B 02            [ 2]  389 	addw	sp, #2
+      0001D2 84               [ 1]  390 	pop	a
+                                    391 ;	lib/src/tm1637.c: 144: for (i = 0; i < TM1637_POSITION_MAX; ++i) {
+      0001D3 4C               [ 1]  392 	inc	a
+      0001D4 A1 04            [ 1]  393 	cp	a, #0x04
+      0001D6 25 F1            [ 1]  394 	jrc	00102$
+      0001D8 81               [ 4]  395 	ret
+                                    396 	.area CODE
+      0001D9                        397 __digit2segments:
+      0001D9 3F                     398 	.db #0x3F	; 63
+      0001DA 06                     399 	.db #0x06	; 6
+      0001DB 5B                     400 	.db #0x5B	; 91
+      0001DC 4F                     401 	.db #0x4F	; 79	'O'
+      0001DD 66                     402 	.db #0x66	; 102	'f'
+      0001DE 6D                     403 	.db #0x6D	; 109	'm'
+      0001DF 7D                     404 	.db #0x7D	; 125
+      0001E0 07                     405 	.db #0x07	; 7
+      0001E1 7F                     406 	.db #0x7F	; 127
+      0001E2 6F                     407 	.db #0x6F	; 111	'o'
+                                    408 	.area INITIALIZER
+      000000                        409 __xinit___config:
+      000000 0F                     410 	.db #0x0F	; 15
+      000001                        411 __xinit___segments:
+      000001 FF                     412 	.db #0xFF	; 255
+                                    413 	.area CABS (ABS)

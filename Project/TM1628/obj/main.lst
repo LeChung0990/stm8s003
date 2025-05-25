@@ -1,0 +1,413 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler 
+                                      3 ; Version 4.3.0 #14184 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module main
+                                      6 	.optsdcc -mstm8
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _TIM4_UPD_OVF_IRQHandler
+                                     12 	.globl _main
+                                     13 	.globl _Read_EEPROM
+                                     14 	.globl _TM1628_DISPLAY_SEGMENTS
+                                     15 	.globl _TM1628_INIT
+                                     16 	.globl _delay_us
+                                     17 	.globl _delay_config
+                                     18 	.globl _TIM4_ClearITPendingBit
+                                     19 	.globl _GPIO_ReadInputPin
+                                     20 	.globl _GPIO_Init
+                                     21 	.globl _GPIO_DeInit
+                                     22 	.globl _counter
+                                     23 	.globl _second
+                                     24 	.globl _minute
+                                     25 	.globl _buffer
+                                     26 	.globl _i
+                                     27 	.globl _Clock_setup
+                                     28 	.globl _GPIO_setup
+                                     29 ;--------------------------------------------------------
+                                     30 ; ram data
+                                     31 ;--------------------------------------------------------
+                                     32 	.area DATA
+      000000                         33 _i::
+      000000                         34 	.ds 1
+                                     35 ;--------------------------------------------------------
+                                     36 ; ram data
+                                     37 ;--------------------------------------------------------
+                                     38 	.area INITIALIZED
+      000000                         39 _buffer::
+      000000                         40 	.ds 14
+      00000E                         41 _minute::
+      00000E                         42 	.ds 1
+      00000F                         43 _second::
+      00000F                         44 	.ds 1
+      000010                         45 _counter::
+      000010                         46 	.ds 2
+                                     47 ;--------------------------------------------------------
+                                     48 ; Stack segment in internal ram
+                                     49 ;--------------------------------------------------------
+                                     50 	.area SSEG
+      000000                         51 __start__stack:
+      000000                         52 	.ds	1
+                                     53 
+                                     54 ;--------------------------------------------------------
+                                     55 ; absolute external ram data
+                                     56 ;--------------------------------------------------------
+                                     57 	.area DABS (ABS)
+                                     58 
+                                     59 ; default segment ordering for linker
+                                     60 	.area HOME
+                                     61 	.area GSINIT
+                                     62 	.area GSFINAL
+                                     63 	.area CONST
+                                     64 	.area INITIALIZER
+                                     65 	.area CODE
+                                     66 
+                                     67 ;--------------------------------------------------------
+                                     68 ; interrupt vector
+                                     69 ;--------------------------------------------------------
+                                     70 	.area HOME
+      000000                         71 __interrupt_vect:
+      000000 82v00u00u00             72 	int s_GSINIT ; reset
+      000004 82 00 00 00             73 	int 0x000000 ; trap
+      000008 82 00 00 00             74 	int 0x000000 ; int0
+      00000C 82 00 00 00             75 	int 0x000000 ; int1
+      000010 82 00 00 00             76 	int 0x000000 ; int2
+      000014 82 00 00 00             77 	int 0x000000 ; int3
+      000018 82 00 00 00             78 	int 0x000000 ; int4
+      00001C 82 00 00 00             79 	int 0x000000 ; int5
+      000020 82 00 00 00             80 	int 0x000000 ; int6
+      000024 82 00 00 00             81 	int 0x000000 ; int7
+      000028 82 00 00 00             82 	int 0x000000 ; int8
+      00002C 82 00 00 00             83 	int 0x000000 ; int9
+      000030 82 00 00 00             84 	int 0x000000 ; int10
+      000034 82 00 00 00             85 	int 0x000000 ; int11
+      000038 82 00 00 00             86 	int 0x000000 ; int12
+      00003C 82 00 00 00             87 	int 0x000000 ; int13
+      000040 82 00 00 00             88 	int 0x000000 ; int14
+      000044 82 00 00 00             89 	int 0x000000 ; int15
+      000048 82 00 00 00             90 	int 0x000000 ; int16
+      00004C 82 00 00 00             91 	int 0x000000 ; int17
+      000050 82 00 00 00             92 	int 0x000000 ; int18
+      000054 82 00 00 00             93 	int 0x000000 ; int19
+      000058 82 00 00 00             94 	int 0x000000 ; int20
+      00005C 82 00 00 00             95 	int 0x000000 ; int21
+      000060 82 00 00 00             96 	int 0x000000 ; int22
+      000064 82v00u00uD6             97 	int _TIM4_UPD_OVF_IRQHandler ; int23
+                                     98 ;--------------------------------------------------------
+                                     99 ; global & static initialisations
+                                    100 ;--------------------------------------------------------
+                                    101 	.area HOME
+                                    102 	.area GSINIT
+                                    103 	.area GSFINAL
+                                    104 	.area GSINIT
+      000000 CDr00r00         [ 4]  105 	call	___sdcc_external_startup
+      000003 4D               [ 1]  106 	tnz	a
+      000004 27 03            [ 1]  107 	jreq	__sdcc_init_data
+      000006 CCr00r68         [ 2]  108 	jp	__sdcc_program_startup
+      000009                        109 __sdcc_init_data:
+                                    110 ; stm8_genXINIT() start
+      000009 AEr00r00         [ 2]  111 	ldw x, #l_DATA
+      00000C 27 07            [ 1]  112 	jreq	00002$
+      00000E                        113 00001$:
+      00000E 72 4FuFFuFF      [ 1]  114 	clr (s_DATA - 1, x)
+      000012 5A               [ 2]  115 	decw x
+      000013 26 F9            [ 1]  116 	jrne	00001$
+      000015                        117 00002$:
+      000015 AEr00r00         [ 2]  118 	ldw	x, #l_INITIALIZER
+      000018 27 09            [ 1]  119 	jreq	00004$
+      00001A                        120 00003$:
+      00001A D6uFFuFF         [ 1]  121 	ld	a, (s_INITIALIZER - 1, x)
+      00001D D7uFFuFF         [ 1]  122 	ld	(s_INITIALIZED - 1, x), a
+      000020 5A               [ 2]  123 	decw	x
+      000021 26 F7            [ 1]  124 	jrne	00003$
+      000023                        125 00004$:
+                                    126 ; stm8_genXINIT() end
+                                    127 	.area GSFINAL
+      000000 CCr00r68         [ 2]  128 	jp	__sdcc_program_startup
+                                    129 ;--------------------------------------------------------
+                                    130 ; Home
+                                    131 ;--------------------------------------------------------
+                                    132 	.area HOME
+                                    133 	.area HOME
+      000068                        134 __sdcc_program_startup:
+      000068 CCr00r00         [ 2]  135 	jp	_main
+                                    136 ;	return from main will return to caller
+                                    137 ;--------------------------------------------------------
+                                    138 ; code
+                                    139 ;--------------------------------------------------------
+                                    140 	.area CODE
+                                    141 ;	main.c: 34: void main()
+                                    142 ;	-----------------------------------------
+                                    143 ;	 function main
+                                    144 ;	-----------------------------------------
+      000000                        145 _main:
+                                    146 ;	main.c: 36: Clock_setup();
+      000000 CDr01r0C         [ 4]  147 	call	_Clock_setup
+                                    148 ;	main.c: 37: GPIO_setup();
+      000003 CDr01r4F         [ 4]  149 	call	_GPIO_setup
+                                    150 ;	main.c: 38: delay_config();
+      000006 CDr00r00         [ 4]  151 	call	_delay_config
+                                    152 ;	main.c: 41: TM1628_INIT(1,1);
+      000009 4B 01            [ 1]  153 	push	#0x01
+      00000B A6 01            [ 1]  154 	ld	a, #0x01
+      00000D CDr00r00         [ 4]  155 	call	_TM1628_INIT
+                                    156 ;	main.c: 43: delay_us(1000);
+      000010 4B E8            [ 1]  157 	push	#0xe8
+      000012 4B 03            [ 1]  158 	push	#0x03
+      000014 5F               [ 1]  159 	clrw	x
+      000015 89               [ 2]  160 	pushw	x
+      000016 CDr00r00         [ 4]  161 	call	_delay_us
+                                    162 ;	main.c: 44: minute = Read_EEPROM(0x4000);
+      000019 4B 00            [ 1]  163 	push	#0x00
+      00001B 4B 40            [ 1]  164 	push	#0x40
+      00001D 5F               [ 1]  165 	clrw	x
+      00001E 89               [ 2]  166 	pushw	x
+      00001F CDr00r00         [ 4]  167 	call	_Read_EEPROM
+      000022 C7u00u0E         [ 1]  168 	ld	_minute+0, a
+                                    169 ;	main.c: 45: second = Read_EEPROM(0x4001);
+      000025 4B 01            [ 1]  170 	push	#0x01
+      000027 4B 40            [ 1]  171 	push	#0x40
+      000029 5F               [ 1]  172 	clrw	x
+      00002A 89               [ 2]  173 	pushw	x
+      00002B CDr00r00         [ 4]  174 	call	_Read_EEPROM
+      00002E C7u00u0F         [ 1]  175 	ld	_second+0, a
+                                    176 ;	main.c: 46: delay_us(1000);
+      000031 4B E8            [ 1]  177 	push	#0xe8
+      000033 4B 03            [ 1]  178 	push	#0x03
+      000035 5F               [ 1]  179 	clrw	x
+      000036 89               [ 2]  180 	pushw	x
+      000037 CDr00r00         [ 4]  181 	call	_delay_us
+                                    182 ;	main.c: 49: while (1)
+      00003A                        183 00111$:
+                                    184 ;	main.c: 51: if (GPIO_ReadInputPin(BUT_PORT, BUT_PIN) == RESET){
+      00003A A6 08            [ 1]  185 	ld	a, #0x08
+      00003C AE 50 00         [ 2]  186 	ldw	x, #0x5000
+      00003F CDr00r00         [ 4]  187 	call	_GPIO_ReadInputPin
+      000042 4D               [ 1]  188 	tnz	a
+      000043 26 16            [ 1]  189 	jrne	00105$
+                                    190 ;	main.c: 52: delay_us(1000000);
+      000045 4B 40            [ 1]  191 	push	#0x40
+      000047 4B 42            [ 1]  192 	push	#0x42
+      000049 4B 0F            [ 1]  193 	push	#0x0f
+      00004B 4B 00            [ 1]  194 	push	#0x00
+      00004D CDr00r00         [ 4]  195 	call	_delay_us
+                                    196 ;	main.c: 53: while (GPIO_ReadInputPin(BUT_PORT, BUT_PIN) == RESET);
+      000050                        197 00101$:
+      000050 A6 08            [ 1]  198 	ld	a, #0x08
+      000052 AE 50 00         [ 2]  199 	ldw	x, #0x5000
+      000055 CDr00r00         [ 4]  200 	call	_GPIO_ReadInputPin
+      000058 4D               [ 1]  201 	tnz	a
+      000059 27 F5            [ 1]  202 	jreq	00101$
+      00005B                        203 00105$:
+                                    204 ;	main.c: 56: buffer[0] = minute / 10;
+      00005B C6u00u0E         [ 1]  205 	ld	a, _minute+0
+      00005E 5F               [ 1]  206 	clrw	x
+      00005F 4B 0A            [ 1]  207 	push	#0x0a
+      000061 4B 00            [ 1]  208 	push	#0x00
+      000063 97               [ 1]  209 	ld	xl, a
+      000064 CDr00r00         [ 4]  210 	call	__divsint
+      000067 9F               [ 1]  211 	ld	a, xl
+      000068 C7u00u00         [ 1]  212 	ld	_buffer+0, a
+                                    213 ;	main.c: 57: buffer[2] = minute % 10;
+      00006B 5F               [ 1]  214 	clrw	x
+      00006C C6u00u0E         [ 1]  215 	ld	a, _minute+0
+      00006F 97               [ 1]  216 	ld	xl, a
+      000070 4B 0A            [ 1]  217 	push	#0x0a
+      000072 4B 00            [ 1]  218 	push	#0x00
+      000074 CDr00r00         [ 4]  219 	call	__modsint
+      000077 9F               [ 1]  220 	ld	a, xl
+      000078 C7u00u02         [ 1]  221 	ld	_buffer+2, a
+                                    222 ;	main.c: 58: buffer[4] = second / 10;
+      00007B 5F               [ 1]  223 	clrw	x
+      00007C C6u00u0F         [ 1]  224 	ld	a, _second+0
+      00007F 97               [ 1]  225 	ld	xl, a
+      000080 4B 0A            [ 1]  226 	push	#0x0a
+      000082 4B 00            [ 1]  227 	push	#0x00
+      000084 CDr00r00         [ 4]  228 	call	__divsint
+      000087 9F               [ 1]  229 	ld	a, xl
+      000088 C7u00u04         [ 1]  230 	ld	_buffer+4, a
+                                    231 ;	main.c: 59: buffer[6] = second % 10;
+      00008B 5F               [ 1]  232 	clrw	x
+      00008C C6u00u0F         [ 1]  233 	ld	a, _second+0
+      00008F 97               [ 1]  234 	ld	xl, a
+      000090 4B 0A            [ 1]  235 	push	#0x0a
+      000092 4B 00            [ 1]  236 	push	#0x00
+      000094 CDr00r00         [ 4]  237 	call	__modsint
+      000097 9F               [ 1]  238 	ld	a, xl
+      000098 C7u00u06         [ 1]  239 	ld	_buffer+6, a
+                                    240 ;	main.c: 61: for(i=0; i< 14; ++i)
+      00009B 72 5Fu00u00      [ 1]  241 	clr	_i+0
+      00009F                        242 00113$:
+                                    243 ;	main.c: 63: if( second % 2 ){
+      00009F 90 5F            [ 1]  244 	clrw	y
+      0000A1 C6u00u0F         [ 1]  245 	ld	a, _second+0
+      0000A4 A4 01            [ 1]  246 	and	a, #0x01
+      0000A6 90 97            [ 1]  247 	ld	yl, a
+                                    248 ;	main.c: 64: TM1628_DISPLAY_SEGMENTS(i,buffer[i],1); 
+      0000A8 5F               [ 1]  249 	clrw	x
+      0000A9 C6u00u00         [ 1]  250 	ld	a, _i+0
+      0000AC 97               [ 1]  251 	ld	xl, a
+      0000AD D6u00u00         [ 1]  252 	ld	a, (_buffer+0, x)
+                                    253 ;	main.c: 63: if( second % 2 ){
+      0000B0 90 5D            [ 2]  254 	tnzw	y
+      0000B2 27 0B            [ 1]  255 	jreq	00107$
+                                    256 ;	main.c: 64: TM1628_DISPLAY_SEGMENTS(i,buffer[i],1); 
+      0000B4 4B 01            [ 1]  257 	push	#0x01
+      0000B6 88               [ 1]  258 	push	a
+      0000B7 C6u00u00         [ 1]  259 	ld	a, _i+0
+      0000BA CDr00r00         [ 4]  260 	call	_TM1628_DISPLAY_SEGMENTS
+      0000BD 20 09            [ 2]  261 	jra	00114$
+      0000BF                        262 00107$:
+                                    263 ;	main.c: 67: TM1628_DISPLAY_SEGMENTS(i,buffer[i],0); 
+      0000BF 4B 00            [ 1]  264 	push	#0x00
+      0000C1 88               [ 1]  265 	push	a
+      0000C2 C6u00u00         [ 1]  266 	ld	a, _i+0
+      0000C5 CDr00r00         [ 4]  267 	call	_TM1628_DISPLAY_SEGMENTS
+      0000C8                        268 00114$:
+                                    269 ;	main.c: 61: for(i=0; i< 14; ++i)
+      0000C8 72 5Cu00u00      [ 1]  270 	inc	_i+0
+      0000CC C6u00u00         [ 1]  271 	ld	a, _i+0
+      0000CF A1 0E            [ 1]  272 	cp	a, #0x0e
+      0000D1 25 CC            [ 1]  273 	jrc	00113$
+                                    274 ;	main.c: 71: }
+      0000D3 CCr00r3A         [ 2]  275 	jp	00111$
+                                    276 ;	main.c: 73: INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
+                                    277 ;	-----------------------------------------
+                                    278 ;	 function TIM4_UPD_OVF_IRQHandler
+                                    279 ;	-----------------------------------------
+      0000D6                        280 _TIM4_UPD_OVF_IRQHandler:
+      0000D6 4F               [ 1]  281 	clr	a
+      0000D7 62               [ 2]  282 	div	x, a
+                                    283 ;	main.c: 75: counter++;
+      0000D8 CEu00u10         [ 2]  284 	ldw	x, _counter+0
+      0000DB 5C               [ 1]  285 	incw	x
+                                    286 ;	main.c: 76: if (counter == 1000)
+      0000DC CFu00u10         [ 2]  287 	ldw	_counter+0, x
+      0000DF A3 03 E8         [ 2]  288 	cpw	x, #0x03e8
+      0000E2 26 22            [ 1]  289 	jrne	00106$
+                                    290 ;	main.c: 78: counter = 0;
+      0000E4 5F               [ 1]  291 	clrw	x
+      0000E5 CFu00u10         [ 2]  292 	ldw	_counter+0, x
+                                    293 ;	main.c: 79: second++;
+      0000E8 72 5Cu00u0F      [ 1]  294 	inc	_second+0
+                                    295 ;	main.c: 80: if (second > 59) 
+      0000EC C6u00u0F         [ 1]  296 	ld	a, _second+0
+      0000EF A1 3B            [ 1]  297 	cp	a, #0x3b
+      0000F1 23 13            [ 2]  298 	jrule	00106$
+                                    299 ;	main.c: 82: second = 0;
+      0000F3 72 5Fu00u0F      [ 1]  300 	clr	_second+0
+                                    301 ;	main.c: 83: minute++;
+      0000F7 72 5Cu00u0E      [ 1]  302 	inc	_minute+0
+                                    303 ;	main.c: 84: if (minute > 59) minute = 0;
+      0000FB C6u00u0E         [ 1]  304 	ld	a, _minute+0
+      0000FE A1 3B            [ 1]  305 	cp	a, #0x3b
+      000100 23 04            [ 2]  306 	jrule	00106$
+      000102 72 5Fu00u0E      [ 1]  307 	clr	_minute+0
+      000106                        308 00106$:
+                                    309 ;	main.c: 88: TIM4_ClearITPendingBit(TIM4_IT_UPDATE); 
+      000106 A6 01            [ 1]  310 	ld	a, #0x01
+      000108 CDr00r00         [ 4]  311 	call	_TIM4_ClearITPendingBit
+                                    312 ;	main.c: 89: }
+      00010B 80               [11]  313 	iret
+                                    314 ;	main.c: 91: void Clock_setup(void)
+                                    315 ;	-----------------------------------------
+                                    316 ;	 function Clock_setup
+                                    317 ;	-----------------------------------------
+      00010C                        318 _Clock_setup:
+                                    319 ;	main.c: 94: CLK->ICKR = CLK_ICKR_RESET_VALUE;
+      00010C 35 01 50 C0      [ 1]  320 	mov	0x50c0+0, #0x01
+                                    321 ;	main.c: 95: CLK->ECKR = CLK_ECKR_RESET_VALUE;
+      000110 35 00 50 C1      [ 1]  322 	mov	0x50c1+0, #0x00
+                                    323 ;	main.c: 96: CLK->SWR  = CLK_SWR_RESET_VALUE;
+      000114 35 E1 50 C4      [ 1]  324 	mov	0x50c4+0, #0xe1
+                                    325 ;	main.c: 97: CLK->SWCR = CLK_SWCR_RESET_VALUE;
+      000118 35 00 50 C5      [ 1]  326 	mov	0x50c5+0, #0x00
+                                    327 ;	main.c: 98: CLK->CKDIVR = CLK_CKDIVR_RESET_VALUE;
+      00011C 35 18 50 C6      [ 1]  328 	mov	0x50c6+0, #0x18
+                                    329 ;	main.c: 99: CLK->PCKENR1 = CLK_PCKENR1_RESET_VALUE;
+      000120 35 FF 50 C7      [ 1]  330 	mov	0x50c7+0, #0xff
+                                    331 ;	main.c: 100: CLK->PCKENR2 = CLK_PCKENR2_RESET_VALUE;
+      000124 35 FF 50 CA      [ 1]  332 	mov	0x50ca+0, #0xff
+                                    333 ;	main.c: 101: CLK->CSSR = CLK_CSSR_RESET_VALUE;
+      000128 35 00 50 C8      [ 1]  334 	mov	0x50c8+0, #0x00
+                                    335 ;	main.c: 102: CLK->CCOR = CLK_CCOR_RESET_VALUE;
+      00012C 35 00 50 C9      [ 1]  336 	mov	0x50c9+0, #0x00
+                                    337 ;	main.c: 103: while ((CLK->CCOR & CLK_CCOR_CCOEN)!= 0) {}
+      000130                        338 00101$:
+      000130 72 00 50 C9 FB   [ 2]  339 	btjt	0x50c9, #0, 00101$
+                                    340 ;	main.c: 104: CLK->CCOR = CLK_CCOR_RESET_VALUE;
+      000135 35 00 50 C9      [ 1]  341 	mov	0x50c9+0, #0x00
+                                    342 ;	main.c: 105: CLK->HSITRIMR = CLK_HSITRIMR_RESET_VALUE;
+      000139 35 00 50 CC      [ 1]  343 	mov	0x50cc+0, #0x00
+                                    344 ;	main.c: 106: CLK->SWIMCCR = CLK_SWIMCCR_RESET_VALUE;
+      00013D 35 00 50 CD      [ 1]  345 	mov	0x50cd+0, #0x00
+                                    346 ;	main.c: 109: CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_HSIDIV);
+      000141 C6 50 C6         [ 1]  347 	ld	a, 0x50c6
+      000144 A4 E7            [ 1]  348 	and	a, #0xe7
+      000146 C7 50 C6         [ 1]  349 	ld	0x50c6, a
+                                    350 ;	main.c: 112: CLK->CKDIVR |= (uint8_t)0x00; /*!< High speed internal clock prescaler: 1 */
+      000149 55 50 C6 50 C6   [ 1]  351 	mov	0x50c6, 0x50c6
+                                    352 ;	main.c: 113: }
+      00014E 81               [ 4]  353 	ret
+                                    354 ;	main.c: 116: void GPIO_setup(void)
+                                    355 ;	-----------------------------------------
+                                    356 ;	 function GPIO_setup
+                                    357 ;	-----------------------------------------
+      00014F                        358 _GPIO_setup:
+                                    359 ;	main.c: 119: GPIO_DeInit(GPIOD);
+      00014F AE 50 0F         [ 2]  360 	ldw	x, #0x500f
+      000152 CDr00r00         [ 4]  361 	call	_GPIO_DeInit
+                                    362 ;	main.c: 120: GPIO_DeInit(GPIOC);
+      000155 AE 50 0A         [ 2]  363 	ldw	x, #0x500a
+      000158 CDr00r00         [ 4]  364 	call	_GPIO_DeInit
+                                    365 ;	main.c: 121: GPIO_DeInit(GPIOA);
+      00015B AE 50 00         [ 2]  366 	ldw	x, #0x5000
+      00015E CDr00r00         [ 4]  367 	call	_GPIO_DeInit
+                                    368 ;	main.c: 122: GPIO_DeInit(GPIOE);
+      000161 AE 50 14         [ 2]  369 	ldw	x, #0x5014
+      000164 CDr00r00         [ 4]  370 	call	_GPIO_DeInit
+                                    371 ;	main.c: 123: GPIO_DeInit(GPIOB);   
+      000167 AE 50 05         [ 2]  372 	ldw	x, #0x5005
+      00016A CDr00r00         [ 4]  373 	call	_GPIO_DeInit
+                                    374 ;	main.c: 124: GPIO_DeInit(GPIOF);
+      00016D AE 50 19         [ 2]  375 	ldw	x, #0x5019
+      000170 CDr00r00         [ 4]  376 	call	_GPIO_DeInit
+                                    377 ;	main.c: 126: GPIO_Init(BUT_PORT, BUT_PIN, GPIO_MODE_IN_PU_NO_IT);
+      000173 4B 40            [ 1]  378 	push	#0x40
+      000175 A6 08            [ 1]  379 	ld	a, #0x08
+      000177 AE 50 00         [ 2]  380 	ldw	x, #0x5000
+      00017A CDr00r00         [ 4]  381 	call	_GPIO_Init
+                                    382 ;	main.c: 127: GPIO_Init(GPIOB, GPIO_PIN_4 | GPIO_PIN_5, GPIO_MODE_OUT_OD_HIZ_SLOW);
+      00017D 4B 90            [ 1]  383 	push	#0x90
+      00017F A6 30            [ 1]  384 	ld	a, #0x30
+      000181 AE 50 05         [ 2]  385 	ldw	x, #0x5005
+      000184 CDr00r00         [ 4]  386 	call	_GPIO_Init
+                                    387 ;	main.c: 128: }
+      000187 81               [ 4]  388 	ret
+                                    389 	.area CODE
+                                    390 	.area CONST
+                                    391 	.area INITIALIZER
+      000000                        392 __xinit__buffer:
+      000000 00                     393 	.db #0x00	; 0
+      000001 00                     394 	.db #0x00	; 0
+      000002 00                     395 	.db #0x00	; 0
+      000003 00                     396 	.db #0x00	; 0
+      000004 00                     397 	.db #0x00	; 0
+      000005 00                     398 	.db #0x00	; 0
+      000006 00                     399 	.db #0x00	; 0
+      000007 00                     400 	.db #0x00	; 0
+      000008 00                     401 	.db #0x00	; 0
+      000009 00                     402 	.db #0x00	; 0
+      00000A 00                     403 	.db #0x00	; 0
+      00000B 00                     404 	.db #0x00	; 0
+      00000C 00                     405 	.db #0x00	; 0
+      00000D 00                     406 	.db #0x00	; 0
+      00000E                        407 __xinit__minute:
+      00000E 00                     408 	.db #0x00	; 0
+      00000F                        409 __xinit__second:
+      00000F 00                     410 	.db #0x00	; 0
+      000010                        411 __xinit__counter:
+      000010 00 00                  412 	.dw #0x0000
+                                    413 	.area CABS (ABS)

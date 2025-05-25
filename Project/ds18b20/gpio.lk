@@ -1,0 +1,16 @@
+-muwx
+-i gpio.ihx
+-Y
+-b HOME = 0x8000
+-b DATA = 0x0001
+-k /usr/bin/../share/sdcc/lib/stm8
+-k /usr/share/sdcc/lib/stm8
+-l stm8
+obj/main.rel
+obj/stm8s_gpio.rel
+obj/tim.rel
+obj/tm1637.rel
+obj/one-wire.rel
+obj/stm8s_clk.rel
+
+-e

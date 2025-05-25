@@ -1,0 +1,109 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 3.5.0 #9253 (Apr  3 2018) (Linux)
+                                      4 ; This file was generated Tue Feb 11 21:24:25 2025
+                                      5 ;--------------------------------------------------------
+                                      6 	.module DS18x20
+                                      7 	.optsdcc -mstm8
+                                      8 	
+                                      9 ;--------------------------------------------------------
+                                     10 ; Public variables in this module
+                                     11 ;--------------------------------------------------------
+                                     12 	.globl _OneWireReadByte
+                                     13 	.globl _OneWireWriteByte
+                                     14 	.globl _OneWireReset
+                                     15 	.globl _DS18x20_ReadTemp
+                                     16 ;--------------------------------------------------------
+                                     17 ; ram data
+                                     18 ;--------------------------------------------------------
+                                     19 	.area DATA
+                                     20 ;--------------------------------------------------------
+                                     21 ; ram data
+                                     22 ;--------------------------------------------------------
+                                     23 	.area INITIALIZED
+                                     24 ;--------------------------------------------------------
+                                     25 ; absolute external ram data
+                                     26 ;--------------------------------------------------------
+                                     27 	.area DABS (ABS)
+                                     28 ;--------------------------------------------------------
+                                     29 ; global & static initialisations
+                                     30 ;--------------------------------------------------------
+                                     31 	.area HOME
+                                     32 	.area GSINIT
+                                     33 	.area GSFINAL
+                                     34 	.area GSINIT
+                                     35 ;--------------------------------------------------------
+                                     36 ; Home
+                                     37 ;--------------------------------------------------------
+                                     38 	.area HOME
+                                     39 	.area HOME
+                                     40 ;--------------------------------------------------------
+                                     41 ; code
+                                     42 ;--------------------------------------------------------
+                                     43 	.area CODE
+                                     44 ;	lib/src/DS18x20.c: 18: float DS18x20_ReadTemp(void) {
+                                     45 ;	-----------------------------------------
+                                     46 ;	 function DS18x20_ReadTemp
+                                     47 ;	-----------------------------------------
+      00855B                         48 _DS18x20_ReadTemp:
+      00855B 52 05            [ 2]   49 	sub	sp, #5
+                                     50 ;	lib/src/DS18x20.c: 22: OneWireReset();                       // Reset Pulse
+      00855D CD 84 93         [ 4]   51 	call	_OneWireReset
+                                     52 ;	lib/src/DS18x20.c: 23: OneWireWriteByte(SKIP_ROM);           // Issue skip ROM command (CCh)
+      008560 4B CC            [ 1]   53 	push	#0xcc
+      008562 CD 85 24         [ 4]   54 	call	_OneWireWriteByte
+      008565 84               [ 1]   55 	pop	a
+                                     56 ;	lib/src/DS18x20.c: 24: OneWireWriteByte(CONVERT_T);          // Convert T command (44h)
+      008566 4B 44            [ 1]   57 	push	#0x44
+      008568 CD 85 24         [ 4]   58 	call	_OneWireWriteByte
+      00856B 84               [ 1]   59 	pop	a
+                                     60 ;	lib/src/DS18x20.c: 25: while(!OW_PIN_VALUE());               // DQ will hold line low while making measurement
+      00856C                         61 00101$:
+      00856C AE 50 0B         [ 2]   62 	ldw	x, #0x500b
+      00856F F6               [ 1]   63 	ld	a, (x)
+      008570 A5 10            [ 1]   64 	bcp	a, #0x10
+      008572 27 F8            [ 1]   65 	jreq	00101$
+                                     66 ;	lib/src/DS18x20.c: 26: OneWireReset();                       // Start new command sequence
+      008574 CD 84 93         [ 4]   67 	call	_OneWireReset
+                                     68 ;	lib/src/DS18x20.c: 27: OneWireWriteByte(SKIP_ROM);           // Issue skip ROM command
+      008577 4B CC            [ 1]   69 	push	#0xcc
+      008579 CD 85 24         [ 4]   70 	call	_OneWireWriteByte
+      00857C 84               [ 1]   71 	pop	a
+                                     72 ;	lib/src/DS18x20.c: 28: OneWireWriteByte(READ_SCRATCHPAD);    // Read Scratchpad (BEh) - 15 bits
+      00857D 4B BE            [ 1]   73 	push	#0xbe
+      00857F CD 85 24         [ 4]   74 	call	_OneWireWriteByte
+      008582 84               [ 1]   75 	pop	a
+                                     76 ;	lib/src/DS18x20.c: 29: LSB = OneWireReadByte();
+      008583 CD 85 3C         [ 4]   77 	call	_OneWireReadByte
+      008586 6B 01            [ 1]   78 	ld	(0x01, sp), a
+                                     79 ;	lib/src/DS18x20.c: 30: MSB = OneWireReadByte();
+      008588 CD 85 3C         [ 4]   80 	call	_OneWireReadByte
+                                     81 ;	lib/src/DS18x20.c: 31: OneWireReset();                       // Stop Reading
+      00858B 88               [ 1]   82 	push	a
+      00858C CD 84 93         [ 4]   83 	call	_OneWireReset
+      00858F 84               [ 1]   84 	pop	a
+                                     85 ;	lib/src/DS18x20.c: 32: return (float) (((MSB << 8) | LSB)/ 16.0);
+      008590 95               [ 1]   86 	ld	xh, a
+      008591 4F               [ 1]   87 	clr	a
+      008592 0F 05            [ 1]   88 	clr	(0x05, sp)
+      008594 7B 01            [ 1]   89 	ld	a, (0x01, sp)
+      008596 0F 02            [ 1]   90 	clr	(0x02, sp)
+      008598 1A 05            [ 1]   91 	or	a, (0x05, sp)
+      00859A 02               [ 1]   92 	rlwa	x
+      00859B 1A 02            [ 1]   93 	or	a, (0x02, sp)
+      00859D 95               [ 1]   94 	ld	xh, a
+      00859E 89               [ 2]   95 	pushw	x
+      00859F CD 8C 59         [ 4]   96 	call	___sint2fs
+      0085A2 5B 02            [ 2]   97 	addw	sp, #2
+      0085A4 4B 00            [ 1]   98 	push	#0x00
+      0085A6 4B 00            [ 1]   99 	push	#0x00
+      0085A8 4B 80            [ 1]  100 	push	#0x80
+      0085AA 4B 41            [ 1]  101 	push	#0x41
+      0085AC 89               [ 2]  102 	pushw	x
+      0085AD 90 89            [ 2]  103 	pushw	y
+      0085AF CD 8C 6A         [ 4]  104 	call	___fsdiv
+      0085B2 5B 0D            [ 2]  105 	addw	sp, #13
+      0085B4 81               [ 4]  106 	ret
+                                    107 	.area CODE
+                                    108 	.area INITIALIZER
+                                    109 	.area CABS (ABS)

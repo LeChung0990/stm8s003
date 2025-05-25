@@ -58,9 +58,9 @@ Vậy là sơ qua về compile và mạch nạp, giờ mình dạo qua một s�
 - Hỗ trợ 5 kênh ADC 10-bit
 - Điện áp hoạt động 2.95V đến 5.5V 
 - Thạch anh nội 16Mhz
-- Còn một số tính năng khác có thể đọc thêm trong thư mục **Datasheet**
+- Còn một số tính năng khác có thể đọc thêm trong thư mục **Docs** 
 
-Phía trên có thư mục **Library_ST** chứa các thư viện của hãng ST cung cấp, đó là thư viện chuẩn. Mình thấy sử dụng thư viện này đã quá đủ với bộ nhớ 8Kb của con STM8S003F3P6. Với việc sử dụng các trình biên dịch khác nhau thì mình cũng phải sửa lại một chút thư viện để phù hợp, mình có để 2 tệp một dành cho SDCC và cái còn lại cho STVD.
+Trong thư mục **template** chứa các thư viện của hãng ST cung cấp, đó là thư viện chuẩn. Mình thấy sử dụng thư viện này đã quá đủ với bộ nhớ 8Kb của con STM8S003F3P6. Với việc sử dụng các trình biên dịch khác nhau thì mình cũng phải sửa lại một chút thư viện để phù hợp, mình có để 2 tệp một dành cho SDCC và cái còn lại cho STVD.
 
 Ngoài ra còn có một số thư viện viết cho các ngoại vi khác, có thể [tham khảo tại đây](https://github.com/timypik/STM8S-Library/tree/master)
 
@@ -68,7 +68,6 @@ Ngoài ra còn có một số thư viện viết cho các ngoại vi khác, có 
 
 ---
 **Mục Lục**
----
 [Môi trường lập trình cho STM8S003F3P6 ](#A-cai-dat-moi-truong-lap-trinh)
 [Thư viện sử dụng cho lập trình STM8S003](#1-các-thư-viện)
 [Set dao động cho VĐK](#2-set-clock-cho-stm8s003f3p6)
@@ -77,8 +76,11 @@ Ngoài ra còn có một số thư viện viết cho các ngoại vi khác, có 
 [Cấu hình PWM ](#5-pwm)
 [External Interrupt](#6-ngắt-ngoài)
 [Giao tiếp UART](#7-uart)
+[ADC in stm8s](#8adc)
+[Beep in stm8s](#9-beep)
 
 ---
+
 ## A. Cài đặt môi trường lập trình
 Trong quá trình mình code STM8, mình có sử dụng 2 trình biên dịch miễn phí là COSMIC và SDCC
 - Đối với SDCC mình có tìm được 1 thư mục template nên việc biên dịch đơn giản và nhanh gọn vì chỉ chạy 
@@ -162,11 +164,37 @@ lệnh "make" trên commandWindow
   <img src="image/image-12.png" alt="Hình ảnh" width = "250" />
 </div>
 
-+ Sau khi add file nguồn gpio, timer4 và clk thì chương trình build không lỗi
++ Sau khi add file nguồn gpio, timer4 và clk thì chương trình build không loi
 
 <div style="text-align: center;">
   <img src="image/image-13.png" alt="Hình ảnh" width = "250" />
 </div>
+
+Sau day la cach cai dat SDCC tren windows 10
+1. Cai dat GnuWin32 theo link sau: GnuWin32 la tien ich makefile cho windows 
+> https://gnuwin32.sourceforge.net/packages.html
+
+<img src = "image/sdcc1.png" width = "350">
+
+2. Dowload SDCC 4.3.0
+
+> https://sdcc.sourceforge.net/
+
+<img src = "image/sdcc2.png" width = "350">
+
+Cai dat gnuwin32 
+
+<img src = "image/sdcc3.png" width = "350">
+
+Cai dat SDCC
+
+<img src = "image/sdcc4.png" width = "350">
+
+them duong PATH cho sdcc va make:
+
+<img src = "image/sdcc5.png" width = "350">
+
+
 
 ## 1. Các thư viện
 - **Nghiên cứu các thư viện này:**
@@ -323,7 +351,7 @@ void main(void)
     /*ngat ngoai*/
     EXTI_DeInit();
     GPIO_Init(GPIOD, GPIO_PIN_4, GPIO_MODE_IN_PU_IT);
-    EXTI_SetExtIntSensitivity(EXTI_PORT_GPIOD, EXTI_SENSITIVITY_FALL_ONLY);
+    EXTI_SetExtIntSensitivity(EX,;lTI_PORT_GPIOD, EXTI_SENSITIVITY_FALL_ONLY);
     enableInterrupts();
 }
  /*-----------Ham ngat ngoai-------------*/
@@ -365,5 +393,126 @@ Linh tham khảo
 10. https://circuitdigest.com/tags/stm8
 11. https://b4050n.wordpress.com/2016/12/17/stm8s-0-khoi-dau-voi-stm8s-tren-linux/
 12. https://b4050n.wordpress.com/2017/05/03/stm8s-8-1-wire-bus-tren-stm8s/
+
+## 8.ADC
+Lap trinh theo thanh ghi:
+Duoi day la ham khoi tao ban dau, reset gia tri cac thanh ghi cho chuc nang ADC
+```c
+#include "stm8s.h"
+/*===================set adc to read potimenter ============*/
+void adc_deinit(void)
+{
+    ADC1->CSR  = ADC1_CSR_RESET_VALUE;
+    ADC1->CR1  = ADC1_CR1_RESET_VALUE;
+    ADC1->CR2  = ADC1_CR2_RESET_VALUE;
+    ADC1->CR3  = ADC1_CR3_RESET_VALUE;
+    ADC1->TDRH = ADC1_TDRH_RESET_VALUE;
+    ADC1->TDRL = ADC1_TDRL_RESET_VALUE;
+    ADC1->HTRH = ADC1_HTRH_RESET_VALUE;
+    ADC1->HTRL = ADC1_HTRL_RESET_VALUE;
+    ADC1->LTRH = ADC1_LTRH_RESET_VALUE;
+    ADC1->LTRL = ADC1_LTRL_RESET_VALUE;
+    ADC1->AWCRH = ADC1_AWCRH_RESET_VALUE;
+    ADC1->AWCRL = ADC1_AWCRL_RESET_VALUE;
+}
+```
+
+
+```c
+void adc_init(void)
+{
+    /* Clear the ADC1 channels */
+    ADC1->CSR &= (uint8_t)(~ADC1_CSR_CH);
+    /* Select the Analog channel 4 , AIN4, pin PD3 (20)*/
+    
+    // ADC1->CSR |= (uint8_t)(0x04);
+
+    /* Select the Analog channel 3, AIN3, pin PD2 (19) */
+    ADC1->CSR |= (uint8_t)(0x03);
+
+    /* Clear the align bit */
+    ADC1->CR2 &= (uint8_t)(~ADC1_CR2_ALIGN);
+    /* Configure the data alignment:  Data alignment right */
+    ADC1->CR2 |= (uint8_t)(0x08);
+
+    /* Set the single conversion mode */
+    ADC1->CR1 &= (uint8_t)(~ADC1_CR1_CONT);
+
+    /* Clear the SPSEL bits */
+    ADC1->CR1 &= (uint8_t)(~ADC1_CR1_SPSEL);
+    /* Prescaler selection fADC1 = fcpu/18 */
+    ADC1->CR1 |= (uint8_t)0x70;  
+
+    ADC1->CR1 |= ADC1_CR1_ADON;
+}
+uint16_t adc_read(void)
+{
+	
+    /*Enable the ADC1 peripheral to conversion*/
+    ADC1->CR1 |= ADC1_CR1_ADON;
+    /* Waiting for conversion complete, bit EOC */
+    while( (ADC1->CSR & ADC1_CSR_EOC) == RESET){}    
+    /* Clear EOC flag status */
+    ADC1->CSR &= (uint8_t) (~ADC1_CSR_EOC);
+
+    /* Read LSB first */
+    templ = ADC1->DRL;
+    /* Then read MSB */
+    temph = ADC1->DRH;
+    temph = (uint16_t)(templ | (uint16_t)(temph << (uint8_t)8));
+    return ((uint16_t)temph);
+}
+```
+## 9. Beep
+- Trong vi dieu khien stm8s003f3p6 co 1 chan dung cho loa buzzer hay chan xuat pwm voi tan so 1,2,4 KHZ
+- Cac buoc cau hinh nhu sau: 
+  - Dau tien la cau hinh clock :
+```c
+  /*Using HSI clock 16Mhz*/
+  // CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1); 
+  CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_HSIDIV);
+  CLK->CKDIVR |= (uint8_t)0x00;
+```
+  - Sau do la cau hinh cac thanh ghi :
+```c
+  BEEP->CSR = BEEP_CSR_RESET_VALUE;
+  /* Set a default calibration value if no calibration is done */
+  if ((BEEP->CSR & BEEP_CSR_BEEPDIV) == BEEP_CSR_BEEPDIV)
+  {
+      BEEP->CSR &= (uint8_t)(~BEEP_CSR_BEEPDIV); /* Clear bits */
+      BEEP->CSR |= 0x0B;
+  }
+  BEEP->CSR &= (uint8_t)(~BEEP_CSR_BEEPSEL);
+  BEEP->CSR |= (uint8_t)(0x40); // frequency  2khz
+```
+  - Enable chan beep hoac disable
+```c
+  /* Enable the BEEP peripheral */
+  BEEP->CSR |= BEEP_CSR_BEEPEN;
+  /* Disable the BEEP peripheral */
+  BEEP->CSR &= (uint8_t)(~BEEP_CSR_BEEPEN);
+
+```
+
+10.EEPROM
+
+- Stm8s003f3p6 have 128 byte eeprom 
+
+```c
+void Write_EEPROM(uint32_t Address, unsigned char Data){
+	FLASH_Unlock(FLASH_MEMTYPE_DATA);
+	FLASH_ProgramByte(Address, Data);
+	FLASH_Lock(FLASH_MEMTYPE_DATA);
+}
+unsigned char Read_EEPROM(uint32_t Address){
+	unsigned char Data;
+	Data = FLASH_ReadByte(Address);
+	return Data;
+}
+
+```
+#reference 
+
+https://bitbucket.org/baoson2211/stm8s-sdcc-1-wire/src/master/Src/one-wire.c
 
 

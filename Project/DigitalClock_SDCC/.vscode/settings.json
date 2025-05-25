@@ -1,0 +1,14 @@
+{
+    "C_Cpp.errorSquiggles": "Disabled",
+    "files.associations": {
+        "stm8s_conf.h": "c",
+        "stm8s_mylib.h": "c",
+        "stm8s_awu.h": "c",
+        "stm8s_clk.h": "c",
+        "stm8s_i2c.h": "c",
+        "stm8s_gpio.h": "c",
+        "stm8s.h": "c",
+        "stm8s_itc.h": "c",
+        "stm8s_tim4.h": "c"
+    }
+}

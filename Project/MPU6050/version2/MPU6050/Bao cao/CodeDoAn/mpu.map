@@ -1,0 +1,202 @@
+ASxxxx Linker V03.00 + NoICE + sdld,  page 1.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+.  .ABS.                            00000000    00000000 =           0. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000000  .__.ABS.                           _ulong2fs
+     00000000  l_CABS                          
+     00000000  l_DABS                          
+     00000000  l__CODE                         
+     00000000  s_CABS                          
+     00000000  s_DABS                          
+     00000000  s__CODE                         
+     00000001  l_SSEG                          
+     00000001  s_DATA                          
+     00000003  l_GSFINAL                       
+     00000006  l_INITIALIZED                   
+     00000006  l_INITIALIZER                   
+     0000001A  l_GSINIT                        
+     00000030  l_DATA                          
+     00000031  s_INITIALIZED                   
+     00000037  s_SSEG                          
+     00000083  l_HOME                          
+     00001733  l_CODE                          
+     00008000  s_HOME                          
+     00008083  s_GSINIT                        
+     0000809D  s_GSFINAL                       
+     000080A0  s_CODE                          
+     000097D3  s_INITIALIZER                   
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+DATA                                00000001    00000030 =          48. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000001  _AccX                              main
+     00000005  _AccY                              main
+     00000009  _AccZ                              main
+     0000000D  _AccXLSB                           main
+     0000000F  _AccXMSB                           main
+     00000011  _AccYLSB                           main
+     00000013  _AccYMSB                           main
+     00000015  _AccZLSB                           main
+     00000017  _AccZMSB                           main
+     00000019  _CurrentValue                      main
+     0000001D  _LastValue                         main
+     00000021  _Value                             main
+     00000025  _Distance                          main
+     00000029  _LastSteps                         main
+     0000002A  _SumValue                          main
+     0000002E  _a                                 main
+     0000002F  _errno                             errno
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+INITIALIZED                         00000031    00000006 =           6. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000031  _Steps                             main
+     00000032  _Threshold                         main
+     00000036  _Mode                              main
+ASxxxx Linker V03.00 + NoICE + sdld,  page 4.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+SSEG                                00000037    00000001 =           1. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 5.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+HOME                                00008000    00000083 =         131. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 6.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+GSINIT                              00008083    0000001A =          26. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 7.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+GSFINAL                             0000809D    00000003 =           3. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 8.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+CODE                                000080A0    00001733 =        5939. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     000080A0  _main                              main
+     000082F2  _initMPU6050                       main
+     00008372  _getMPU6050                        main
+     00008493  _OLED_INIT_CMD                     main
+     000084A1  _OLED_FONT                         main
+     000085E8  _Timer4Config                      lib
+     000085F5  _Timer4DelayMs                     lib
+     0000860F  _I2C_init                          lib
+     0000864C  _I2C_start                         lib
+     00008662  _I2C_stop                          lib
+     00008672  _I2C_address                       lib
+     0000868D  _I2C_write                         lib
+     000086A3  _uart_init                         lib
+     0000870B  _uart1_number                      lib
+     000087AB  _uart1_string                      lib
+     000087C2  _uart1_nline                       lib
+     000087CE  ___fssub                           _fssub
+     000087F1  ___fsmul                           _fsmul
+     00008AF3  _sqrtf                             sqrtf
+     00008C07  ___fsgt                            _fsgt
+     00008CF3  ___fslt                            _fslt
+     00008DE1  ___fsadd                           _fsadd
+     000090A3  _fabsf                             fabsf
+     000090D9  _ldexpf                            ldexpf
+     0000916E  ___fs2sint                         _fs2sint
+     000091AC  ___sint2fs                         _sint2fs
+     000091BD  _frexpf                            frexpf
+     00009241  ___fsdiv                           _fsdiv
+     000094D5  __mullong                          
+     00009551  __modsint                          
+     00009567  __divsint                          
+     0000957B  ___slong2fs                        _slong2fs
+     000095A6  ___fs2slong                        _fs2slong
+     000095F4  ___fseq                            _fseq
+     00009672  ___fs2ulong                        _fs2ulong
+     0000970F  ___ulong2fs                        _ulong2fs
+ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+INITIALIZER                         000097D3    00000006 =           6. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
+
+Files Linked                              [ module(s) ]
+
+obj/main.rel                              [ main ]
+obj/lib.rel                               [ lib ]
+
+
+Libraries Linked                          [ object file ]
+
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fssub.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fsmul.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ sqrtf.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fsgt.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fslt.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fsadd.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ fabsf.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ ldexpf.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fs2sint.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _sint2fs.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ frexpf.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fsdiv.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _mullong.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _modsint.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _divsint.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ errno.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _slong2fs.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fs2slong.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fseq.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fs2ulong.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _ulong2fs.rel ]
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 11.
+
+User Base Address Definitions
+
+HOME = 0x8000
+DATA = 0x0001
+
+

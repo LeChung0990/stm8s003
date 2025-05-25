@@ -1,0 +1,532 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler 
+                                      3 ; Version 4.3.0 #14184 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module stm8s_mylib
+                                      6 	.optsdcc -mstm8
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _TM1628_SEND_CONFIG
+                                     12 	.globl _TM1628_SEND_COMMAND
+                                     13 	.globl _SEND_WRITE
+                                     14 	.globl _SEND_START
+                                     15 	.globl _SEND_STOP
+                                     16 	.globl _TIM4_ClearFlag
+                                     17 	.globl _TIM4_GetFlagStatus
+                                     18 	.globl _TIM4_SetCounter
+                                     19 	.globl _TIM4_ITConfig
+                                     20 	.globl _TIM4_Cmd
+                                     21 	.globl _TIM4_TimeBaseInit
+                                     22 	.globl _TIM4_DeInit
+                                     23 	.globl _GPIO_WriteLow
+                                     24 	.globl _GPIO_WriteHigh
+                                     25 	.globl _GPIO_Init
+                                     26 	.globl _delay_config
+                                     27 	.globl _delay_ms
+                                     28 	.globl _delay_us
+                                     29 	.globl _TM1628_INIT
+                                     30 	.globl _TM1628_DISPLAY_SEGMENTS
+                                     31 	.globl _Write_EEPROM
+                                     32 	.globl _Read_EEPROM
+                                     33 ;--------------------------------------------------------
+                                     34 ; ram data
+                                     35 ;--------------------------------------------------------
+                                     36 	.area DATA
+                                     37 ;--------------------------------------------------------
+                                     38 ; ram data
+                                     39 ;--------------------------------------------------------
+                                     40 	.area INITIALIZED
+      000000                         41 __config:
+      000000                         42 	.ds 1
+      000001                         43 __segments:
+      000001                         44 	.ds 1
+                                     45 ;--------------------------------------------------------
+                                     46 ; absolute external ram data
+                                     47 ;--------------------------------------------------------
+                                     48 	.area DABS (ABS)
+                                     49 
+                                     50 ; default segment ordering for linker
+                                     51 	.area HOME
+                                     52 	.area GSINIT
+                                     53 	.area GSFINAL
+                                     54 	.area CONST
+                                     55 	.area INITIALIZER
+                                     56 	.area CODE
+                                     57 
+                                     58 ;--------------------------------------------------------
+                                     59 ; global & static initialisations
+                                     60 ;--------------------------------------------------------
+                                     61 	.area HOME
+                                     62 	.area GSINIT
+                                     63 	.area GSFINAL
+                                     64 	.area GSINIT
+                                     65 ;--------------------------------------------------------
+                                     66 ; Home
+                                     67 ;--------------------------------------------------------
+                                     68 	.area HOME
+                                     69 	.area HOME
+                                     70 ;--------------------------------------------------------
+                                     71 ; code
+                                     72 ;--------------------------------------------------------
+                                     73 	.area CODE
+                                     74 ;	lib/src/stm8s_mylib.c: 24: void delay_config(void){
+                                     75 ;	-----------------------------------------
+                                     76 ;	 function delay_config
+                                     77 ;	-----------------------------------------
+      000000                         78 _delay_config:
+                                     79 ;	lib/src/stm8s_mylib.c: 25: TIM4_DeInit();
+      000000 CDr00r00         [ 4]   80 	call	_TIM4_DeInit
+                                     81 ;	lib/src/stm8s_mylib.c: 26: TIM4_TimeBaseInit(TIM4_PRESCALER_128, 125 - 1);
+      000003 4B 7C            [ 1]   82 	push	#0x7c
+      000005 A6 07            [ 1]   83 	ld	a, #0x07
+      000007 CDr00r00         [ 4]   84 	call	_TIM4_TimeBaseInit
+                                     85 ;	lib/src/stm8s_mylib.c: 27: TIM4_ITConfig(TIM4_IT_UPDATE, ENABLE);
+      00000A 4B 01            [ 1]   86 	push	#0x01
+      00000C A6 01            [ 1]   87 	ld	a, #0x01
+      00000E CDr00r00         [ 4]   88 	call	_TIM4_ITConfig
+                                     89 ;	lib/src/stm8s_mylib.c: 28: TIM4_ClearFlag(TIM4_FLAG_UPDATE);
+      000011 A6 01            [ 1]   90 	ld	a, #0x01
+      000013 CDr00r00         [ 4]   91 	call	_TIM4_ClearFlag
+                                     92 ;	lib/src/stm8s_mylib.c: 29: TIM4_Cmd(DISABLE);
+      000016 4F               [ 1]   93 	clr	a
+      000017 CDr00r00         [ 4]   94 	call	_TIM4_Cmd
+                                     95 ;	lib/src/stm8s_mylib.c: 30: enableInterrupts();
+      00001A 9A               [ 1]   96 	rim
+                                     97 ;	lib/src/stm8s_mylib.c: 31: }
+      00001B 81               [ 4]   98 	ret
+                                     99 ;	lib/src/stm8s_mylib.c: 32: void delay_ms(unsigned int  u16Delay)
+                                    100 ;	-----------------------------------------
+                                    101 ;	 function delay_ms
+                                    102 ;	-----------------------------------------
+      00001C                        103 _delay_ms:
+      00001C 52 02            [ 2]  104 	sub	sp, #2
+                                    105 ;	lib/src/stm8s_mylib.c: 34: while (u16Delay) {
+      00001E 1F 01            [ 2]  106 	ldw	(0x01, sp), x
+      000020                        107 00104$:
+      000020 1E 01            [ 2]  108 	ldw	x, (0x01, sp)
+      000022 27 18            [ 1]  109 	jreq	00107$
+                                    110 ;	lib/src/stm8s_mylib.c: 35: TIM4_SetCounter(0);
+      000024 4F               [ 1]  111 	clr	a
+      000025 CDr00r00         [ 4]  112 	call	_TIM4_SetCounter
+                                    113 ;	lib/src/stm8s_mylib.c: 36: TIM4_ClearFlag(TIM4_FLAG_UPDATE);
+      000028 A6 01            [ 1]  114 	ld	a, #0x01
+      00002A CDr00r00         [ 4]  115 	call	_TIM4_ClearFlag
+                                    116 ;	lib/src/stm8s_mylib.c: 37: while (TIM4_GetFlagStatus(TIM4_FLAG_UPDATE) == RESET) {
+      00002D                        117 00101$:
+      00002D A6 01            [ 1]  118 	ld	a, #0x01
+      00002F CDr00r00         [ 4]  119 	call	_TIM4_GetFlagStatus
+      000032 4D               [ 1]  120 	tnz	a
+      000033 27 F8            [ 1]  121 	jreq	00101$
+                                    122 ;	lib/src/stm8s_mylib.c: 39: --u16Delay;
+      000035 1E 01            [ 2]  123 	ldw	x, (0x01, sp)
+      000037 5A               [ 2]  124 	decw	x
+      000038 1F 01            [ 2]  125 	ldw	(0x01, sp), x
+      00003A 20 E4            [ 2]  126 	jra	00104$
+      00003C                        127 00107$:
+                                    128 ;	lib/src/stm8s_mylib.c: 41: }
+      00003C 5B 02            [ 2]  129 	addw	sp, #2
+      00003E 81               [ 4]  130 	ret
+                                    131 ;	lib/src/stm8s_mylib.c: 43: void delay_us(unsigned long int  us) {
+                                    132 ;	-----------------------------------------
+                                    133 ;	 function delay_us
+                                    134 ;	-----------------------------------------
+      00003F                        135 _delay_us:
+                                    136 ;	lib/src/stm8s_mylib.c: 44: for(;us > 0; us--) nop();
+      00003F 1E 05            [ 2]  137 	ldw	x, (0x05, sp)
+      000041 16 03            [ 2]  138 	ldw	y, (0x03, sp)
+      000043                        139 00103$:
+      000043 5D               [ 2]  140 	tnzw	x
+      000044 26 04            [ 1]  141 	jrne	00120$
+      000046 90 5D            [ 2]  142 	tnzw	y
+      000048 27 0A            [ 1]  143 	jreq	00105$
+      00004A                        144 00120$:
+      00004A 9D               [ 1]  145 	nop
+      00004B 1D 00 01         [ 2]  146 	subw	x, #0x0001
+      00004E 24 F3            [ 1]  147 	jrnc	00103$
+      000050 90 5A            [ 2]  148 	decw	y
+      000052 20 EF            [ 2]  149 	jra	00103$
+      000054                        150 00105$:
+                                    151 ;	lib/src/stm8s_mylib.c: 45: }
+      000054 1E 01            [ 2]  152 	ldw	x, (1, sp)
+      000056 5B 06            [ 2]  153 	addw	sp, #6
+      000058 FC               [ 2]  154 	jp	(x)
+                                    155 ;	lib/src/stm8s_mylib.c: 47: void SEND_STOP(void)
+                                    156 ;	-----------------------------------------
+                                    157 ;	 function SEND_STOP
+                                    158 ;	-----------------------------------------
+      000059                        159 _SEND_STOP:
+                                    160 ;	lib/src/stm8s_mylib.c: 49: STB_1;
+      000059 A6 08            [ 1]  161 	ld	a, #0x08
+      00005B AE 50 00         [ 2]  162 	ldw	x, #0x5000
+      00005E CDr00r00         [ 4]  163 	call	_GPIO_WriteHigh
+                                    164 ;	lib/src/stm8s_mylib.c: 50: DIO_0; TM_DELAY;  
+      000061 A6 20            [ 1]  165 	ld	a, #0x20
+      000063 AE 50 0F         [ 2]  166 	ldw	x, #0x500f
+      000066 CDr00r00         [ 4]  167 	call	_GPIO_WriteLow
+      000069 4B 64            [ 1]  168 	push	#0x64
+      00006B 5F               [ 1]  169 	clrw	x
+      00006C 89               [ 2]  170 	pushw	x
+      00006D 4B 00            [ 1]  171 	push	#0x00
+      00006F CDr00r3F         [ 4]  172 	call	_delay_us
+                                    173 ;	lib/src/stm8s_mylib.c: 51: CLK_1; TM_DELAY;
+      000072 A6 40            [ 1]  174 	ld	a, #0x40
+      000074 AE 50 0F         [ 2]  175 	ldw	x, #0x500f
+      000077 CDr00r00         [ 4]  176 	call	_GPIO_WriteHigh
+      00007A 4B 64            [ 1]  177 	push	#0x64
+      00007C 5F               [ 1]  178 	clrw	x
+      00007D 89               [ 2]  179 	pushw	x
+      00007E 4B 00            [ 1]  180 	push	#0x00
+      000080 CDr00r3F         [ 4]  181 	call	_delay_us
+                                    182 ;	lib/src/stm8s_mylib.c: 52: DIO_1; TM_DELAY;
+      000083 A6 20            [ 1]  183 	ld	a, #0x20
+      000085 AE 50 0F         [ 2]  184 	ldw	x, #0x500f
+      000088 CDr00r00         [ 4]  185 	call	_GPIO_WriteHigh
+      00008B 4B 64            [ 1]  186 	push	#0x64
+      00008D 5F               [ 1]  187 	clrw	x
+      00008E 89               [ 2]  188 	pushw	x
+      00008F 4B 00            [ 1]  189 	push	#0x00
+      000091 CDr00r3F         [ 4]  190 	call	_delay_us
+                                    191 ;	lib/src/stm8s_mylib.c: 53: }
+      000094 81               [ 4]  192 	ret
+                                    193 ;	lib/src/stm8s_mylib.c: 54: void SEND_START(void)
+                                    194 ;	-----------------------------------------
+                                    195 ;	 function SEND_START
+                                    196 ;	-----------------------------------------
+      000095                        197 _SEND_START:
+                                    198 ;	lib/src/stm8s_mylib.c: 57: CLK_1; TM_DELAY;
+      000095 A6 40            [ 1]  199 	ld	a, #0x40
+      000097 AE 50 0F         [ 2]  200 	ldw	x, #0x500f
+      00009A CDr00r00         [ 4]  201 	call	_GPIO_WriteHigh
+      00009D 4B 64            [ 1]  202 	push	#0x64
+      00009F 5F               [ 1]  203 	clrw	x
+      0000A0 89               [ 2]  204 	pushw	x
+      0000A1 4B 00            [ 1]  205 	push	#0x00
+      0000A3 CDr00r3F         [ 4]  206 	call	_delay_us
+                                    207 ;	lib/src/stm8s_mylib.c: 58: DIO_1; TM_DELAY;
+      0000A6 A6 20            [ 1]  208 	ld	a, #0x20
+      0000A8 AE 50 0F         [ 2]  209 	ldw	x, #0x500f
+      0000AB CDr00r00         [ 4]  210 	call	_GPIO_WriteHigh
+      0000AE 4B 64            [ 1]  211 	push	#0x64
+      0000B0 5F               [ 1]  212 	clrw	x
+      0000B1 89               [ 2]  213 	pushw	x
+      0000B2 4B 00            [ 1]  214 	push	#0x00
+      0000B4 CDr00r3F         [ 4]  215 	call	_delay_us
+                                    216 ;	lib/src/stm8s_mylib.c: 59: STB_0;
+      0000B7 A6 08            [ 1]  217 	ld	a, #0x08
+      0000B9 AE 50 00         [ 2]  218 	ldw	x, #0x5000
+      0000BC CDr00r00         [ 4]  219 	call	_GPIO_WriteLow
+                                    220 ;	lib/src/stm8s_mylib.c: 60: DIO_0; TM_DELAY;
+      0000BF A6 20            [ 1]  221 	ld	a, #0x20
+      0000C1 AE 50 0F         [ 2]  222 	ldw	x, #0x500f
+      0000C4 CDr00r00         [ 4]  223 	call	_GPIO_WriteLow
+      0000C7 4B 64            [ 1]  224 	push	#0x64
+      0000C9 5F               [ 1]  225 	clrw	x
+      0000CA 89               [ 2]  226 	pushw	x
+      0000CB 4B 00            [ 1]  227 	push	#0x00
+      0000CD CDr00r3F         [ 4]  228 	call	_delay_us
+                                    229 ;	lib/src/stm8s_mylib.c: 61: CLK_0; TM_DELAY;
+      0000D0 A6 40            [ 1]  230 	ld	a, #0x40
+      0000D2 AE 50 0F         [ 2]  231 	ldw	x, #0x500f
+      0000D5 CDr00r00         [ 4]  232 	call	_GPIO_WriteLow
+      0000D8 4B 64            [ 1]  233 	push	#0x64
+      0000DA 5F               [ 1]  234 	clrw	x
+      0000DB 89               [ 2]  235 	pushw	x
+      0000DC 4B 00            [ 1]  236 	push	#0x00
+      0000DE CDr00r3F         [ 4]  237 	call	_delay_us
+                                    238 ;	lib/src/stm8s_mylib.c: 62: }
+      0000E1 81               [ 4]  239 	ret
+                                    240 ;	lib/src/stm8s_mylib.c: 64: void SEND_WRITE(unsigned char data)
+                                    241 ;	-----------------------------------------
+                                    242 ;	 function SEND_WRITE
+                                    243 ;	-----------------------------------------
+      0000E2                        244 _SEND_WRITE:
+      0000E2 52 02            [ 2]  245 	sub	sp, #2
+      0000E4 6B 01            [ 1]  246 	ld	(0x01, sp), a
+                                    247 ;	lib/src/stm8s_mylib.c: 67: for (i = 0; i < 8; ++i)
+      0000E6 0F 02            [ 1]  248 	clr	(0x02, sp)
+      0000E8                        249 00105$:
+                                    250 ;	lib/src/stm8s_mylib.c: 69: if (data & 0x01) {DIO_1;}
+      0000E8 7B 01            [ 1]  251 	ld	a, (0x01, sp)
+      0000EA 44               [ 1]  252 	srl	a
+      0000EB 24 0A            [ 1]  253 	jrnc	00102$
+      0000ED A6 20            [ 1]  254 	ld	a, #0x20
+      0000EF AE 50 0F         [ 2]  255 	ldw	x, #0x500f
+      0000F2 CDr00r00         [ 4]  256 	call	_GPIO_WriteHigh
+      0000F5 20 08            [ 2]  257 	jra	00103$
+      0000F7                        258 00102$:
+                                    259 ;	lib/src/stm8s_mylib.c: 70: else {DIO_0;}
+      0000F7 A6 20            [ 1]  260 	ld	a, #0x20
+      0000F9 AE 50 0F         [ 2]  261 	ldw	x, #0x500f
+      0000FC CDr00r00         [ 4]  262 	call	_GPIO_WriteLow
+      0000FF                        263 00103$:
+                                    264 ;	lib/src/stm8s_mylib.c: 71: TM_DELAY;	
+      0000FF 4B 64            [ 1]  265 	push	#0x64
+      000101 5F               [ 1]  266 	clrw	x
+      000102 89               [ 2]  267 	pushw	x
+      000103 4B 00            [ 1]  268 	push	#0x00
+      000105 CDr00r3F         [ 4]  269 	call	_delay_us
+                                    270 ;	lib/src/stm8s_mylib.c: 72: CLK_1;
+      000108 A6 40            [ 1]  271 	ld	a, #0x40
+      00010A AE 50 0F         [ 2]  272 	ldw	x, #0x500f
+      00010D CDr00r00         [ 4]  273 	call	_GPIO_WriteHigh
+                                    274 ;	lib/src/stm8s_mylib.c: 73: TM_DELAY;
+      000110 4B 64            [ 1]  275 	push	#0x64
+      000112 5F               [ 1]  276 	clrw	x
+      000113 89               [ 2]  277 	pushw	x
+      000114 4B 00            [ 1]  278 	push	#0x00
+      000116 CDr00r3F         [ 4]  279 	call	_delay_us
+                                    280 ;	lib/src/stm8s_mylib.c: 74: CLK_0;
+      000119 A6 40            [ 1]  281 	ld	a, #0x40
+      00011B AE 50 0F         [ 2]  282 	ldw	x, #0x500f
+      00011E CDr00r00         [ 4]  283 	call	_GPIO_WriteLow
+                                    284 ;	lib/src/stm8s_mylib.c: 75: data >>= 1;
+      000121 04 01            [ 1]  285 	srl	(0x01, sp)
+                                    286 ;	lib/src/stm8s_mylib.c: 67: for (i = 0; i < 8; ++i)
+      000123 0C 02            [ 1]  287 	inc	(0x02, sp)
+      000125 7B 02            [ 1]  288 	ld	a, (0x02, sp)
+      000127 A1 08            [ 1]  289 	cp	a, #0x08
+      000129 25 BD            [ 1]  290 	jrc	00105$
+                                    291 ;	lib/src/stm8s_mylib.c: 77: }
+      00012B 5B 02            [ 2]  292 	addw	sp, #2
+      00012D 81               [ 4]  293 	ret
+                                    294 ;	lib/src/stm8s_mylib.c: 78: void TM1628_SEND_COMMAND(const unsigned char value)
+                                    295 ;	-----------------------------------------
+                                    296 ;	 function TM1628_SEND_COMMAND
+                                    297 ;	-----------------------------------------
+      00012E                        298 _TM1628_SEND_COMMAND:
+                                    299 ;	lib/src/stm8s_mylib.c: 80: SEND_START();
+      00012E 88               [ 1]  300 	push	a
+      00012F CDr00r95         [ 4]  301 	call	_SEND_START
+      000132 84               [ 1]  302 	pop	a
+                                    303 ;	lib/src/stm8s_mylib.c: 81: SEND_WRITE(value);
+      000133 CDr00rE2         [ 4]  304 	call	_SEND_WRITE
+                                    305 ;	lib/src/stm8s_mylib.c: 82: SEND_STOP();
+      000136 CDr00r59         [ 4]  306 	call	_SEND_STOP
+                                    307 ;	lib/src/stm8s_mylib.c: 83: TM_DELAY;
+      000139 4B 64            [ 1]  308 	push	#0x64
+      00013B 5F               [ 1]  309 	clrw	x
+      00013C 89               [ 2]  310 	pushw	x
+      00013D 4B 00            [ 1]  311 	push	#0x00
+      00013F CDr00r3F         [ 4]  312 	call	_delay_us
+                                    313 ;	lib/src/stm8s_mylib.c: 84: }
+      000142 81               [ 4]  314 	ret
+                                    315 ;	lib/src/stm8s_mylib.c: 86: void TM1628_SEND_CONFIG(const unsigned char enable, const unsigned char brightness)
+                                    316 ;	-----------------------------------------
+                                    317 ;	 function TM1628_SEND_CONFIG
+                                    318 ;	-----------------------------------------
+      000143                        319 _TM1628_SEND_CONFIG:
+      000143 52 02            [ 2]  320 	sub	sp, #2
+                                    321 ;	lib/src/stm8s_mylib.c: 88: TM1628_SEND_COMMAND(TM1628_CMD_MODE_DIS_2);
+      000145 88               [ 1]  322 	push	a
+      000146 A6 03            [ 1]  323 	ld	a, #0x03
+      000148 CDr01r2E         [ 4]  324 	call	_TM1628_SEND_COMMAND
+      00014B 84               [ 1]  325 	pop	a
+                                    326 ;	lib/src/stm8s_mylib.c: 89: _config = (enable ? TM1628_SET_DISPLAY_ON : TM1628_SET_DISPLAY_OFF) |
+      00014C 4D               [ 1]  327 	tnz	a
+      00014D 27 04            [ 1]  328 	jreq	00103$
+      00014F AE 00 08         [ 2]  329 	ldw	x, #0x0008
+      000152 21                     330 	.byte 0x21
+      000153                        331 00103$:
+      000153 5F               [ 1]  332 	clrw	x
+      000154                        333 00104$:
+                                    334 ;	lib/src/stm8s_mylib.c: 90: (brightness > TM1628_BRIGHTNESS_MAX ? TM1628_BRIGHTNESS_MAX : brightness);
+      000154 7B 05            [ 1]  335 	ld	a, (0x05, sp)
+      000156 A1 07            [ 1]  336 	cp	a, #0x07
+      000158 23 06            [ 2]  337 	jrule	00105$
+      00015A A6 07            [ 1]  338 	ld	a, #0x07
+      00015C 0F 01            [ 1]  339 	clr	(0x01, sp)
+      00015E 20 04            [ 2]  340 	jra	00106$
+      000160                        341 00105$:
+      000160 7B 05            [ 1]  342 	ld	a, (0x05, sp)
+      000162 0F 01            [ 1]  343 	clr	(0x01, sp)
+      000164                        344 00106$:
+      000164 89               [ 2]  345 	pushw	x
+      000165 1A 02            [ 1]  346 	or	a, (2, sp)
+      000167 85               [ 2]  347 	popw	x
+                                    348 ;	lib/src/stm8s_mylib.c: 92: TM1628_SEND_COMMAND(TM1628_CMD_SET_DSIPLAY | _config);
+      000168 C7u00u00         [ 1]  349 	ld	__config+0, a
+      00016B AA 80            [ 1]  350 	or	a, #0x80
+      00016D 1E 03            [ 2]  351 	ldw	x, (3, sp)
+      00016F 1F 04            [ 2]  352 	ldw	(4, sp), x
+      000171 5B 03            [ 2]  353 	addw	sp, #3
+                                    354 ;	lib/src/stm8s_mylib.c: 94: }
+      000173 CCr01r2E         [ 2]  355 	jp	_TM1628_SEND_COMMAND
+      000176 84               [ 1]  356 	pop	a
+      000177 FC               [ 2]  357 	jp	(x)
+                                    358 ;	lib/src/stm8s_mylib.c: 95: void TM1628_INIT(unsigned char enable, const unsigned char brightness)
+                                    359 ;	-----------------------------------------
+                                    360 ;	 function TM1628_INIT
+                                    361 ;	-----------------------------------------
+      000178                        362 _TM1628_INIT:
+      000178 88               [ 1]  363 	push	a
+      000179 6B 01            [ 1]  364 	ld	(0x01, sp), a
+                                    365 ;	lib/src/stm8s_mylib.c: 97: GPIO_Init(GPIOA, STB, GPIO_MODE_OUT_PP_HIGH_FAST);	
+      00017B 4B F0            [ 1]  366 	push	#0xf0
+      00017D A6 08            [ 1]  367 	ld	a, #0x08
+      00017F AE 50 00         [ 2]  368 	ldw	x, #0x5000
+      000182 CDr00r00         [ 4]  369 	call	_GPIO_Init
+                                    370 ;	lib/src/stm8s_mylib.c: 98: GPIO_Init(GPIOD, DIO|SCLK, GPIO_MODE_OUT_PP_HIGH_FAST);
+      000185 4B F0            [ 1]  371 	push	#0xf0
+      000187 A6 60            [ 1]  372 	ld	a, #0x60
+      000189 AE 50 0F         [ 2]  373 	ldw	x, #0x500f
+      00018C CDr00r00         [ 4]  374 	call	_GPIO_Init
+                                    375 ;	lib/src/stm8s_mylib.c: 100: TM1628_SEND_CONFIG(enable, brightness);
+      00018F 7B 04            [ 1]  376 	ld	a, (0x04, sp)
+      000191 88               [ 1]  377 	push	a
+      000192 7B 02            [ 1]  378 	ld	a, (0x02, sp)
+      000194 CDr01r43         [ 4]  379 	call	_TM1628_SEND_CONFIG
+                                    380 ;	lib/src/stm8s_mylib.c: 101: }
+      000197 84               [ 1]  381 	pop	a
+      000198 85               [ 2]  382 	popw	x
+      000199 84               [ 1]  383 	pop	a
+      00019A FC               [ 2]  384 	jp	(x)
+                                    385 ;	lib/src/stm8s_mylib.c: 102: void TM1628_DISPLAY_SEGMENTS(const unsigned char position, const unsigned char digit, unsigned char dot)
+                                    386 ;	-----------------------------------------
+                                    387 ;	 function TM1628_DISPLAY_SEGMENTS
+                                    388 ;	-----------------------------------------
+      00019B                        389 _TM1628_DISPLAY_SEGMENTS:
+      00019B 52 04            [ 2]  390 	sub	sp, #4
+      00019D 6B 03            [ 1]  391 	ld	(0x03, sp), a
+                                    392 ;	lib/src/stm8s_mylib.c: 105: if (digit < 15)
+      00019F 7B 07            [ 1]  393 	ld	a, (0x07, sp)
+      0001A1 A1 0F            [ 1]  394 	cp	a, #0x0f
+      0001A3 24 0A            [ 1]  395 	jrnc	00102$
+                                    396 ;	lib/src/stm8s_mylib.c: 107: segments = _digit2segments[digit];
+      0001A5 5F               [ 1]  397 	clrw	x
+      0001A6 7B 07            [ 1]  398 	ld	a, (0x07, sp)
+      0001A8 97               [ 1]  399 	ld	xl, a
+      0001A9 D6u00u00         [ 1]  400 	ld	a, (__digit2segments+0, x)
+      0001AC 6B 04            [ 1]  401 	ld	(0x04, sp), a
+                                    402 ;	lib/src/stm8s_mylib.c: 110: segments = 0x00;	
+      0001AE C5                     403 	.byte 0xc5
+      0001AF                        404 00102$:
+      0001AF 0F 04            [ 1]  405 	clr	(0x04, sp)
+      0001B1                        406 00103$:
+                                    407 ;	lib/src/stm8s_mylib.c: 112: if ( (dot == 1 & (position == 2 )) | (dot == 2 & (position == 0 )) ) {
+      0001B1 7B 08            [ 1]  408 	ld	a, (0x08, sp)
+      0001B3 4A               [ 1]  409 	dec	a
+      0001B4 26 05            [ 1]  410 	jrne	00120$
+      0001B6 A6 01            [ 1]  411 	ld	a, #0x01
+      0001B8 6B 02            [ 1]  412 	ld	(0x02, sp), a
+      0001BA C5                     413 	.byte 0xc5
+      0001BB                        414 00120$:
+      0001BB 0F 02            [ 1]  415 	clr	(0x02, sp)
+      0001BD                        416 00121$:
+      0001BD 7B 03            [ 1]  417 	ld	a, (0x03, sp)
+      0001BF A0 02            [ 1]  418 	sub	a, #0x02
+      0001C1 26 02            [ 1]  419 	jrne	00123$
+      0001C3 4C               [ 1]  420 	inc	a
+      0001C4 21                     421 	.byte 0x21
+      0001C5                        422 00123$:
+      0001C5 4F               [ 1]  423 	clr	a
+      0001C6                        424 00124$:
+      0001C6 14 02            [ 1]  425 	and	a, (0x02, sp)
+      0001C8 6B 01            [ 1]  426 	ld	(0x01, sp), a
+      0001CA 7B 08            [ 1]  427 	ld	a, (0x08, sp)
+      0001CC A0 02            [ 1]  428 	sub	a, #0x02
+      0001CE 26 04            [ 1]  429 	jrne	00126$
+      0001D0 4C               [ 1]  430 	inc	a
+      0001D1 6B 02            [ 1]  431 	ld	(0x02, sp), a
+      0001D3 C5                     432 	.byte 0xc5
+      0001D4                        433 00126$:
+      0001D4 0F 02            [ 1]  434 	clr	(0x02, sp)
+      0001D6                        435 00127$:
+      0001D6 7B 03            [ 1]  436 	ld	a, (0x03, sp)
+      0001D8 A0 00            [ 1]  437 	sub	a, #0x00
+      0001DA 26 02            [ 1]  438 	jrne	00129$
+      0001DC 4C               [ 1]  439 	inc	a
+      0001DD 21                     440 	.byte 0x21
+      0001DE                        441 00129$:
+      0001DE 4F               [ 1]  442 	clr	a
+      0001DF                        443 00130$:
+      0001DF 14 02            [ 1]  444 	and	a, (0x02, sp)
+      0001E1 1A 01            [ 1]  445 	or	a, (0x01, sp)
+      0001E3 27 05            [ 1]  446 	jreq	00105$
+                                    447 ;	lib/src/stm8s_mylib.c: 113: segments = segments | 0x80;
+      0001E5 08 04            [ 1]  448 	sll	(0x04, sp)
+      0001E7 99               [ 1]  449 	scf
+      0001E8 06 04            [ 1]  450 	rrc	(0x04, sp)
+      0001EA                        451 00105$:
+                                    452 ;	lib/src/stm8s_mylib.c: 115: TM1628_SEND_COMMAND(TM1628_CMD_SET_DATA | TM1628_SET_DATA_F_ADDR);
+      0001EA A6 44            [ 1]  453 	ld	a, #0x44
+      0001EC CDr01r2E         [ 4]  454 	call	_TM1628_SEND_COMMAND
+                                    455 ;	lib/src/stm8s_mylib.c: 116: SEND_START();
+      0001EF CDr00r95         [ 4]  456 	call	_SEND_START
+                                    457 ;	lib/src/stm8s_mylib.c: 117: SEND_WRITE(TM1628_CMD_SET_ADDR | position );
+      0001F2 7B 03            [ 1]  458 	ld	a, (0x03, sp)
+      0001F4 AA C0            [ 1]  459 	or	a, #0xc0
+      0001F6 CDr00rE2         [ 4]  460 	call	_SEND_WRITE
+                                    461 ;	lib/src/stm8s_mylib.c: 118: SEND_WRITE(segments);
+      0001F9 7B 04            [ 1]  462 	ld	a, (0x04, sp)
+      0001FB CDr00rE2         [ 4]  463 	call	_SEND_WRITE
+                                    464 ;	lib/src/stm8s_mylib.c: 119: SEND_STOP();
+      0001FE CDr00r59         [ 4]  465 	call	_SEND_STOP
+                                    466 ;	lib/src/stm8s_mylib.c: 120: TM_DELAY;
+      000201 4B 64            [ 1]  467 	push	#0x64
+      000203 5F               [ 1]  468 	clrw	x
+      000204 89               [ 2]  469 	pushw	x
+      000205 4B 00            [ 1]  470 	push	#0x00
+      000207 CDr00r3F         [ 4]  471 	call	_delay_us
+                                    472 ;	lib/src/stm8s_mylib.c: 121: }
+      00020A 1E 05            [ 2]  473 	ldw	x, (5, sp)
+      00020C 5B 08            [ 2]  474 	addw	sp, #8
+      00020E FC               [ 2]  475 	jp	(x)
+                                    476 ;	lib/src/stm8s_mylib.c: 122: void Write_EEPROM(uint32_t Address, unsigned char Data){
+                                    477 ;	-----------------------------------------
+                                    478 ;	 function Write_EEPROM
+                                    479 ;	-----------------------------------------
+      00020F                        480 _Write_EEPROM:
+                                    481 ;	lib/src/stm8s_mylib.c: 124: FLASH->DUKR = (uint8_t)0xAE ; /*!< Second RASS key */ /* Warning: keys are reversed on data memory !!! */ 
+      00020F 35 AE 50 64      [ 1]  482 	mov	0x5064+0, #0xae
+                                    483 ;	lib/src/stm8s_mylib.c: 125: FLASH->DUKR = (uint8_t)0x56 ;  /*!< First RASS key */
+      000213 35 56 50 64      [ 1]  484 	mov	0x5064+0, #0x56
+                                    485 ;	lib/src/stm8s_mylib.c: 127: *(PointerAttr uint8_t*) (MemoryAddressCast)Address = Data;
+      000217 1E 05            [ 2]  486 	ldw	x, (0x05, sp)
+      000219 7B 07            [ 1]  487 	ld	a, (0x07, sp)
+      00021B F7               [ 1]  488 	ld	(x), a
+                                    489 ;	lib/src/stm8s_mylib.c: 130: FLASH->IAPSR &= (uint8_t)0xF7; /*!< Data EEPROM memory */
+      00021C C6 50 5F         [ 1]  490 	ld	a, 0x505f
+      00021F A4 F7            [ 1]  491 	and	a, #0xf7
+      000221 C7 50 5F         [ 1]  492 	ld	0x505f, a
+                                    493 ;	lib/src/stm8s_mylib.c: 131: }
+      000224 1E 01            [ 2]  494 	ldw	x, (1, sp)
+      000226 5B 07            [ 2]  495 	addw	sp, #7
+      000228 FC               [ 2]  496 	jp	(x)
+                                    497 ;	lib/src/stm8s_mylib.c: 132: uint8_t Read_EEPROM(uint32_t Address){
+                                    498 ;	-----------------------------------------
+                                    499 ;	 function Read_EEPROM
+                                    500 ;	-----------------------------------------
+      000229                        501 _Read_EEPROM:
+                                    502 ;	lib/src/stm8s_mylib.c: 133: return(*(PointerAttr uint8_t *) (MemoryAddressCast)Address);
+      000229 1E 05            [ 2]  503 	ldw	x, (0x05, sp)
+      00022B F6               [ 1]  504 	ld	a, (x)
+                                    505 ;	lib/src/stm8s_mylib.c: 134: }
+      00022C 1E 01            [ 2]  506 	ldw	x, (1, sp)
+      00022E 5B 06            [ 2]  507 	addw	sp, #6
+      000230 FC               [ 2]  508 	jp	(x)
+                                    509 	.area CODE
+                                    510 	.area CONST
+      000000                        511 __digit2segments:
+      000000 3F                     512 	.db #0x3f	; 63
+      000001 06                     513 	.db #0x06	; 6
+      000002 5B                     514 	.db #0x5b	; 91
+      000003 4F                     515 	.db #0x4f	; 79	'O'
+      000004 66                     516 	.db #0x66	; 102	'f'
+      000005 6D                     517 	.db #0x6d	; 109	'm'
+      000006 7D                     518 	.db #0x7d	; 125
+      000007 07                     519 	.db #0x07	; 7
+      000008 7F                     520 	.db #0x7f	; 127
+      000009 6F                     521 	.db #0x6f	; 111	'o'
+      00000A 77                     522 	.db #0x77	; 119	'w'
+      00000B 38                     523 	.db #0x38	; 56	'8'
+      00000C 74                     524 	.db #0x74	; 116	't'
+      00000D 54                     525 	.db #0x54	; 84	'T'
+      00000E 5E                     526 	.db #0x5e	; 94
+                                    527 	.area INITIALIZER
+      000000                        528 __xinit___config:
+      000000 0F                     529 	.db #0x0f	; 15
+      000001                        530 __xinit___segments:
+      000001 FF                     531 	.db #0xff	; 255
+                                    532 	.area CABS (ABS)

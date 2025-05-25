@@ -1,0 +1,28 @@
+XH3
+H A areas 2 global symbols
+M tim
+O -mstm8
+S .__.ABS. Def000000
+A _CODE size 0 flags 0 addr 0
+A DATA size 0 flags 0 addr 0
+A INITIALIZED size 0 flags 0 addr 0
+A DABS size 0 flags 8 addr 0
+A HOME size 0 flags 0 addr 0
+A GSINIT size 0 flags 0 addr 0
+A GSFINAL size 0 flags 0 addr 0
+A CODE size A flags 0 addr 0
+S _delay_us Def000000
+A INITIALIZER size 0 flags 0 addr 0
+A CABS size 0 flags 8 addr 0
+T 00 00 00
+R 00 00 00 07
+T 00 00 00 1E 03
+R 00 00 00 07
+T 00 00 02
+R 00 00 00 07
+T 00 00 02 5D 27 04 9D 5A 20 F9
+R 00 00 00 07
+T 00 00 09
+R 00 00 00 07
+T 00 00 09 81
+R 00 00 00 07

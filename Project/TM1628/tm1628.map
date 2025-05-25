@@ -1,0 +1,213 @@
+ASxxxx Linker V03.00/V05.40 + sdld,  page 1.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+.  .ABS.                            00000000    00000000 =           0. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000000  .__.ABS.                           
+     00000000  l_CABS                          
+     00000000  l_DABS                          
+     00000000  l__CODE                         
+     00000000  s_CABS                          
+     00000000  s_DABS                          
+     00000000  s__CODE                         
+     00000001  l_DATA                          
+     00000001  l_SSEG                          
+     00000001  s_DATA                          
+     00000002  s_INITIALIZED                   
+     00000003  l_GSFINAL                       
+     0000000F  l_CONST                         
+     00000014  l_INITIALIZED                   
+     00000014  l_INITIALIZER                   
+     00000016  s_SSEG                          
+     00000023  l_GSINIT                        
+     0000006B  l_HOME                          
+     000006C6  l_CODE                          
+     00008000  s_HOME                          
+     0000806B  s_GSINIT                        
+     0000808E  s_GSFINAL                       
+     00008091  s_CONST                         
+     000080A0  s_INITIALIZER                   
+     000080B4  s_CODE                          
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 2.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+DATA                                00000001    00000001 =           1. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000001  _i                                 main
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 3.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+INITIALIZED                         00000002    00000014 =          20. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000002  _buffer                            main
+     00000010  _minute                            main
+     00000011  _second                            main
+     00000012  _counter                           main
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 4.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+SSEG                                00000016    00000001 =           1. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 5.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+HOME                                00008000    0000006B =         107. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 6.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+GSINIT                              0000806B    00000023 =          35. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 7.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+GSFINAL                             0000808E    00000003 =           3. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 8.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+CONST                               00008091    0000000F =          15. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 9.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+INITIALIZER                         000080A0    00000014 =          20. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 10.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+CODE                                000080B4    000006C6 =        1734. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     000080B4  _main                              main
+     0000818A  _TIM4_UPD_OVF_IRQHandler           main
+     000081C0  _Clock_setup                       main
+     00008203  _GPIO_setup                        main
+     0000823C  _delay_config                      stm8s_mylib
+     00008258  _delay_ms                          stm8s_mylib
+     0000827B  _delay_us                          stm8s_mylib
+     00008295  _SEND_STOP                         stm8s_mylib
+     000082D1  _SEND_START                        stm8s_mylib
+     0000831E  _SEND_WRITE                        stm8s_mylib
+     0000836A  _TM1628_SEND_COMMAND               stm8s_mylib
+     0000837F  _TM1628_SEND_CONFIG                stm8s_mylib
+     000083B4  _TM1628_INIT                       stm8s_mylib
+     000083D7  _TM1628_DISPLAY_SEGMENTS           stm8s_mylib
+     0000844B  _Write_EEPROM                      stm8s_mylib
+     00008465  _Read_EEPROM                       stm8s_mylib
+     0000846D  _GPIO_DeInit                       stm8s_gpio
+     0000847B  _GPIO_Init                         stm8s_gpio
+     000084F3  _GPIO_Write                        stm8s_gpio
+     000084F5  _GPIO_WriteHigh                    stm8s_gpio
+     000084FE  _GPIO_WriteLow                     stm8s_gpio
+     0000850A  _GPIO_WriteReverse                 stm8s_gpio
+     00008513  _GPIO_ReadOutputData               stm8s_gpio
+     00008515  _GPIO_ReadInputData                stm8s_gpio
+     00008518  _GPIO_ReadInputPin                 stm8s_gpio
+     00008525  _GPIO_ExternalPullUpConfig         stm8s_gpio
+     0000853F  _TIM4_DeInit                       stm8s_tim4
+     00008558  _TIM4_TimeBaseInit                 stm8s_tim4
+     00008564  _TIM4_Cmd                          stm8s_tim4
+     0000857C  _TIM4_ITConfig                     stm8s_tim4
+     0000859A  _TIM4_UpdateDisableConfig          stm8s_tim4
+     000085B2  _TIM4_UpdateRequestConfig          stm8s_tim4
+     000085CA  _TIM4_SelectOnePulseMode           stm8s_tim4
+     000085E2  _TIM4_PrescalerConfig              stm8s_tim4
+     000085ED  _TIM4_ARRPreloadConfig             stm8s_tim4
+     00008605  _TIM4_GenerateEvent                stm8s_tim4
+     00008609  _TIM4_SetCounter                   stm8s_tim4
+     0000860D  _TIM4_SetAutoreload                stm8s_tim4
+     00008611  _TIM4_GetCounter                   stm8s_tim4
+     00008615  _TIM4_GetPrescaler                 stm8s_tim4
+     00008619  _TIM4_GetFlagStatus                stm8s_tim4
+     00008629  _TIM4_ClearFlag                    stm8s_tim4
+     0000862E  _TIM4_GetITStatus                  stm8s_tim4
+     0000864F  _TIM4_ClearITPendingBit            stm8s_tim4
+     00008654  _EXTI_DeInit                       stm8s_exti
+     0000865D  _EXTI_SetExtIntSensitivity         stm8s_exti
+     000086EB  _EXTI_SetTLISensitivity            stm8s_exti
+     00008700  _EXTI_GetExtIntSensitivity         stm8s_exti
+     00008743  _EXTI_GetTLISensitivity            stm8s_exti
+     00008749  ___sdcc_external_startup           _startup
+ASxxxx Linker V03.00/V05.40 + sdld,  page 11.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+CODE                                000080B4    000006C6 =        1734. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000874B  __modsint                          
+     00008763  __divsint                          
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 12.
+
+Files Linked                              [ module(s) ]
+
+obj/main.rel                              [ main ]
+obj/stm8s_mylib.rel                       [ stm8s_mylib ]
+obj/stm8s_gpio.rel                        [ stm8s_gpio ]
+obj/stm8s_tim4.rel                        [ stm8s_tim4 ]
+obj/stm8s_exti.rel                        [ stm8s_exti ]
+
+
+Libraries Linked                          [ object file ]
+
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _startup.rel ]
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _modsint.rel ]
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _divsint.rel ]
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 13.
+
+User Base Address Definitions
+
+HOME = 0x8000
+DATA = 0x0001
+
+

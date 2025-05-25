@@ -1,0 +1,159 @@
+ASxxxx Linker V03.00/V05.40 + sdld,  page 1.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+.  .ABS.                            00000000    00000000 =           0. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000000  .__.ABS.                           _ulong2fs
+     00000000  l_CABS                          
+     00000000  l_DABS                          
+     00000000  l_DATA                          
+     00000000  l_INITIALIZED                   
+     00000000  l_INITIALIZER                   
+     00000000  l__CODE                         
+     00000000  s_CABS                          
+     00000000  s_DABS                          
+     00000000  s__CODE                         
+     00000001  l_SSEG                          
+     00000001  s_DATA                          
+     00000001  s_INITIALIZED                   
+     00000001  s_SSEG                          
+     00000003  l_GSFINAL                       
+     00000007  l_HOME                          
+     00000023  l_GSINIT                        
+     00000053  l_CONST                         
+     000008EF  l_CODE                          
+     00008000  s_HOME                          
+     00008007  s_GSINIT                        
+     0000802A  s_GSFINAL                       
+     0000802D  s_CONST                         
+     00008080  s_CODE                          
+     00008080  s_INITIALIZER                   
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 2.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+SSEG                                00000001    00000001 =           1. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 3.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+HOME                                00008000    00000007 =           7. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 4.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+GSINIT                              00008007    00000023 =          35. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 5.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+GSFINAL                             0000802A    00000003 =           3. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 6.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+CONST                               0000802D    00000053 =          83. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000802D  _segmentMap                        mpu6050
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 7.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+CODE                                00008080    000008EF =        2287. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00008080  _delayTenMicro                     mpu6050
+     00008088  _InitializeSystemClock             mpu6050
+     000080C3  _delay                             mpu6050
+     00008106  _i2c_read                          mpu6050
+     00008110  _i2c_set_nak                       mpu6050
+     00008115  _i2c_set_stop                      mpu6050
+     0000811A  _i2c_send_reg                      mpu6050
+     0000813A  _UARTPrintF                        mpu6050
+     0000814A  _i2c_send_address                  mpu6050
+     0000818A  _i2c_set_start_ack                 mpu6050
+     00008194  _print_byte_hex                    mpu6050
+     000081D2  _i2c_read_register                 mpu6050
+     0000820D  _InitializeI2C                     mpu6050
+     00008237  _InitializeUART                    mpu6050
+     000082A6  _tm1637Init                        mpu6050
+     000082AB  _tm1637DisplayDecimal              mpu6050
+     00008336  _tm1637SetBrightness               mpu6050
+     00008346  __tm1637Start                      mpu6050
+     00008355  __tm1637Stop                       mpu6050
+     00008373  __tm1637ReadResult                 mpu6050
+     00008388  __tm1637WriteByte                  mpu6050
+     000083BD  __tm1637ClkHigh                    mpu6050
+     000083C2  __tm1637ClkLow                     mpu6050
+     000083C7  __tm1637DioHigh                    mpu6050
+     000083CC  __tm1637DioLow                     mpu6050
+     000083D1  _initMPU6050                       mpu6050
+     0000843E  _getMPU6050                        mpu6050
+     00008470  _main                              mpu6050
+     000085C5  ___fssub                           _fssub
+     000085EE  ___fslt                            _fslt
+     0000867E  __mulint                           
+     0000869B  ___fsadd                           _fsadd
+     000088C6  ___uint2fs                         _uint2fs
+     000088D1  ___sdcc_external_startup           _startup
+     000088D3  ___ulong2fs                        _ulong2fs
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 8.
+
+Files Linked                              [ module(s) ]
+
+mpu6050.rel                               [ mpu6050 ]
+
+
+Libraries Linked                          [ object file ]
+
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _fssub.rel ]
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _fslt.rel ]
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _mulint.rel ]
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _fsadd.rel ]
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _uint2fs.rel ]
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _startup.rel ]
+C:\Program Files\SDCC\bin\..\lib\stm8/stm8.lib
+                                          [ _ulong2fs.rel ]
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 9.
+
+User Base Address Definitions
+
+HOME = 0x8000
+DATA = 0x0001
+
+

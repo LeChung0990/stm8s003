@@ -1,0 +1,1576 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler 
+                                      3 ; Version 4.3.0 #14184 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module main
+                                      6 	.optsdcc -mstm8
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _mangAL
+                                     12 	.globl _TIM4_UPD_OVF_IRQHandler
+                                     13 	.globl _ADC1_IRQHandler
+                                     14 	.globl _EXTI_PORTA_IRQHandler
+                                     15 	.globl _main
+                                     16 	.globl _EXTI_SetTLISensitivity
+                                     17 	.globl _EXTI_SetExtIntSensitivity
+                                     18 	.globl _EXTI_DeInit
+                                     19 	.globl _clock_icon_ds
+                                     20 	.globl _station_chanel
+                                     21 	.globl _print_rssi
+                                     22 	.globl _print_levelBAT
+                                     23 	.globl _SD1106_CUS_PRINT
+                                     24 	.globl _SD1106_printBigLine
+                                     25 	.globl _SD1106_printBigPoint
+                                     26 	.globl _SD1106_printBigNum
+                                     27 	.globl _SD1106_printNum
+                                     28 	.globl _SD1106_print_one_num
+                                     29 	.globl _SD1106_printP
+                                     30 	.globl _SD1106_resetDis
+                                     31 	.globl _SD1106_setContranst
+                                     32 	.globl _SD1106_clear
+                                     33 	.globl _SD1106_sendInitCom
+                                     34 	.globl _SD1106_sendCom
+                                     35 	.globl _writeDay
+                                     36 	.globl _writeTime
+                                     37 	.globl _data_read
+                                     38 	.globl _i2c_write
+                                     39 	.globl _i2c_stop
+                                     40 	.globl _i2c_start
+                                     41 	.globl _i2c_init
+                                     42 	.globl _BEEP_Cmd
+                                     43 	.globl _BEEP_config
+                                     44 	.globl _delay_ms
+                                     45 	.globl _configADC
+                                     46 	.globl _Tim4_config
+                                     47 	.globl _GPIO_ReadInputPin
+                                     48 	.globl _GPIO_WriteReverse
+                                     49 	.globl _GPIO_WriteLow
+                                     50 	.globl _GPIO_Init
+                                     51 	.globl _GPIO_DeInit
+                                     52 	.globl _lcdstate
+                                     53 	.globl _cnt_refesh
+                                     54 	.globl _monthAL
+                                     55 	.globl _dateAL
+                                     56 	.globl _month
+                                     57 	.globl _date
+                                     58 	.globl _templ
+                                     59 	.globl _temph
+                                     60 	.globl _mode
+                                     61 	.globl _cnt_minute
+                                     62 	.globl _cnt_autoOff
+                                     63 	.globl _cnt_second
+                                     64 	.globl _powerradio
+                                     65 	.globl _counter
+                                     66 	.globl _voltBat
+                                     67 	.globl _adc_value
+                                     68 	.globl _FreFM
+                                     69 	.globl _u8Radio
+                                     70 	.globl _u8Time
+                                     71 	.globl _Clock_setup
+                                     72 	.globl _GPIO_setup
+                                     73 	.globl _Exti_Config
+                                     74 	.globl _readTime
+                                     75 	.globl _setchannel
+                                     76 ;--------------------------------------------------------
+                                     77 ; ram data
+                                     78 ;--------------------------------------------------------
+                                     79 	.area DATA
+                                     80 ;--------------------------------------------------------
+                                     81 ; ram data
+                                     82 ;--------------------------------------------------------
+                                     83 	.area INITIALIZED
+      000000                         84 _u8Time::
+      000000                         85 	.ds 6
+      000006                         86 _u8Radio::
+      000006                         87 	.ds 4
+      00000A                         88 _FreFM::
+      00000A                         89 	.ds 2
+      00000C                         90 _adc_value::
+      00000C                         91 	.ds 2
+      00000E                         92 _voltBat::
+      00000E                         93 	.ds 2
+      000010                         94 _counter::
+      000010                         95 	.ds 2
+      000012                         96 _powerradio::
+      000012                         97 	.ds 1
+      000013                         98 _cnt_second::
+      000013                         99 	.ds 1
+      000014                        100 _cnt_autoOff::
+      000014                        101 	.ds 1
+      000015                        102 _cnt_minute::
+      000015                        103 	.ds 1
+      000016                        104 _mode::
+      000016                        105 	.ds 1
+      000017                        106 _temph::
+      000017                        107 	.ds 2
+      000019                        108 _templ::
+      000019                        109 	.ds 1
+      00001A                        110 _date::
+      00001A                        111 	.ds 1
+      00001B                        112 _month::
+      00001B                        113 	.ds 1
+      00001C                        114 _dateAL::
+      00001C                        115 	.ds 1
+      00001D                        116 _monthAL::
+      00001D                        117 	.ds 1
+      00001E                        118 _cnt_refesh::
+      00001E                        119 	.ds 1
+      00001F                        120 _lcdstate::
+      00001F                        121 	.ds 1
+                                    122 ;--------------------------------------------------------
+                                    123 ; Stack segment in internal ram
+                                    124 ;--------------------------------------------------------
+                                    125 	.area SSEG
+      000000                        126 __start__stack:
+      000000                        127 	.ds	1
+                                    128 
+                                    129 ;--------------------------------------------------------
+                                    130 ; absolute external ram data
+                                    131 ;--------------------------------------------------------
+                                    132 	.area DABS (ABS)
+                                    133 
+                                    134 ; default segment ordering for linker
+                                    135 	.area HOME
+                                    136 	.area GSINIT
+                                    137 	.area GSFINAL
+                                    138 	.area CONST
+                                    139 	.area INITIALIZER
+                                    140 	.area CODE
+                                    141 
+                                    142 ;--------------------------------------------------------
+                                    143 ; interrupt vector
+                                    144 ;--------------------------------------------------------
+                                    145 	.area HOME
+      000000                        146 __interrupt_vect:
+      000000 82v00u00u00            147 	int s_GSINIT ; reset
+      000004 82 00 00 00            148 	int 0x000000 ; trap
+      000008 82 00 00 00            149 	int 0x000000 ; int0
+      00000C 82 00 00 00            150 	int 0x000000 ; int1
+      000010 82 00 00 00            151 	int 0x000000 ; int2
+      000014 82v00u07u0B            152 	int _EXTI_PORTA_IRQHandler ; int3
+      000018 82 00 00 00            153 	int 0x000000 ; int4
+      00001C 82 00 00 00            154 	int 0x000000 ; int5
+      000020 82 00 00 00            155 	int 0x000000 ; int6
+      000024 82 00 00 00            156 	int 0x000000 ; int7
+      000028 82 00 00 00            157 	int 0x000000 ; int8
+      00002C 82 00 00 00            158 	int 0x000000 ; int9
+      000030 82 00 00 00            159 	int 0x000000 ; int10
+      000034 82 00 00 00            160 	int 0x000000 ; int11
+      000038 82 00 00 00            161 	int 0x000000 ; int12
+      00003C 82 00 00 00            162 	int 0x000000 ; int13
+      000040 82 00 00 00            163 	int 0x000000 ; int14
+      000044 82 00 00 00            164 	int 0x000000 ; int15
+      000048 82 00 00 00            165 	int 0x000000 ; int16
+      00004C 82 00 00 00            166 	int 0x000000 ; int17
+      000050 82 00 00 00            167 	int 0x000000 ; int18
+      000054 82 00 00 00            168 	int 0x000000 ; int19
+      000058 82 00 00 00            169 	int 0x000000 ; int20
+      00005C 82 00 00 00            170 	int 0x000000 ; int21
+      000060 82v00u07u7E            171 	int _ADC1_IRQHandler ; int22
+      000064 82v00u07uA8            172 	int _TIM4_UPD_OVF_IRQHandler ; int23
+                                    173 ;--------------------------------------------------------
+                                    174 ; global & static initialisations
+                                    175 ;--------------------------------------------------------
+                                    176 	.area HOME
+                                    177 	.area GSINIT
+                                    178 	.area GSFINAL
+                                    179 	.area GSINIT
+      000000 CDr00r00         [ 4]  180 	call	___sdcc_external_startup
+      000003 4D               [ 1]  181 	tnz	a
+      000004 27 03            [ 1]  182 	jreq	__sdcc_init_data
+      000006 CCr00r68         [ 2]  183 	jp	__sdcc_program_startup
+      000009                        184 __sdcc_init_data:
+                                    185 ; stm8_genXINIT() start
+      000009 AEr00r00         [ 2]  186 	ldw x, #l_DATA
+      00000C 27 07            [ 1]  187 	jreq	00002$
+      00000E                        188 00001$:
+      00000E 72 4FuFFuFF      [ 1]  189 	clr (s_DATA - 1, x)
+      000012 5A               [ 2]  190 	decw x
+      000013 26 F9            [ 1]  191 	jrne	00001$
+      000015                        192 00002$:
+      000015 AEr00r00         [ 2]  193 	ldw	x, #l_INITIALIZER
+      000018 27 09            [ 1]  194 	jreq	00004$
+      00001A                        195 00003$:
+      00001A D6uFFuFF         [ 1]  196 	ld	a, (s_INITIALIZER - 1, x)
+      00001D D7uFFuFF         [ 1]  197 	ld	(s_INITIALIZED - 1, x), a
+      000020 5A               [ 2]  198 	decw	x
+      000021 26 F7            [ 1]  199 	jrne	00003$
+      000023                        200 00004$:
+                                    201 ; stm8_genXINIT() end
+                                    202 	.area GSFINAL
+      000000 CCr00r68         [ 2]  203 	jp	__sdcc_program_startup
+                                    204 ;--------------------------------------------------------
+                                    205 ; Home
+                                    206 ;--------------------------------------------------------
+                                    207 	.area HOME
+                                    208 	.area HOME
+      000068                        209 __sdcc_program_startup:
+      000068 CCr00r00         [ 2]  210 	jp	_main
+                                    211 ;	return from main will return to caller
+                                    212 ;--------------------------------------------------------
+                                    213 ; code
+                                    214 ;--------------------------------------------------------
+                                    215 	.area CODE
+                                    216 ;	main.c: 72: void main()
+                                    217 ;	-----------------------------------------
+                                    218 ;	 function main
+                                    219 ;	-----------------------------------------
+      000000                        220 _main:
+      000000 52 06            [ 2]  221 	sub	sp, #6
+                                    222 ;	main.c: 74: Clock_setup();
+      000002 CDr05rDE         [ 4]  223 	call	_Clock_setup
+                                    224 ;	main.c: 75: GPIO_setup();
+      000005 CDr06r21         [ 4]  225 	call	_GPIO_setup
+                                    226 ;	main.c: 76: Tim4_config();
+      000008 CDr00r00         [ 4]  227 	call	_Tim4_config
+                                    228 ;	main.c: 77: Exti_Config();
+      00000B CDr06r7F         [ 4]  229 	call	_Exti_Config
+                                    230 ;	main.c: 78: configADC();
+      00000E CDr00r00         [ 4]  231 	call	_configADC
+                                    232 ;	main.c: 79: BEEP_config();
+      000011 CDr00r00         [ 4]  233 	call	_BEEP_config
+                                    234 ;	main.c: 80: i2c_init();
+      000014 CDr00r00         [ 4]  235 	call	_i2c_init
+                                    236 ;	main.c: 82: delay_ms(100);  //Wait LCD OLED init
+      000017 AE 00 64         [ 2]  237 	ldw	x, #0x0064
+      00001A CDr00r00         [ 4]  238 	call	_delay_ms
+                                    239 ;	main.c: 83: SD1106_sendInitCom();
+      00001D CDr00r00         [ 4]  240 	call	_SD1106_sendInitCom
+                                    241 ;	main.c: 84: SD1106_resetDis();
+      000020 CDr00r00         [ 4]  242 	call	_SD1106_resetDis
+                                    243 ;	main.c: 85: SD1106_setContranst(200);
+      000023 A6 C8            [ 1]  244 	ld	a, #0xc8
+      000025 CDr00r00         [ 4]  245 	call	_SD1106_setContranst
+                                    246 ;	main.c: 86: SD1106_clear();
+      000028 CDr00r00         [ 4]  247 	call	_SD1106_clear
+                                    248 ;	main.c: 87: lcdstate = SET;
+      00002B 35 01u00u1F      [ 1]  249 	mov	_lcdstate+0, #0x01
+                                    250 ;	main.c: 88: delay_ms(1);
+      00002F 5F               [ 1]  251 	clrw	x
+      000030 5C               [ 1]  252 	incw	x
+      000031 CDr00r00         [ 4]  253 	call	_delay_ms
+                                    254 ;	main.c: 101: SD1106_CUS_PRINT();
+      000034 CDr00r00         [ 4]  255 	call	_SD1106_CUS_PRINT
+                                    256 ;	main.c: 103: while (1)
+      000037                        257 00174$:
+                                    258 ;	main.c: 105: if(!cnt_refesh){
+      000037 C6u00u1E         [ 1]  259 	ld	a, _cnt_refesh+0
+      00003A 26 07            [ 1]  260 	jrne	00102$
+                                    261 ;	main.c: 106: SD1106_clear();
+      00003C CDr00r00         [ 4]  262 	call	_SD1106_clear
+                                    263 ;	main.c: 107: cnt_refesh++;
+      00003F 72 5Cu00u1E      [ 1]  264 	inc	_cnt_refesh+0
+      000043                        265 00102$:
+                                    266 ;	main.c: 110: if( (cnt_autoOff >= 30) & lcdstate ){
+      000043 C6u00u14         [ 1]  267 	ld	a, _cnt_autoOff+0
+      000046 A1 1E            [ 1]  268 	cp	a, #0x1e
+      000048 4F               [ 1]  269 	clr	a
+      000049 49               [ 1]  270 	rlc	a
+      00004A A8 01            [ 1]  271 	xor	a, #0x01
+      00004C C4u00u1F         [ 1]  272 	and	a, _lcdstate+0
+      00004F 27 1C            [ 1]  273 	jreq	00107$
+                                    274 ;	main.c: 111: SD1106_sendCom(0xAE);   //OLED Off
+      000051 A6 AE            [ 1]  275 	ld	a, #0xae
+      000053 CDr00r00         [ 4]  276 	call	_SD1106_sendCom
+                                    277 ;	main.c: 112: lcdstate = 0;
+      000056 72 5Fu00u1F      [ 1]  278 	clr	_lcdstate+0
+                                    279 ;	main.c: 113: cnt_minute = 0;
+      00005A 72 5Fu00u15      [ 1]  280 	clr	_cnt_minute+0
+                                    281 ;	main.c: 114: cnt_second = 0; 
+      00005E 72 5Fu00u13      [ 1]  282 	clr	_cnt_second+0
+                                    283 ;	main.c: 115: cnt_autoOff = 0;
+      000062 72 5Fu00u14      [ 1]  284 	clr	_cnt_autoOff+0
+                                    285 ;	main.c: 116: if(powerradio){
+      000066 72 5Du00u12      [ 1]  286 	tnz	_powerradio+0
+      00006A 26 01            [ 1]  287 	jrne	00107$
+                                    288 ;	main.c: 118: halt();
+      00006C 8E               [10]  289 	halt
+      00006D                        290 00107$:
+                                    291 ;	main.c: 123: if(dateAL == 1 | dateAL == 15){
+      00006D C6u00u1C         [ 1]  292 	ld	a, _dateAL+0
+      000070 4A               [ 1]  293 	dec	a
+      000071 26 05            [ 1]  294 	jrne	00374$
+      000073 A6 01            [ 1]  295 	ld	a, #0x01
+      000075 6B 06            [ 1]  296 	ld	(0x06, sp), a
+      000077 C5                     297 	.byte 0xc5
+      000078                        298 00374$:
+      000078 0F 06            [ 1]  299 	clr	(0x06, sp)
+      00007A                        300 00375$:
+      00007A C6u00u1C         [ 1]  301 	ld	a, _dateAL+0
+      00007D A0 0F            [ 1]  302 	sub	a, #0x0f
+      00007F 26 02            [ 1]  303 	jrne	00377$
+      000081 4C               [ 1]  304 	inc	a
+      000082 21                     305 	.byte 0x21
+      000083                        306 00377$:
+      000083 4F               [ 1]  307 	clr	a
+      000084                        308 00378$:
+      000084 1A 06            [ 1]  309 	or	a, (0x06, sp)
+      000086 27 09            [ 1]  310 	jreq	00109$
+                                    311 ;	main.c: 124: SD1106_printP("AL:1|15",0,2);
+      000088 4B 02            [ 1]  312 	push	#0x02
+      00008A 4F               [ 1]  313 	clr	a
+      00008B AEr00r14         [ 2]  314 	ldw	x, #(___str_0+0)
+      00008E CDr00r00         [ 4]  315 	call	_SD1106_printP
+      000091                        316 00109$:
+                                    317 ;	main.c: 127: if(adc_value != temph){
+      000091 CEu00u17         [ 2]  318 	ldw	x, _temph+0
+      000094 C3u00u0C         [ 2]  319 	cpw	x, _adc_value+0
+      000097 27 51            [ 1]  320 	jreq	00111$
+                                    321 ;	main.c: 132: voltBat = 5325 / temph;
+      000099 AE 14 CD         [ 2]  322 	ldw	x, #0x14cd
+      00009C 90 CEu00u17      [ 2]  323 	ldw	y, _temph+0
+      0000A0 65               [ 2]  324 	divw	x, y
+      0000A1 CFu00u0E         [ 2]  325 	ldw	_voltBat+0, x
+                                    326 ;	main.c: 134: print_levelBAT(voltBat);
+      0000A4 C6u00u0F         [ 1]  327 	ld	a, _voltBat+1
+      0000A7 CDr00r00         [ 4]  328 	call	_print_levelBAT
+                                    329 ;	main.c: 135: SD1106_print_one_num( (uint8_t)voltBat/10,0,100);
+      0000AA C6u00u0F         [ 1]  330 	ld	a, _voltBat+1
+      0000AD 5F               [ 1]  331 	clrw	x
+      0000AE 4B 0A            [ 1]  332 	push	#0x0a
+      0000B0 4B 00            [ 1]  333 	push	#0x00
+      0000B2 97               [ 1]  334 	ld	xl, a
+      0000B3 CDr00r00         [ 4]  335 	call	__divsint
+      0000B6 9F               [ 1]  336 	ld	a, xl
+      0000B7 4B 64            [ 1]  337 	push	#0x64
+      0000B9 4B 00            [ 1]  338 	push	#0x00
+      0000BB CDr00r00         [ 4]  339 	call	_SD1106_print_one_num
+                                    340 ;	main.c: 136: SD1106_printP(".",    0,  106);
+      0000BE 4B 6A            [ 1]  341 	push	#0x6a
+      0000C0 4F               [ 1]  342 	clr	a
+      0000C1 AEr00r1C         [ 2]  343 	ldw	x, #(___str_1+0)
+      0000C4 CDr00r00         [ 4]  344 	call	_SD1106_printP
+                                    345 ;	main.c: 137: SD1106_print_one_num( (uint8_t)voltBat%10, 0, 112);
+      0000C7 C6u00u0F         [ 1]  346 	ld	a, _voltBat+1
+      0000CA 5F               [ 1]  347 	clrw	x
+      0000CB 4B 0A            [ 1]  348 	push	#0x0a
+      0000CD 4B 00            [ 1]  349 	push	#0x00
+      0000CF 97               [ 1]  350 	ld	xl, a
+      0000D0 CDr00r00         [ 4]  351 	call	__modsint
+      0000D3 9F               [ 1]  352 	ld	a, xl
+      0000D4 4B 70            [ 1]  353 	push	#0x70
+      0000D6 4B 00            [ 1]  354 	push	#0x00
+      0000D8 CDr00r00         [ 4]  355 	call	_SD1106_print_one_num
+                                    356 ;	main.c: 138: SD1106_printP("V", 0, 118);
+      0000DB 4B 76            [ 1]  357 	push	#0x76
+      0000DD 4F               [ 1]  358 	clr	a
+      0000DE AEr00r1E         [ 2]  359 	ldw	x, #(___str_2+0)
+      0000E1 CDr00r00         [ 4]  360 	call	_SD1106_printP
+                                    361 ;	main.c: 140: adc_value = temph;
+      0000E4 CEu00u17         [ 2]  362 	ldw	x, _temph+0
+      0000E7 CFu00u0C         [ 2]  363 	ldw	_adc_value+0, x
+      0000EA                        364 00111$:
+                                    365 ;	main.c: 143: if (GPIO_ReadInputPin(right_port, right_pin) == RESET){
+      0000EA A6 40            [ 1]  366 	ld	a, #0x40
+      0000EC AE 50 0A         [ 2]  367 	ldw	x, #0x500a
+      0000EF CDr00r00         [ 4]  368 	call	_GPIO_ReadInputPin
+      0000F2 4D               [ 1]  369 	tnz	a
+      0000F3 26 1C            [ 1]  370 	jrne	00118$
+                                    371 ;	main.c: 144: delay_ms(20);
+      0000F5 AE 00 14         [ 2]  372 	ldw	x, #0x0014
+      0000F8 CDr00r00         [ 4]  373 	call	_delay_ms
+                                    374 ;	main.c: 145: if(powerradio){
+      0000FB C6u00u12         [ 1]  375 	ld	a, _powerradio+0
+      0000FE 27 11            [ 1]  376 	jreq	00118$
+                                    377 ;	main.c: 146: while (GPIO_ReadInputPin(right_port, right_pin) == RESET);
+      000100                        378 00112$:
+      000100 A6 40            [ 1]  379 	ld	a, #0x40
+      000102 AE 50 0A         [ 2]  380 	ldw	x, #0x500a
+      000105 CDr00r00         [ 4]  381 	call	_GPIO_ReadInputPin
+      000108 4D               [ 1]  382 	tnz	a
+      000109 27 F5            [ 1]  383 	jreq	00112$
+                                    384 ;	main.c: 147: setchannel(1000);   //Tan so 100.0 MHZ
+      00010B AE 03 E8         [ 2]  385 	ldw	x, #0x03e8
+      00010E CDr06rD4         [ 4]  386 	call	_setchannel
+      000111                        387 00118$:
+                                    388 ;	main.c: 152: if (GPIO_ReadInputPin(left_port, left_pin) == RESET){
+      000111 A6 20            [ 1]  389 	ld	a, #0x20
+      000113 AE 50 0A         [ 2]  390 	ldw	x, #0x500a
+      000116 CDr00r00         [ 4]  391 	call	_GPIO_ReadInputPin
+      000119 6B 06            [ 1]  392 	ld	(0x06, sp), a
+      00011B 27 03            [ 1]  393 	jreq	00386$
+      00011D CCr02rD4         [ 2]  394 	jp	00138$
+      000120                        395 00386$:
+                                    396 ;	main.c: 153: delay_ms(20);
+      000120 AE 00 14         [ 2]  397 	ldw	x, #0x0014
+      000123 CDr00r00         [ 4]  398 	call	_delay_ms
+                                    399 ;	main.c: 154: if(powerradio){
+      000126 C6u00u12         [ 1]  400 	ld	a, _powerradio+0
+      000129 27 18            [ 1]  401 	jreq	00135$
+                                    402 ;	main.c: 156: i2c_start();
+      00012B CDr00r00         [ 4]  403 	call	_i2c_start
+                                    404 ;	main.c: 157: i2c_write(ADDR_5807M);
+      00012E A6 20            [ 1]  405 	ld	a, #0x20
+      000130 CDr00r00         [ 4]  406 	call	_i2c_write
+                                    407 ;	main.c: 158: i2c_write(0xC3);
+      000133 A6 C3            [ 1]  408 	ld	a, #0xc3
+      000135 CDr00r00         [ 4]  409 	call	_i2c_write
+                                    410 ;	main.c: 159: i2c_write(0x01);
+      000138 A6 01            [ 1]  411 	ld	a, #0x01
+      00013A CDr00r00         [ 4]  412 	call	_i2c_write
+                                    413 ;	main.c: 160: i2c_stop();
+      00013D CDr00r00         [ 4]  414 	call	_i2c_stop
+      000140 CCr02rD4         [ 2]  415 	jp	00138$
+      000143                        416 00135$:
+                                    417 ;	main.c: 163: delay_ms(500);
+      000143 AE 01 F4         [ 2]  418 	ldw	x, #0x01f4
+      000146 CDr00r00         [ 4]  419 	call	_delay_ms
+                                    420 ;	main.c: 164: SD1106_clear();
+      000149 CDr00r00         [ 4]  421 	call	_SD1106_clear
+                                    422 ;	main.c: 165: while (GPIO_ReadInputPin(left_port, left_pin) == RESET){
+      00014C                        423 00131$:
+      00014C A6 20            [ 1]  424 	ld	a, #0x20
+      00014E AE 50 0A         [ 2]  425 	ldw	x, #0x500a
+      000151 CDr00r00         [ 4]  426 	call	_GPIO_ReadInputPin
+      000154 6B 06            [ 1]  427 	ld	(0x06, sp), a
+      000156 27 03            [ 1]  428 	jreq	00388$
+      000158 CCr02rD1         [ 2]  429 	jp	00133$
+      00015B                        430 00388$:
+                                    431 ;	main.c: 166: SD1106_printP("+DATE+",   1,  70);
+      00015B 4B 46            [ 1]  432 	push	#0x46
+      00015D A6 01            [ 1]  433 	ld	a, #0x01
+      00015F AEr00r20         [ 2]  434 	ldw	x, #(___str_3+0)
+      000162 CDr00r00         [ 4]  435 	call	_SD1106_printP
+                                    436 ;	main.c: 167: readTime();
+      000165 CDr06r8E         [ 4]  437 	call	_readTime
+                                    438 ;	main.c: 168: uint8_t flag = ( (mangAL[(u8Time[5] - 8)*4] - u8Time[4] >= 1) ? 0 : 1);
+      000168 C6u00u05         [ 1]  439 	ld	a, _u8Time+5
+      00016B A0 08            [ 1]  440 	sub	a, #0x08
+      00016D 6B 03            [ 1]  441 	ld	(0x03, sp), a
+      00016F 97               [ 1]  442 	ld	xl, a
+      000170 49               [ 1]  443 	rlc	a
+      000171 4F               [ 1]  444 	clr	a
+      000172 A2 00            [ 1]  445 	sbc	a, #0x00
+      000174 95               [ 1]  446 	ld	xh, a
+      000175 58               [ 2]  447 	sllw	x
+      000176 58               [ 2]  448 	sllw	x
+      000177 D6u00u00         [ 1]  449 	ld	a, (_mangAL+0, x)
+      00017A 6B 04            [ 1]  450 	ld	(0x04, sp), a
+      00017C 5F               [ 1]  451 	clrw	x
+      00017D 7B 04            [ 1]  452 	ld	a, (0x04, sp)
+      00017F 97               [ 1]  453 	ld	xl, a
+      000180 C6u00u04         [ 1]  454 	ld	a, _u8Time+4
+      000183 6B 05            [ 1]  455 	ld	(0x05, sp), a
+      000185 6B 02            [ 1]  456 	ld	(0x02, sp), a
+      000187 0F 01            [ 1]  457 	clr	(0x01, sp)
+      000189 72 F0 01         [ 2]  458 	subw	x, (0x01, sp)
+      00018C A3 00 01         [ 2]  459 	cpw	x, #0x0001
+      00018F 2F 02            [ 1]  460 	jrslt	00178$
+      000191 4F               [ 1]  461 	clr	a
+      000192 C5                     462 	.byte 0xc5
+      000193                        463 00178$:
+      000193 A6 01            [ 1]  464 	ld	a, #0x01
+      000195                        465 00179$:
+                                    466 ;	main.c: 169: if(flag){
+      000195 6B 06            [ 1]  467 	ld	(0x06, sp), a
+      000197 27 1F            [ 1]  468 	jreq	00120$
+                                    469 ;	main.c: 170: dateAL = u8Time[4] - mangAL[(u8Time[5] - 8)*4] + 1;
+      000199 7B 05            [ 1]  470 	ld	a, (0x05, sp)
+      00019B 10 04            [ 1]  471 	sub	a, (0x04, sp)
+      00019D 4C               [ 1]  472 	inc	a
+      00019E C7u00u1C         [ 1]  473 	ld	_dateAL+0, a
+                                    474 ;	main.c: 171: monthAL = mangAL[(u8Time[5] - 8)*4 + 3];
+      0001A1 C6u00u05         [ 1]  475 	ld	a, _u8Time+5
+      0001A4 A0 08            [ 1]  476 	sub	a, #0x08
+      0001A6 48               [ 1]  477 	sll	a
+      0001A7 48               [ 1]  478 	sll	a
+      0001A8 AB 03            [ 1]  479 	add	a, #0x03
+      0001AA 97               [ 1]  480 	ld	xl, a
+      0001AB 49               [ 1]  481 	rlc	a
+      0001AC 4F               [ 1]  482 	clr	a
+      0001AD A2 00            [ 1]  483 	sbc	a, #0x00
+      0001AF 95               [ 1]  484 	ld	xh, a
+      0001B0 D6u00u00         [ 1]  485 	ld	a, (_mangAL+0, x)
+      0001B3 C7u00u1D         [ 1]  486 	ld	_monthAL+0, a
+      0001B6 20 29            [ 2]  487 	jra	00121$
+      0001B8                        488 00120$:
+                                    489 ;	main.c: 174: dateAL = u8Time[4] + mangAL[(u8Time[5] - 8)*4 + 2] - 1;
+      0001B8 7B 03            [ 1]  490 	ld	a, (0x03, sp)
+      0001BA 48               [ 1]  491 	sll	a
+      0001BB 48               [ 1]  492 	sll	a
+      0001BC AB 02            [ 1]  493 	add	a, #0x02
+      0001BE 97               [ 1]  494 	ld	xl, a
+      0001BF 49               [ 1]  495 	rlc	a
+      0001C0 4F               [ 1]  496 	clr	a
+      0001C1 A2 00            [ 1]  497 	sbc	a, #0x00
+      0001C3 95               [ 1]  498 	ld	xh, a
+      0001C4 D6u00u00         [ 1]  499 	ld	a, (_mangAL+0, x)
+      0001C7 1B 05            [ 1]  500 	add	a, (0x05, sp)
+      0001C9 4A               [ 1]  501 	dec	a
+      0001CA C7u00u1C         [ 1]  502 	ld	_dateAL+0, a
+                                    503 ;	main.c: 175: monthAL = mangAL[(u8Time[5] - 8)*4 + 1];
+      0001CD C6u00u05         [ 1]  504 	ld	a, _u8Time+5
+      0001D0 A0 08            [ 1]  505 	sub	a, #0x08
+      0001D2 48               [ 1]  506 	sll	a
+      0001D3 48               [ 1]  507 	sll	a
+      0001D4 4C               [ 1]  508 	inc	a
+      0001D5 97               [ 1]  509 	ld	xl, a
+      0001D6 49               [ 1]  510 	rlc	a
+      0001D7 4F               [ 1]  511 	clr	a
+      0001D8 A2 00            [ 1]  512 	sbc	a, #0x00
+      0001DA 95               [ 1]  513 	ld	xh, a
+      0001DB D6u00u00         [ 1]  514 	ld	a, (_mangAL+0, x)
+      0001DE C7u00u1D         [ 1]  515 	ld	_monthAL+0, a
+      0001E1                        516 00121$:
+                                    517 ;	main.c: 177: SD1106_printBigNum(u8Time[4]/10, 25);
+      0001E1 C6u00u04         [ 1]  518 	ld	a, _u8Time+4
+      0001E4 5F               [ 1]  519 	clrw	x
+      0001E5 97               [ 1]  520 	ld	xl, a
+      0001E6 4B 0A            [ 1]  521 	push	#0x0a
+      0001E8 4B 00            [ 1]  522 	push	#0x00
+      0001EA CDr00r00         [ 4]  523 	call	__divsint
+      0001ED 9F               [ 1]  524 	ld	a, xl
+      0001EE 4B 19            [ 1]  525 	push	#0x19
+      0001F0 CDr00r00         [ 4]  526 	call	_SD1106_printBigNum
+                                    527 ;	main.c: 178: SD1106_printBigNum(u8Time[4]%10, 42);
+      0001F3 C6u00u04         [ 1]  528 	ld	a, _u8Time+4
+      0001F6 5F               [ 1]  529 	clrw	x
+      0001F7 97               [ 1]  530 	ld	xl, a
+      0001F8 4B 0A            [ 1]  531 	push	#0x0a
+      0001FA 4B 00            [ 1]  532 	push	#0x00
+      0001FC CDr00r00         [ 4]  533 	call	__modsint
+      0001FF 9F               [ 1]  534 	ld	a, xl
+      000200 4B 2A            [ 1]  535 	push	#0x2a
+      000202 CDr00r00         [ 4]  536 	call	_SD1106_printBigNum
+                                    537 ;	main.c: 179: SD1106_printBigLine(59);
+      000205 A6 3B            [ 1]  538 	ld	a, #0x3b
+      000207 CDr00r00         [ 4]  539 	call	_SD1106_printBigLine
+                                    540 ;	main.c: 180: SD1106_printBigNum(u8Time[5]/10, 66);
+      00020A C6u00u05         [ 1]  541 	ld	a, _u8Time+5
+      00020D 5F               [ 1]  542 	clrw	x
+      00020E 97               [ 1]  543 	ld	xl, a
+      00020F 4B 0A            [ 1]  544 	push	#0x0a
+      000211 4B 00            [ 1]  545 	push	#0x00
+      000213 CDr00r00         [ 4]  546 	call	__divsint
+      000216 9F               [ 1]  547 	ld	a, xl
+      000217 4B 42            [ 1]  548 	push	#0x42
+      000219 CDr00r00         [ 4]  549 	call	_SD1106_printBigNum
+                                    550 ;	main.c: 181: SD1106_printBigNum(u8Time[5]%10, 83);
+      00021C C6u00u05         [ 1]  551 	ld	a, _u8Time+5
+      00021F 5F               [ 1]  552 	clrw	x
+      000220 97               [ 1]  553 	ld	xl, a
+      000221 4B 0A            [ 1]  554 	push	#0x0a
+      000223 4B 00            [ 1]  555 	push	#0x00
+      000225 CDr00r00         [ 4]  556 	call	__modsint
+      000228 9F               [ 1]  557 	ld	a, xl
+      000229 4B 53            [ 1]  558 	push	#0x53
+      00022B CDr00r00         [ 4]  559 	call	_SD1106_printBigNum
+                                    560 ;	main.c: 183: SD1106_printP("AL:",0,2);
+      00022E 4B 02            [ 1]  561 	push	#0x02
+      000230 4F               [ 1]  562 	clr	a
+      000231 AEr00r27         [ 2]  563 	ldw	x, #(___str_4+0)
+      000234 CDr00r00         [ 4]  564 	call	_SD1106_printP
+                                    565 ;	main.c: 184: SD1106_printNum(dateAL,0,20);
+      000237 5F               [ 1]  566 	clrw	x
+      000238 C6u00u1C         [ 1]  567 	ld	a, _dateAL+0
+      00023B 97               [ 1]  568 	ld	xl, a
+      00023C 4B 14            [ 1]  569 	push	#0x14
+      00023E 4F               [ 1]  570 	clr	a
+      00023F CDr00r00         [ 4]  571 	call	_SD1106_printNum
+                                    572 ;	main.c: 185: SD1106_printP("-",0,32);
+      000242 4B 20            [ 1]  573 	push	#0x20
+      000244 4F               [ 1]  574 	clr	a
+      000245 AEr00r2B         [ 2]  575 	ldw	x, #(___str_5+0)
+      000248 CDr00r00         [ 4]  576 	call	_SD1106_printP
+                                    577 ;	main.c: 186: SD1106_printNum( monthAL, 0, 38);
+      00024B 5F               [ 1]  578 	clrw	x
+      00024C C6u00u1D         [ 1]  579 	ld	a, _monthAL+0
+      00024F 97               [ 1]  580 	ld	xl, a
+      000250 4B 26            [ 1]  581 	push	#0x26
+      000252 4F               [ 1]  582 	clr	a
+      000253 CDr00r00         [ 4]  583 	call	_SD1106_printNum
+                                    584 ;	main.c: 187: delay_ms(100);
+      000256 AE 00 64         [ 2]  585 	ldw	x, #0x0064
+      000259 CDr00r00         [ 4]  586 	call	_delay_ms
+                                    587 ;	main.c: 188: if(GPIO_ReadInputPin(right_port, right_pin) == RESET){
+      00025C A6 40            [ 1]  588 	ld	a, #0x40
+      00025E AE 50 0A         [ 2]  589 	ldw	x, #0x500a
+      000261 CDr00r00         [ 4]  590 	call	_GPIO_ReadInputPin
+      000264 4D               [ 1]  591 	tnz	a
+      000265 27 03            [ 1]  592 	jreq	00391$
+      000267 CCr01r4C         [ 2]  593 	jp	00131$
+      00026A                        594 00391$:
+                                    595 ;	main.c: 189: delay_ms(400);
+      00026A AE 01 90         [ 2]  596 	ldw	x, #0x0190
+      00026D CDr00r00         [ 4]  597 	call	_delay_ms
+                                    598 ;	main.c: 190: while(GPIO_ReadInputPin(right_port, right_pin) == RESET){
+      000270                        599 00124$:
+      000270 A6 40            [ 1]  600 	ld	a, #0x40
+      000272 AE 50 0A         [ 2]  601 	ldw	x, #0x500a
+      000275 CDr00r00         [ 4]  602 	call	_GPIO_ReadInputPin
+      000278 4D               [ 1]  603 	tnz	a
+      000279 26 3B            [ 1]  604 	jrne	00126$
+                                    605 ;	main.c: 191: delay_ms(400);
+      00027B AE 01 90         [ 2]  606 	ldw	x, #0x0190
+      00027E CDr00r00         [ 4]  607 	call	_delay_ms
+                                    608 ;	main.c: 192: month++;
+      000281 72 5Cu00u1B      [ 1]  609 	inc	_month+0
+                                    610 ;	main.c: 193: if(month > 12) month = 0;
+      000285 C6u00u1B         [ 1]  611 	ld	a, _month+0
+      000288 A1 0C            [ 1]  612 	cp	a, #0x0c
+      00028A 23 04            [ 2]  613 	jrule	00123$
+      00028C 72 5Fu00u1B      [ 1]  614 	clr	_month+0
+      000290                        615 00123$:
+                                    616 ;	main.c: 194: SD1106_printBigNum(month/10, 66);
+      000290 5F               [ 1]  617 	clrw	x
+      000291 C6u00u1B         [ 1]  618 	ld	a, _month+0
+      000294 97               [ 1]  619 	ld	xl, a
+      000295 4B 0A            [ 1]  620 	push	#0x0a
+      000297 4B 00            [ 1]  621 	push	#0x00
+      000299 CDr00r00         [ 4]  622 	call	__divsint
+      00029C 9F               [ 1]  623 	ld	a, xl
+      00029D 4B 42            [ 1]  624 	push	#0x42
+      00029F CDr00r00         [ 4]  625 	call	_SD1106_printBigNum
+                                    626 ;	main.c: 195: SD1106_printBigNum(month%10, 83);
+      0002A2 C6u00u1B         [ 1]  627 	ld	a, _month+0
+      0002A5 5F               [ 1]  628 	clrw	x
+      0002A6 4B 0A            [ 1]  629 	push	#0x0a
+      0002A8 4B 00            [ 1]  630 	push	#0x00
+      0002AA 97               [ 1]  631 	ld	xl, a
+      0002AB CDr00r00         [ 4]  632 	call	__modsint
+      0002AE 9F               [ 1]  633 	ld	a, xl
+      0002AF 4B 53            [ 1]  634 	push	#0x53
+      0002B1 CDr00r00         [ 4]  635 	call	_SD1106_printBigNum
+      0002B4 20 BA            [ 2]  636 	jra	00124$
+      0002B6                        637 00126$:
+                                    638 ;	main.c: 197: date++;
+      0002B6 72 5Cu00u1A      [ 1]  639 	inc	_date+0
+                                    640 ;	main.c: 198: if(date > 31) date = 0;
+      0002BA C6u00u1A         [ 1]  641 	ld	a, _date+0
+      0002BD A1 1F            [ 1]  642 	cp	a, #0x1f
+      0002BF 23 04            [ 2]  643 	jrule	00128$
+      0002C1 72 5Fu00u1A      [ 1]  644 	clr	_date+0
+      0002C5                        645 00128$:
+                                    646 ;	main.c: 199: writeDay(date, month);
+      0002C5 3Bu00u1B         [ 1]  647 	push	_month+0
+      0002C8 C6u00u1A         [ 1]  648 	ld	a, _date+0
+      0002CB CDr00r00         [ 4]  649 	call	_writeDay
+      0002CE CCr01r4C         [ 2]  650 	jp	00131$
+      0002D1                        651 00133$:
+                                    652 ;	main.c: 203: SD1106_clear();
+      0002D1 CDr00r00         [ 4]  653 	call	_SD1106_clear
+      0002D4                        654 00138$:
+                                    655 ;	main.c: 208: readTime();
+      0002D4 CDr06r8E         [ 4]  656 	call	_readTime
+                                    657 ;	main.c: 221: SD1106_printBigNum(u8Time[2]/10, 25);
+      0002D7 C6u00u02         [ 1]  658 	ld	a, _u8Time+2
+      0002DA 5F               [ 1]  659 	clrw	x
+      0002DB 4B 0A            [ 1]  660 	push	#0x0a
+      0002DD 4B 00            [ 1]  661 	push	#0x00
+      0002DF 97               [ 1]  662 	ld	xl, a
+      0002E0 CDr00r00         [ 4]  663 	call	__divsint
+      0002E3 9F               [ 1]  664 	ld	a, xl
+      0002E4 4B 19            [ 1]  665 	push	#0x19
+      0002E6 CDr00r00         [ 4]  666 	call	_SD1106_printBigNum
+                                    667 ;	main.c: 222: SD1106_printBigNum(u8Time[2]%10, 42);
+      0002E9 C6u00u02         [ 1]  668 	ld	a, _u8Time+2
+      0002EC 5F               [ 1]  669 	clrw	x
+      0002ED 4B 0A            [ 1]  670 	push	#0x0a
+      0002EF 4B 00            [ 1]  671 	push	#0x00
+      0002F1 97               [ 1]  672 	ld	xl, a
+      0002F2 CDr00r00         [ 4]  673 	call	__modsint
+      0002F5 9F               [ 1]  674 	ld	a, xl
+      0002F6 4B 2A            [ 1]  675 	push	#0x2a
+      0002F8 CDr00r00         [ 4]  676 	call	_SD1106_printBigNum
+                                    677 ;	main.c: 223: SD1106_printBigPoint(59);
+      0002FB A6 3B            [ 1]  678 	ld	a, #0x3b
+      0002FD CDr00r00         [ 4]  679 	call	_SD1106_printBigPoint
+                                    680 ;	main.c: 225: SD1106_printBigNum(u8Time[1]/10, 66);
+      000300 C6u00u01         [ 1]  681 	ld	a, _u8Time+1
+      000303 5F               [ 1]  682 	clrw	x
+      000304 4B 0A            [ 1]  683 	push	#0x0a
+      000306 4B 00            [ 1]  684 	push	#0x00
+      000308 97               [ 1]  685 	ld	xl, a
+      000309 CDr00r00         [ 4]  686 	call	__divsint
+      00030C 9F               [ 1]  687 	ld	a, xl
+      00030D 4B 42            [ 1]  688 	push	#0x42
+      00030F CDr00r00         [ 4]  689 	call	_SD1106_printBigNum
+                                    690 ;	main.c: 226: SD1106_printBigNum(u8Time[1]%10, 83);
+      000312 C6u00u01         [ 1]  691 	ld	a, _u8Time+1
+      000315 5F               [ 1]  692 	clrw	x
+      000316 4B 0A            [ 1]  693 	push	#0x0a
+      000318 4B 00            [ 1]  694 	push	#0x00
+      00031A 97               [ 1]  695 	ld	xl, a
+      00031B CDr00r00         [ 4]  696 	call	__modsint
+      00031E 9F               [ 1]  697 	ld	a, xl
+      00031F 4B 53            [ 1]  698 	push	#0x53
+      000321 CDr00r00         [ 4]  699 	call	_SD1106_printBigNum
+                                    700 ;	main.c: 228: SD1106_print_one_num( (uint8_t)u8Time[0]/10,7,100);
+      000324 C6u00u00         [ 1]  701 	ld	a, _u8Time+0
+      000327 5F               [ 1]  702 	clrw	x
+      000328 4B 0A            [ 1]  703 	push	#0x0a
+      00032A 4B 00            [ 1]  704 	push	#0x00
+      00032C 97               [ 1]  705 	ld	xl, a
+      00032D CDr00r00         [ 4]  706 	call	__divsint
+      000330 9F               [ 1]  707 	ld	a, xl
+      000331 4B 64            [ 1]  708 	push	#0x64
+      000333 4B 07            [ 1]  709 	push	#0x07
+      000335 CDr00r00         [ 4]  710 	call	_SD1106_print_one_num
+                                    711 ;	main.c: 229: SD1106_print_one_num( (uint8_t)u8Time[0]%10,7,106);
+      000338 C6u00u00         [ 1]  712 	ld	a, _u8Time+0
+      00033B 5F               [ 1]  713 	clrw	x
+      00033C 4B 0A            [ 1]  714 	push	#0x0a
+      00033E 4B 00            [ 1]  715 	push	#0x00
+      000340 97               [ 1]  716 	ld	xl, a
+      000341 CDr00r00         [ 4]  717 	call	__modsint
+      000344 9F               [ 1]  718 	ld	a, xl
+      000345 4B 6A            [ 1]  719 	push	#0x6a
+      000347 4B 07            [ 1]  720 	push	#0x07
+      000349 CDr00r00         [ 4]  721 	call	_SD1106_print_one_num
+                                    722 ;	main.c: 230: delay_ms(100);
+      00034C AE 00 64         [ 2]  723 	ldw	x, #0x0064
+      00034F CDr00r00         [ 4]  724 	call	_delay_ms
+                                    725 ;	main.c: 232: if(GPIO_ReadInputPin(switch_PORT, switch_PIN)){
+      000352 A6 10            [ 1]  726 	ld	a, #0x10
+      000354 AE 50 0A         [ 2]  727 	ldw	x, #0x500a
+      000357 CDr00r00         [ 4]  728 	call	_GPIO_ReadInputPin
+      00035A 4D               [ 1]  729 	tnz	a
+      00035B 27 0B            [ 1]  730 	jreq	00140$
+                                    731 ;	main.c: 233: powerradio = 1;
+      00035D 35 01u00u12      [ 1]  732 	mov	_powerradio+0, #0x01
+                                    733 ;	main.c: 234: delay_ms(1);
+      000361 5F               [ 1]  734 	clrw	x
+      000362 5C               [ 1]  735 	incw	x
+      000363 CDr00r00         [ 4]  736 	call	_delay_ms
+      000366 20 0C            [ 2]  737 	jra	00141$
+      000368                        738 00140$:
+                                    739 ;	main.c: 236: powerradio = 0;
+      000368 72 5Fu00u12      [ 1]  740 	clr	_powerradio+0
+                                    741 ;	main.c: 237: clock_icon_ds();
+      00036C CDr00r00         [ 4]  742 	call	_clock_icon_ds
+                                    743 ;	main.c: 238: delay_ms(1);
+      00036F 5F               [ 1]  744 	clrw	x
+      000370 5C               [ 1]  745 	incw	x
+      000371 CDr00r00         [ 4]  746 	call	_delay_ms
+      000374                        747 00141$:
+                                    748 ;	main.c: 242: if(powerradio == 1){
+      000374 C6u00u12         [ 1]  749 	ld	a, _powerradio+0
+      000377 4A               [ 1]  750 	dec	a
+      000378 27 03            [ 1]  751 	jreq	00398$
+      00037A CCr04r15         [ 2]  752 	jp	00208$
+      00037D                        753 00398$:
+                                    754 ;	main.c: 243: data_read(ADDR_5807M | 0x22, 0x0A, 4, u8Radio);
+      00037D 4Br06            [ 1]  755 	push	#<(_u8Radio+0)
+      00037F 4Bs00            [ 1]  756 	push	#((_u8Radio+0) >> 8)
+      000381 4B 04            [ 1]  757 	push	#0x04
+      000383 4B 0A            [ 1]  758 	push	#0x0a
+      000385 A6 22            [ 1]  759 	ld	a, #0x22
+      000387 CDr00r00         [ 4]  760 	call	_data_read
+                                    761 ;	main.c: 244: FreFM = (u8Radio[0] & 0x1) << 8;    //bit cao
+      00038A C6u00u06         [ 1]  762 	ld	a, _u8Radio+0
+      00038D 5F               [ 1]  763 	clrw	x
+      00038E A4 01            [ 1]  764 	and	a, #0x01
+      000390 97               [ 1]  765 	ld	xl, a
+      000391 4F               [ 1]  766 	clr	a
+      000392 02               [ 1]  767 	rlwa	x
+      000393 CFu00u0A         [ 2]  768 	ldw	_FreFM+0, x
+                                    769 ;	main.c: 245: FreFM |= u8Radio[1];                //bit thap
+      000396 C6u00u07         [ 1]  770 	ld	a, _u8Radio+1
+      000399 5F               [ 1]  771 	clrw	x
+      00039A CAu00u0B         [ 1]  772 	or	a, _FreFM+1
+      00039D 02               [ 1]  773 	rlwa	x
+      00039E CAu00u0A         [ 1]  774 	or	a, _FreFM+0
+      0003A1 95               [ 1]  775 	ld	xh, a
+                                    776 ;	main.c: 246: FreFM += 870; //tan so kenh hien tai
+      0003A2 CFu00u0A         [ 2]  777 	ldw	_FreFM+0, x
+      0003A5 1C 03 66         [ 2]  778 	addw	x, #0x0366
+      0003A8 CFu00u0A         [ 2]  779 	ldw	_FreFM+0, x
+                                    780 ;	main.c: 248: print_rssi();
+      0003AB CDr00r00         [ 4]  781 	call	_print_rssi
+                                    782 ;	main.c: 249: SD1106_printNum(u8Radio[2] >> 2,    0,  20);
+      0003AE C6u00u08         [ 1]  783 	ld	a, _u8Radio+2
+      0003B1 44               [ 1]  784 	srl	a
+      0003B2 44               [ 1]  785 	srl	a
+      0003B3 5F               [ 1]  786 	clrw	x
+      0003B4 97               [ 1]  787 	ld	xl, a
+      0003B5 4B 14            [ 1]  788 	push	#0x14
+      0003B7 4F               [ 1]  789 	clr	a
+      0003B8 CDr00r00         [ 4]  790 	call	_SD1106_printNum
+                                    791 ;	main.c: 251: station_chanel();
+      0003BB CDr00r00         [ 4]  792 	call	_station_chanel
+                                    793 ;	main.c: 252: SD1106_print_one_num(  FreFM/1000,      1,  20); // + 6
+      0003BE CEu00u0A         [ 2]  794 	ldw	x, _FreFM+0
+      0003C1 90 AE 03 E8      [ 2]  795 	ldw	y, #0x03e8
+      0003C5 65               [ 2]  796 	divw	x, y
+      0003C6 9F               [ 1]  797 	ld	a, xl
+      0003C7 4B 14            [ 1]  798 	push	#0x14
+      0003C9 4B 01            [ 1]  799 	push	#0x01
+      0003CB CDr00r00         [ 4]  800 	call	_SD1106_print_one_num
+                                    801 ;	main.c: 253: SD1106_print_one_num( (FreFM/100)%10,   1,  26);
+      0003CE CEu00u0A         [ 2]  802 	ldw	x, _FreFM+0
+      0003D1 90 AE 00 64      [ 2]  803 	ldw	y, #0x0064
+      0003D5 65               [ 2]  804 	divw	x, y
+      0003D6 90 AE 00 0A      [ 2]  805 	ldw	y, #0x000a
+      0003DA 65               [ 2]  806 	divw	x, y
+      0003DB 90 9F            [ 1]  807 	ld	a, yl
+      0003DD 4B 1A            [ 1]  808 	push	#0x1a
+      0003DF 4B 01            [ 1]  809 	push	#0x01
+      0003E1 CDr00r00         [ 4]  810 	call	_SD1106_print_one_num
+                                    811 ;	main.c: 254: SD1106_print_one_num( (FreFM/10) % 10,  1,  32);
+      0003E4 CEu00u0A         [ 2]  812 	ldw	x, _FreFM+0
+      0003E7 90 AE 00 0A      [ 2]  813 	ldw	y, #0x000a
+      0003EB 65               [ 2]  814 	divw	x, y
+      0003EC 90 AE 00 0A      [ 2]  815 	ldw	y, #0x000a
+      0003F0 65               [ 2]  816 	divw	x, y
+      0003F1 90 9F            [ 1]  817 	ld	a, yl
+      0003F3 4B 20            [ 1]  818 	push	#0x20
+      0003F5 4B 01            [ 1]  819 	push	#0x01
+      0003F7 CDr00r00         [ 4]  820 	call	_SD1106_print_one_num
+                                    821 ;	main.c: 255: SD1106_printP(".",    1,  38);
+      0003FA 4B 26            [ 1]  822 	push	#0x26
+      0003FC A6 01            [ 1]  823 	ld	a, #0x01
+      0003FE AEr00r1C         [ 2]  824 	ldw	x, #(___str_1+0)
+      000401 CDr00r00         [ 4]  825 	call	_SD1106_printP
+                                    826 ;	main.c: 256: SD1106_print_one_num( (FreFM/1) %10,    1,  44);
+      000404 CEu00u0A         [ 2]  827 	ldw	x, _FreFM+0
+      000407 90 AE 00 0A      [ 2]  828 	ldw	y, #0x000a
+      00040B 65               [ 2]  829 	divw	x, y
+      00040C 90 9F            [ 1]  830 	ld	a, yl
+      00040E 4B 2C            [ 1]  831 	push	#0x2c
+      000410 4B 01            [ 1]  832 	push	#0x01
+      000412 CDr00r00         [ 4]  833 	call	_SD1106_print_one_num
+                                    834 ;	main.c: 259: while(mode == 1){
+      000415                        835 00208$:
+      000415                        836 00155$:
+      000415 C6u00u16         [ 1]  837 	ld	a, _mode+0
+      000418 4A               [ 1]  838 	dec	a
+      000419 27 03            [ 1]  839 	jreq	00401$
+      00041B CCr04rE5         [ 2]  840 	jp	00217$
+      00041E                        841 00401$:
+                                    842 ;	main.c: 261: if(!cnt_refesh){
+      00041E C6u00u1E         [ 1]  843 	ld	a, _cnt_refesh+0
+      000421 26 10            [ 1]  844 	jrne	00145$
+                                    845 ;	main.c: 262: SD1106_sendCom(0xAF);   ////OLED On
+      000423 A6 AF            [ 1]  846 	ld	a, #0xaf
+      000425 CDr00r00         [ 4]  847 	call	_SD1106_sendCom
+                                    848 ;	main.c: 263: lcdstate = SET;
+      000428 35 01u00u1F      [ 1]  849 	mov	_lcdstate+0, #0x01
+                                    850 ;	main.c: 264: SD1106_clear();
+      00042C CDr00r00         [ 4]  851 	call	_SD1106_clear
+                                    852 ;	main.c: 265: cnt_refesh++;
+      00042F 72 5Cu00u1E      [ 1]  853 	inc	_cnt_refesh+0
+      000433                        854 00145$:
+                                    855 ;	main.c: 267: SD1106_printP("+COUNTER+",   1,  70);
+      000433 4B 46            [ 1]  856 	push	#0x46
+      000435 A6 01            [ 1]  857 	ld	a, #0x01
+      000437 AEr00r2D         [ 2]  858 	ldw	x, #(___str_6+0)
+      00043A CDr00r00         [ 4]  859 	call	_SD1106_printP
+                                    860 ;	main.c: 268: if(GPIO_ReadInputPin(right_port, right_pin) == RESET){
+      00043D A6 40            [ 1]  861 	ld	a, #0x40
+      00043F AE 50 0A         [ 2]  862 	ldw	x, #0x500a
+      000442 CDr00r00         [ 4]  863 	call	_GPIO_ReadInputPin
+      000445 4D               [ 1]  864 	tnz	a
+      000446 26 15            [ 1]  865 	jrne	00150$
+                                    866 ;	main.c: 269: delay_ms(20); //stop/start
+      000448 AE 00 14         [ 2]  867 	ldw	x, #0x0014
+      00044B CDr00r00         [ 4]  868 	call	_delay_ms
+                                    869 ;	main.c: 270: while(GPIO_ReadInputPin(right_port, right_pin) == RESET);
+      00044E                        870 00146$:
+      00044E A6 40            [ 1]  871 	ld	a, #0x40
+      000450 AE 50 0A         [ 2]  872 	ldw	x, #0x500a
+      000453 CDr00r00         [ 4]  873 	call	_GPIO_ReadInputPin
+      000456 4D               [ 1]  874 	tnz	a
+      000457 27 F5            [ 1]  875 	jreq	00146$
+                                    876 ;	main.c: 271: TIM4->CR1 ^= TIM4_CR1_CEN;
+      000459 90 10 53 40      [ 1]  877 	bcpl	0x5340, #0
+      00045D                        878 00150$:
+                                    879 ;	main.c: 273: if(GPIO_ReadInputPin(left_port, left_pin) == RESET){
+      00045D A6 20            [ 1]  880 	ld	a, #0x20
+      00045F AE 50 0A         [ 2]  881 	ldw	x, #0x500a
+      000462 CDr00r00         [ 4]  882 	call	_GPIO_ReadInputPin
+      000465 4D               [ 1]  883 	tnz	a
+      000466 26 27            [ 1]  884 	jrne	00154$
+                                    885 ;	main.c: 274: delay_ms(50); //reset
+      000468 AE 00 32         [ 2]  886 	ldw	x, #0x0032
+      00046B CDr00r00         [ 4]  887 	call	_delay_ms
+                                    888 ;	main.c: 275: counter = 0;
+      00046E 5F               [ 1]  889 	clrw	x
+      00046F CFu00u10         [ 2]  890 	ldw	_counter+0, x
+                                    891 ;	main.c: 276: cnt_second = 0;
+      000472 72 5Fu00u13      [ 1]  892 	clr	_cnt_second+0
+                                    893 ;	main.c: 277: cnt_minute = 0;
+      000476 72 5Fu00u15      [ 1]  894 	clr	_cnt_minute+0
+                                    895 ;	main.c: 278: delay_ms(500);
+      00047A AE 01 F4         [ 2]  896 	ldw	x, #0x01f4
+      00047D CDr00r00         [ 4]  897 	call	_delay_ms
+                                    898 ;	main.c: 279: if(GPIO_ReadInputPin(left_port, left_pin) == RESET){
+      000480 A6 20            [ 1]  899 	ld	a, #0x20
+      000482 AE 50 0A         [ 2]  900 	ldw	x, #0x500a
+      000485 CDr00r00         [ 4]  901 	call	_GPIO_ReadInputPin
+      000488 4D               [ 1]  902 	tnz	a
+      000489 26 04            [ 1]  903 	jrne	00154$
+                                    904 ;	main.c: 280: mode = 0;
+      00048B 72 5Fu00u16      [ 1]  905 	clr	_mode+0
+      00048F                        906 00154$:
+                                    907 ;	main.c: 284: SD1106_printBigNum(cnt_minute/10, 25);
+      00048F C6u00u15         [ 1]  908 	ld	a, _cnt_minute+0
+      000492 5F               [ 1]  909 	clrw	x
+      000493 4B 0A            [ 1]  910 	push	#0x0a
+      000495 4B 00            [ 1]  911 	push	#0x00
+      000497 97               [ 1]  912 	ld	xl, a
+      000498 CDr00r00         [ 4]  913 	call	__divsint
+      00049B 9F               [ 1]  914 	ld	a, xl
+      00049C 4B 19            [ 1]  915 	push	#0x19
+      00049E CDr00r00         [ 4]  916 	call	_SD1106_printBigNum
+                                    917 ;	main.c: 285: SD1106_printBigNum(cnt_minute%10, 42);
+      0004A1 C6u00u15         [ 1]  918 	ld	a, _cnt_minute+0
+      0004A4 5F               [ 1]  919 	clrw	x
+      0004A5 4B 0A            [ 1]  920 	push	#0x0a
+      0004A7 4B 00            [ 1]  921 	push	#0x00
+      0004A9 97               [ 1]  922 	ld	xl, a
+      0004AA CDr00r00         [ 4]  923 	call	__modsint
+      0004AD 9F               [ 1]  924 	ld	a, xl
+      0004AE 4B 2A            [ 1]  925 	push	#0x2a
+      0004B0 CDr00r00         [ 4]  926 	call	_SD1106_printBigNum
+                                    927 ;	main.c: 286: SD1106_printBigPoint(59);
+      0004B3 A6 3B            [ 1]  928 	ld	a, #0x3b
+      0004B5 CDr00r00         [ 4]  929 	call	_SD1106_printBigPoint
+                                    930 ;	main.c: 287: SD1106_printBigNum(cnt_second/10, 66);
+      0004B8 C6u00u13         [ 1]  931 	ld	a, _cnt_second+0
+      0004BB 5F               [ 1]  932 	clrw	x
+      0004BC 4B 0A            [ 1]  933 	push	#0x0a
+      0004BE 4B 00            [ 1]  934 	push	#0x00
+      0004C0 97               [ 1]  935 	ld	xl, a
+      0004C1 CDr00r00         [ 4]  936 	call	__divsint
+      0004C4 9F               [ 1]  937 	ld	a, xl
+      0004C5 4B 42            [ 1]  938 	push	#0x42
+      0004C7 CDr00r00         [ 4]  939 	call	_SD1106_printBigNum
+                                    940 ;	main.c: 288: SD1106_printBigNum(cnt_second%10, 83);
+      0004CA C6u00u13         [ 1]  941 	ld	a, _cnt_second+0
+      0004CD 5F               [ 1]  942 	clrw	x
+      0004CE 4B 0A            [ 1]  943 	push	#0x0a
+      0004D0 4B 00            [ 1]  944 	push	#0x00
+      0004D2 97               [ 1]  945 	ld	xl, a
+      0004D3 CDr00r00         [ 4]  946 	call	__modsint
+      0004D6 9F               [ 1]  947 	ld	a, xl
+      0004D7 4B 53            [ 1]  948 	push	#0x53
+      0004D9 CDr00r00         [ 4]  949 	call	_SD1106_printBigNum
+                                    950 ;	main.c: 289: delay_ms(100);
+      0004DC AE 00 64         [ 2]  951 	ldw	x, #0x0064
+      0004DF CDr00r00         [ 4]  952 	call	_delay_ms
+      0004E2 CCr04r15         [ 2]  953 	jp	00155$
+                                    954 ;	main.c: 292: while(mode == 2)
+      0004E5                        955 00217$:
+      0004E5                        956 00170$:
+      0004E5 C6u00u16         [ 1]  957 	ld	a, _mode+0
+      0004E8 A1 02            [ 1]  958 	cp	a, #0x02
+      0004EA 27 03            [ 1]  959 	jreq	00409$
+      0004EC CCr00r37         [ 2]  960 	jp	00174$
+      0004EF                        961 00409$:
+                                    962 ;	main.c: 294: if(!cnt_refesh){
+      0004EF C6u00u1E         [ 1]  963 	ld	a, _cnt_refesh+0
+      0004F2 26 10            [ 1]  964 	jrne	00159$
+                                    965 ;	main.c: 295: SD1106_sendCom(0xAF);   ////OLED On
+      0004F4 A6 AF            [ 1]  966 	ld	a, #0xaf
+      0004F6 CDr00r00         [ 4]  967 	call	_SD1106_sendCom
+                                    968 ;	main.c: 296: lcdstate = SET;
+      0004F9 35 01u00u1F      [ 1]  969 	mov	_lcdstate+0, #0x01
+                                    970 ;	main.c: 297: SD1106_clear();
+      0004FD CDr00r00         [ 4]  971 	call	_SD1106_clear
+                                    972 ;	main.c: 298: cnt_refesh++;
+      000500 72 5Cu00u1E      [ 1]  973 	inc	_cnt_refesh+0
+      000504                        974 00159$:
+                                    975 ;	main.c: 300: SD1106_printP("+SET TIME+",   1,  70);
+      000504 4B 46            [ 1]  976 	push	#0x46
+      000506 A6 01            [ 1]  977 	ld	a, #0x01
+      000508 AEr00r37         [ 2]  978 	ldw	x, #(___str_7+0)
+      00050B CDr00r00         [ 4]  979 	call	_SD1106_printP
+                                    980 ;	main.c: 301: if( (GPIO_ReadInputPin(right_port, right_pin) == RESET) | (GPIO_ReadInputPin(left_port, left_pin) == RESET) ) {
+      00050E A6 40            [ 1]  981 	ld	a, #0x40
+      000510 AE 50 0A         [ 2]  982 	ldw	x, #0x500a
+      000513 CDr00r00         [ 4]  983 	call	_GPIO_ReadInputPin
+      000516 A0 00            [ 1]  984 	sub	a, #0x00
+      000518 26 04            [ 1]  985 	jrne	00412$
+      00051A 4C               [ 1]  986 	inc	a
+      00051B 6B 06            [ 1]  987 	ld	(0x06, sp), a
+      00051D C5                     988 	.byte 0xc5
+      00051E                        989 00412$:
+      00051E 0F 06            [ 1]  990 	clr	(0x06, sp)
+      000520                        991 00413$:
+      000520 A6 20            [ 1]  992 	ld	a, #0x20
+      000522 AE 50 0A         [ 2]  993 	ldw	x, #0x500a
+      000525 CDr00r00         [ 4]  994 	call	_GPIO_ReadInputPin
+      000528 A0 00            [ 1]  995 	sub	a, #0x00
+      00052A 26 02            [ 1]  996 	jrne	00415$
+      00052C 4C               [ 1]  997 	inc	a
+      00052D 21                     998 	.byte 0x21
+      00052E                        999 00415$:
+      00052E 4F               [ 1] 1000 	clr	a
+      00052F                       1001 00416$:
+      00052F 1A 06            [ 1] 1002 	or	a, (0x06, sp)
+      000531 27 55            [ 1] 1003 	jreq	00169$
+                                   1004 ;	main.c: 302: delay_ms(20);
+      000533 AE 00 14         [ 2] 1005 	ldw	x, #0x0014
+      000536 CDr00r00         [ 4] 1006 	call	_delay_ms
+                                   1007 ;	main.c: 303: if(GPIO_ReadInputPin(right_port, right_pin) == RESET){
+      000539 A6 40            [ 1] 1008 	ld	a, #0x40
+      00053B AE 50 0A         [ 2] 1009 	ldw	x, #0x500a
+      00053E CDr00r00         [ 4] 1010 	call	_GPIO_ReadInputPin
+      000541 4D               [ 1] 1011 	tnz	a
+      000542 26 15            [ 1] 1012 	jrne	00163$
+                                   1013 ;	main.c: 304: delay_ms(100);
+      000544 AE 00 64         [ 2] 1014 	ldw	x, #0x0064
+      000547 CDr00r00         [ 4] 1015 	call	_delay_ms
+                                   1016 ;	main.c: 305: u8Time[1]++;
+      00054A C6u00u01         [ 1] 1017 	ld	a, _u8Time+1
+      00054D 4C               [ 1] 1018 	inc	a
+      00054E C7u00u01         [ 1] 1019 	ld	_u8Time+1, a
+                                   1020 ;	main.c: 306: if(u8Time[1] > 59) u8Time[1] = 0;
+      000551 A1 3B            [ 1] 1021 	cp	a, #0x3b
+      000553 23 04            [ 2] 1022 	jrule	00163$
+      000555 35 00u00u01      [ 1] 1023 	mov	_u8Time+1, #0x00
+      000559                       1024 00163$:
+                                   1025 ;	main.c: 308: if(GPIO_ReadInputPin(left_port, left_pin) == RESET){
+      000559 A6 20            [ 1] 1026 	ld	a, #0x20
+      00055B AE 50 0A         [ 2] 1027 	ldw	x, #0x500a
+      00055E CDr00r00         [ 4] 1028 	call	_GPIO_ReadInputPin
+      000561 4D               [ 1] 1029 	tnz	a
+      000562 26 15            [ 1] 1030 	jrne	00167$
+                                   1031 ;	main.c: 309: delay_ms(100);
+      000564 AE 00 64         [ 2] 1032 	ldw	x, #0x0064
+      000567 CDr00r00         [ 4] 1033 	call	_delay_ms
+                                   1034 ;	main.c: 310: u8Time[2]++;
+      00056A C6u00u02         [ 1] 1035 	ld	a, _u8Time+2
+      00056D 4C               [ 1] 1036 	inc	a
+      00056E C7u00u02         [ 1] 1037 	ld	_u8Time+2, a
+                                   1038 ;	main.c: 311: if(u8Time[2] > 23) u8Time[2] = 0;
+      000571 A1 17            [ 1] 1039 	cp	a, #0x17
+      000573 23 04            [ 2] 1040 	jrule	00167$
+      000575 35 00u00u02      [ 1] 1041 	mov	_u8Time+2, #0x00
+      000579                       1042 00167$:
+                                   1043 ;	main.c: 313: writeTime(00,u8Time[1],u8Time[2]);
+      000579 C6u00u02         [ 1] 1044 	ld	a, _u8Time+2
+      00057C 97               [ 1] 1045 	ld	xl, a
+      00057D C6u00u01         [ 1] 1046 	ld	a, _u8Time+1
+      000580 89               [ 2] 1047 	pushw	x
+      000581 5B 01            [ 2] 1048 	addw	sp, #1
+      000583 88               [ 1] 1049 	push	a
+      000584 4F               [ 1] 1050 	clr	a
+      000585 CDr00r00         [ 4] 1051 	call	_writeTime
+      000588                       1052 00169$:
+                                   1053 ;	main.c: 316: delay_ms(10);
+      000588 AE 00 0A         [ 2] 1054 	ldw	x, #0x000a
+      00058B CDr00r00         [ 4] 1055 	call	_delay_ms
+                                   1056 ;	main.c: 326: SD1106_printBigNum(u8Time[2]/10, 25);
+      00058E C6u00u02         [ 1] 1057 	ld	a, _u8Time+2
+      000591 5F               [ 1] 1058 	clrw	x
+      000592 4B 0A            [ 1] 1059 	push	#0x0a
+      000594 4B 00            [ 1] 1060 	push	#0x00
+      000596 97               [ 1] 1061 	ld	xl, a
+      000597 CDr00r00         [ 4] 1062 	call	__divsint
+      00059A 9F               [ 1] 1063 	ld	a, xl
+      00059B 4B 19            [ 1] 1064 	push	#0x19
+      00059D CDr00r00         [ 4] 1065 	call	_SD1106_printBigNum
+                                   1066 ;	main.c: 327: SD1106_printBigNum(u8Time[2]%10, 42);
+      0005A0 C6u00u02         [ 1] 1067 	ld	a, _u8Time+2
+      0005A3 5F               [ 1] 1068 	clrw	x
+      0005A4 4B 0A            [ 1] 1069 	push	#0x0a
+      0005A6 4B 00            [ 1] 1070 	push	#0x00
+      0005A8 97               [ 1] 1071 	ld	xl, a
+      0005A9 CDr00r00         [ 4] 1072 	call	__modsint
+      0005AC 9F               [ 1] 1073 	ld	a, xl
+      0005AD 4B 2A            [ 1] 1074 	push	#0x2a
+      0005AF CDr00r00         [ 4] 1075 	call	_SD1106_printBigNum
+                                   1076 ;	main.c: 328: SD1106_printBigPoint(59);
+      0005B2 A6 3B            [ 1] 1077 	ld	a, #0x3b
+      0005B4 CDr00r00         [ 4] 1078 	call	_SD1106_printBigPoint
+                                   1079 ;	main.c: 329: SD1106_printBigNum(u8Time[1]/10, 66);
+      0005B7 C6u00u01         [ 1] 1080 	ld	a, _u8Time+1
+      0005BA 5F               [ 1] 1081 	clrw	x
+      0005BB 4B 0A            [ 1] 1082 	push	#0x0a
+      0005BD 4B 00            [ 1] 1083 	push	#0x00
+      0005BF 97               [ 1] 1084 	ld	xl, a
+      0005C0 CDr00r00         [ 4] 1085 	call	__divsint
+      0005C3 9F               [ 1] 1086 	ld	a, xl
+      0005C4 4B 42            [ 1] 1087 	push	#0x42
+      0005C6 CDr00r00         [ 4] 1088 	call	_SD1106_printBigNum
+                                   1089 ;	main.c: 330: SD1106_printBigNum(u8Time[1]%10, 83);
+      0005C9 C6u00u01         [ 1] 1090 	ld	a, _u8Time+1
+      0005CC 5F               [ 1] 1091 	clrw	x
+      0005CD 4B 0A            [ 1] 1092 	push	#0x0a
+      0005CF 4B 00            [ 1] 1093 	push	#0x00
+      0005D1 97               [ 1] 1094 	ld	xl, a
+      0005D2 CDr00r00         [ 4] 1095 	call	__modsint
+      0005D5 9F               [ 1] 1096 	ld	a, xl
+      0005D6 4B 53            [ 1] 1097 	push	#0x53
+      0005D8 CDr00r00         [ 4] 1098 	call	_SD1106_printBigNum
+                                   1099 ;	main.c: 333: }
+      0005DB CCr04rE5         [ 2] 1100 	jp	00170$
+                                   1101 ;	main.c: 335: void Clock_setup(void)
+                                   1102 ;	-----------------------------------------
+                                   1103 ;	 function Clock_setup
+                                   1104 ;	-----------------------------------------
+      0005DE                       1105 _Clock_setup:
+                                   1106 ;	main.c: 338: CLK->ICKR = CLK_ICKR_RESET_VALUE;
+      0005DE 35 01 50 C0      [ 1] 1107 	mov	0x50c0+0, #0x01
+                                   1108 ;	main.c: 339: CLK->ECKR = CLK_ECKR_RESET_VALUE;
+      0005E2 35 00 50 C1      [ 1] 1109 	mov	0x50c1+0, #0x00
+                                   1110 ;	main.c: 340: CLK->SWR  = CLK_SWR_RESET_VALUE;
+      0005E6 35 E1 50 C4      [ 1] 1111 	mov	0x50c4+0, #0xe1
+                                   1112 ;	main.c: 341: CLK->SWCR = CLK_SWCR_RESET_VALUE;
+      0005EA 35 00 50 C5      [ 1] 1113 	mov	0x50c5+0, #0x00
+                                   1114 ;	main.c: 342: CLK->CKDIVR = CLK_CKDIVR_RESET_VALUE;
+      0005EE 35 18 50 C6      [ 1] 1115 	mov	0x50c6+0, #0x18
+                                   1116 ;	main.c: 343: CLK->PCKENR1 = CLK_PCKENR1_RESET_VALUE;
+      0005F2 35 FF 50 C7      [ 1] 1117 	mov	0x50c7+0, #0xff
+                                   1118 ;	main.c: 344: CLK->PCKENR2 = CLK_PCKENR2_RESET_VALUE;
+      0005F6 35 FF 50 CA      [ 1] 1119 	mov	0x50ca+0, #0xff
+                                   1120 ;	main.c: 345: CLK->CSSR = CLK_CSSR_RESET_VALUE;
+      0005FA 35 00 50 C8      [ 1] 1121 	mov	0x50c8+0, #0x00
+                                   1122 ;	main.c: 346: CLK->CCOR = CLK_CCOR_RESET_VALUE;
+      0005FE 35 00 50 C9      [ 1] 1123 	mov	0x50c9+0, #0x00
+                                   1124 ;	main.c: 347: while ((CLK->CCOR & CLK_CCOR_CCOEN)!= 0) {}
+      000602                       1125 00101$:
+      000602 72 00 50 C9 FB   [ 2] 1126 	btjt	0x50c9, #0, 00101$
+                                   1127 ;	main.c: 348: CLK->CCOR = CLK_CCOR_RESET_VALUE;
+      000607 35 00 50 C9      [ 1] 1128 	mov	0x50c9+0, #0x00
+                                   1129 ;	main.c: 349: CLK->HSITRIMR = CLK_HSITRIMR_RESET_VALUE;
+      00060B 35 00 50 CC      [ 1] 1130 	mov	0x50cc+0, #0x00
+                                   1131 ;	main.c: 350: CLK->SWIMCCR = CLK_SWIMCCR_RESET_VALUE;
+      00060F 35 00 50 CD      [ 1] 1132 	mov	0x50cd+0, #0x00
+                                   1133 ;	main.c: 353: CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_HSIDIV);
+      000613 C6 50 C6         [ 1] 1134 	ld	a, 0x50c6
+      000616 A4 E7            [ 1] 1135 	and	a, #0xe7
+      000618 C7 50 C6         [ 1] 1136 	ld	0x50c6, a
+                                   1137 ;	main.c: 356: CLK->CKDIVR |= (uint8_t)0x00; /*!< High speed internal clock prescaler: 1 */
+      00061B 55 50 C6 50 C6   [ 1] 1138 	mov	0x50c6, 0x50c6
+                                   1139 ;	main.c: 357: }
+      000620 81               [ 4] 1140 	ret
+                                   1141 ;	main.c: 360: void GPIO_setup(void)
+                                   1142 ;	-----------------------------------------
+                                   1143 ;	 function GPIO_setup
+                                   1144 ;	-----------------------------------------
+      000621                       1145 _GPIO_setup:
+                                   1146 ;	main.c: 363: GPIO_DeInit(GPIOD);
+      000621 AE 50 0F         [ 2] 1147 	ldw	x, #0x500f
+      000624 CDr00r00         [ 4] 1148 	call	_GPIO_DeInit
+                                   1149 ;	main.c: 364: GPIO_DeInit(GPIOC);
+      000627 AE 50 0A         [ 2] 1150 	ldw	x, #0x500a
+      00062A CDr00r00         [ 4] 1151 	call	_GPIO_DeInit
+                                   1152 ;	main.c: 365: GPIO_DeInit(GPIOA);
+      00062D AE 50 00         [ 2] 1153 	ldw	x, #0x5000
+      000630 CDr00r00         [ 4] 1154 	call	_GPIO_DeInit
+                                   1155 ;	main.c: 366: GPIO_DeInit(GPIOE);
+      000633 AE 50 14         [ 2] 1156 	ldw	x, #0x5014
+      000636 CDr00r00         [ 4] 1157 	call	_GPIO_DeInit
+                                   1158 ;	main.c: 367: GPIO_DeInit(GPIOB);   
+      000639 AE 50 05         [ 2] 1159 	ldw	x, #0x5005
+      00063C CDr00r00         [ 4] 1160 	call	_GPIO_DeInit
+                                   1161 ;	main.c: 368: GPIO_DeInit(GPIOF);
+      00063F AE 50 19         [ 2] 1162 	ldw	x, #0x5019
+      000642 CDr00r00         [ 4] 1163 	call	_GPIO_DeInit
+                                   1164 ;	main.c: 370: GPIO_Init(mode_PORT, mode_PIN, GPIO_MODE_IN_PU_IT);
+      000645 4B 60            [ 1] 1165 	push	#0x60
+      000647 A6 08            [ 1] 1166 	ld	a, #0x08
+      000649 AE 50 00         [ 2] 1167 	ldw	x, #0x5000
+      00064C CDr00r00         [ 4] 1168 	call	_GPIO_Init
+                                   1169 ;	main.c: 371: GPIO_Init(left_port, left_pin, GPIO_MODE_IN_PU_NO_IT);
+      00064F 4B 40            [ 1] 1170 	push	#0x40
+      000651 A6 20            [ 1] 1171 	ld	a, #0x20
+      000653 AE 50 0A         [ 2] 1172 	ldw	x, #0x500a
+      000656 CDr00r00         [ 4] 1173 	call	_GPIO_Init
+                                   1174 ;	main.c: 372: GPIO_Init(right_port, right_pin, GPIO_MODE_IN_PU_NO_IT);
+      000659 4B 40            [ 1] 1175 	push	#0x40
+      00065B A6 40            [ 1] 1176 	ld	a, #0x40
+      00065D AE 50 0A         [ 2] 1177 	ldw	x, #0x500a
+      000660 CDr00r00         [ 4] 1178 	call	_GPIO_Init
+                                   1179 ;	main.c: 374: GPIO_Init(GPIOB, GPIO_PIN_4 | GPIO_PIN_5, GPIO_MODE_OUT_OD_HIZ_SLOW);
+      000663 4B 90            [ 1] 1180 	push	#0x90
+      000665 A6 30            [ 1] 1181 	ld	a, #0x30
+      000667 AE 50 05         [ 2] 1182 	ldw	x, #0x5005
+      00066A CDr00r00         [ 4] 1183 	call	_GPIO_Init
+                                   1184 ;	main.c: 375: GPIO_Init(GPIOC ,GPIO_PIN_4 ,GPIO_MODE_OUT_PP_LOW_SLOW);
+      00066D 4B C0            [ 1] 1185 	push	#0xc0
+      00066F A6 10            [ 1] 1186 	ld	a, #0x10
+      000671 AE 50 0A         [ 2] 1187 	ldw	x, #0x500a
+      000674 CDr00r00         [ 4] 1188 	call	_GPIO_Init
+                                   1189 ;	main.c: 376: GPIO_WriteLow(GPIOC, GPIO_PIN_4);
+      000677 A6 10            [ 1] 1190 	ld	a, #0x10
+      000679 AE 50 0A         [ 2] 1191 	ldw	x, #0x500a
+                                   1192 ;	main.c: 377: }
+      00067C CCr00r00         [ 2] 1193 	jp	_GPIO_WriteLow
+                                   1194 ;	main.c: 379: void Exti_Config(void){
+                                   1195 ;	-----------------------------------------
+                                   1196 ;	 function Exti_Config
+                                   1197 ;	-----------------------------------------
+      00067F                       1198 _Exti_Config:
+                                   1199 ;	main.c: 381: EXTI_DeInit();
+      00067F CDr00r00         [ 4] 1200 	call	_EXTI_DeInit
+                                   1201 ;	main.c: 382: EXTI_SetExtIntSensitivity(EXTI_PORT_GPIOA, EXTI_SENSITIVITY_FALL_ONLY);
+      000682 4B 02            [ 1] 1202 	push	#0x02
+      000684 4F               [ 1] 1203 	clr	a
+      000685 CDr00r00         [ 4] 1204 	call	_EXTI_SetExtIntSensitivity
+                                   1205 ;	main.c: 383: EXTI_SetTLISensitivity(EXTI_TLISENSITIVITY_FALL_ONLY);
+      000688 4F               [ 1] 1206 	clr	a
+      000689 CDr00r00         [ 4] 1207 	call	_EXTI_SetTLISensitivity
+                                   1208 ;	main.c: 384: enableInterrupts();
+      00068C 9A               [ 1] 1209 	rim
+                                   1210 ;	main.c: 385: }
+      00068D 81               [ 4] 1211 	ret
+                                   1212 ;	main.c: 386: void readTime(void){
+                                   1213 ;	-----------------------------------------
+                                   1214 ;	 function readTime
+                                   1215 ;	-----------------------------------------
+      00068E                       1216 _readTime:
+      00068E 88               [ 1] 1217 	push	a
+                                   1218 ;	main.c: 388: data_read(ADDR_DS13, 0x00, 6, u8Time);
+      00068F 4Br00            [ 1] 1219 	push	#<(_u8Time+0)
+      000691 4Bs00            [ 1] 1220 	push	#((_u8Time+0) >> 8)
+      000693 4B 06            [ 1] 1221 	push	#0x06
+      000695 4B 00            [ 1] 1222 	push	#0x00
+      000697 A6 D0            [ 1] 1223 	ld	a, #0xd0
+      000699 CDr00r00         [ 4] 1224 	call	_data_read
+                                   1225 ;	main.c: 389: for(uint8_t i=0; i<6; ++i){
+      00069C 0F 01            [ 1] 1226 	clr	(0x01, sp)
+      00069E                       1227 00107$:
+      00069E 7B 01            [ 1] 1228 	ld	a, (0x01, sp)
+      0006A0 A1 06            [ 1] 1229 	cp	a, #0x06
+      0006A2 24 2E            [ 1] 1230 	jrnc	00109$
+                                   1231 ;	main.c: 391: if((u8Time[i] >=0) && (u8Time[i] < 90) ){
+      0006A4 90 5F            [ 1] 1232 	clrw	y
+      0006A6 7B 01            [ 1] 1233 	ld	a, (0x01, sp)
+      0006A8 90 97            [ 1] 1234 	ld	yl, a
+      0006AA 72 A9r00r00      [ 2] 1235 	addw	y, #(_u8Time+0)
+      0006AE 90 F6            [ 1] 1236 	ld	a, (y)
+      0006B0 95               [ 1] 1237 	ld	xh, a
+      0006B1 A1 5A            [ 1] 1238 	cp	a, #0x5a
+      0006B3 24 17            [ 1] 1239 	jrnc	00102$
+                                   1240 ;	main.c: 392: temp = (u8Time[i] >> 4) & 0x0F;
+      0006B5 9E               [ 1] 1241 	ld	a, xh
+      0006B6 4E               [ 1] 1242 	swap	a
+      0006B7 A4 0F            [ 1] 1243 	and	a, #15
+      0006B9 97               [ 1] 1244 	ld	xl, a
+                                   1245 ;	main.c: 393: u8Time[i] = u8Time[i] & 0x0F;
+      0006BA 9E               [ 1] 1246 	ld	a, xh
+      0006BB A4 0F            [ 1] 1247 	and	a, #0x0f
+      0006BD 90 F7            [ 1] 1248 	ld	(y), a
+                                   1249 ;	main.c: 394: u8Time[i] = (temp * 10) + u8Time[i];
+      0006BF 88               [ 1] 1250 	push	a
+      0006C0 A6 0A            [ 1] 1251 	ld	a, #0x0a
+      0006C2 42               [ 4] 1252 	mul	x, a
+      0006C3 84               [ 1] 1253 	pop	a
+      0006C4 89               [ 2] 1254 	pushw	x
+      0006C5 1B 02            [ 1] 1255 	add	a, (2, sp)
+      0006C7 85               [ 2] 1256 	popw	x
+      0006C8 90 F7            [ 1] 1257 	ld	(y), a
+      0006CA 20 02            [ 2] 1258 	jra	00108$
+      0006CC                       1259 00102$:
+                                   1260 ;	main.c: 396: u8Time[i] = 0;
+      0006CC 90 7F            [ 1] 1261 	clr	(y)
+      0006CE                       1262 00108$:
+                                   1263 ;	main.c: 389: for(uint8_t i=0; i<6; ++i){
+      0006CE 0C 01            [ 1] 1264 	inc	(0x01, sp)
+      0006D0 20 CC            [ 2] 1265 	jra	00107$
+      0006D2                       1266 00109$:
+                                   1267 ;	main.c: 399: }
+      0006D2 84               [ 1] 1268 	pop	a
+      0006D3 81               [ 4] 1269 	ret
+                                   1270 ;	main.c: 420: void setchannel(uint16_t fre){
+                                   1271 ;	-----------------------------------------
+                                   1272 ;	 function setchannel
+                                   1273 ;	-----------------------------------------
+      0006D4                       1274 _setchannel:
+      0006D4 52 02            [ 2] 1275 	sub	sp, #2
+                                   1276 ;	main.c: 421: fre = fre - 870;
+      0006D6 1D 03 66         [ 2] 1277 	subw	x, #0x0366
+                                   1278 ;	main.c: 422: uint8_t high = (uint8_t) fre >> 2;
+      0006D9 9F               [ 1] 1279 	ld	a, xl
+      0006DA 44               [ 1] 1280 	srl	a
+      0006DB 44               [ 1] 1281 	srl	a
+      0006DC 6B 01            [ 1] 1282 	ld	(0x01, sp), a
+                                   1283 ;	main.c: 423: uint8_t low = (uint8_t) ( (fre & 0b11) << 6) | 0b00010000;
+      0006DE 9F               [ 1] 1284 	ld	a, xl
+      0006DF A4 03            [ 1] 1285 	and	a, #0x03
+      0006E1 4E               [ 1] 1286 	swap	a
+      0006E2 A4 F0            [ 1] 1287 	and	a, #0xf0
+      0006E4 48               [ 1] 1288 	sll	a
+      0006E5 48               [ 1] 1289 	sll	a
+      0006E6 AA 10            [ 1] 1290 	or	a, #0x10
+      0006E8 6B 02            [ 1] 1291 	ld	(0x02, sp), a
+                                   1292 ;	main.c: 424: i2c_start();
+      0006EA CDr00r00         [ 4] 1293 	call	_i2c_start
+                                   1294 ;	main.c: 425: i2c_write(ADDR_5807M);
+      0006ED A6 20            [ 1] 1295 	ld	a, #0x20
+      0006EF CDr00r00         [ 4] 1296 	call	_i2c_write
+                                   1297 ;	main.c: 426: i2c_write(0xC0);
+      0006F2 A6 C0            [ 1] 1298 	ld	a, #0xc0
+      0006F4 CDr00r00         [ 4] 1299 	call	_i2c_write
+                                   1300 ;	main.c: 427: i2c_write(0x01);
+      0006F7 A6 01            [ 1] 1301 	ld	a, #0x01
+      0006F9 CDr00r00         [ 4] 1302 	call	_i2c_write
+                                   1303 ;	main.c: 428: i2c_write(high);
+      0006FC 7B 01            [ 1] 1304 	ld	a, (0x01, sp)
+      0006FE CDr00r00         [ 4] 1305 	call	_i2c_write
+                                   1306 ;	main.c: 429: i2c_write(low);
+      000701 7B 02            [ 1] 1307 	ld	a, (0x02, sp)
+      000703 CDr00r00         [ 4] 1308 	call	_i2c_write
+                                   1309 ;	main.c: 430: i2c_stop();
+      000706 5B 02            [ 2] 1310 	addw	sp, #2
+                                   1311 ;	main.c: 431: }
+      000708 CCr00r00         [ 2] 1312 	jp	_i2c_stop
+                                   1313 ;	main.c: 433: INTERRUPT_HANDLER(EXTI_PORTA_IRQHandler, 3)
+                                   1314 ;	-----------------------------------------
+                                   1315 ;	 function EXTI_PORTA_IRQHandler
+                                   1316 ;	-----------------------------------------
+      00070B                       1317 _EXTI_PORTA_IRQHandler:
+      00070B 4F               [ 1] 1318 	clr	a
+      00070C 62               [ 2] 1319 	div	x, a
+                                   1320 ;	main.c: 438: if (GPIO_ReadInputPin(mode_PORT, mode_PIN) == RESET){
+      00070D A6 08            [ 1] 1321 	ld	a, #0x08
+      00070F AE 50 00         [ 2] 1322 	ldw	x, #0x5000
+      000712 CDr00r00         [ 4] 1323 	call	_GPIO_ReadInputPin
+      000715 4D               [ 1] 1324 	tnz	a
+      000716 26 65            [ 1] 1325 	jrne	00112$
+                                   1326 ;	main.c: 439: BEEP_Cmd(ENABLE);
+      000718 A6 01            [ 1] 1327 	ld	a, #0x01
+      00071A CDr00r00         [ 4] 1328 	call	_BEEP_Cmd
+                                   1329 ;	main.c: 440: delay_ms(200);
+      00071D AE 00 C8         [ 2] 1330 	ldw	x, #0x00c8
+      000720 CDr00r00         [ 4] 1331 	call	_delay_ms
+                                   1332 ;	main.c: 441: BEEP_Cmd(DISABLE);
+      000723 4F               [ 1] 1333 	clr	a
+      000724 CDr00r00         [ 4] 1334 	call	_BEEP_Cmd
+                                   1335 ;	main.c: 443: cnt_refesh = 0;
+      000727 72 5Fu00u1E      [ 1] 1336 	clr	_cnt_refesh+0
+                                   1337 ;	main.c: 444: cnt_autoOff = 0;
+      00072B 72 5Fu00u14      [ 1] 1338 	clr	_cnt_autoOff+0
+                                   1339 ;	main.c: 445: mode++;
+      00072F 72 5Cu00u16      [ 1] 1340 	inc	_mode+0
+                                   1341 ;	main.c: 446: if(mode > 2) mode = 0;
+      000733 C6u00u16         [ 1] 1342 	ld	a, _mode+0
+      000736 A1 02            [ 1] 1343 	cp	a, #0x02
+      000738 23 04            [ 2] 1344 	jrule	00102$
+      00073A 72 5Fu00u16      [ 1] 1345 	clr	_mode+0
+      00073E                       1346 00102$:
+                                   1347 ;	main.c: 447: delay_ms(200);
+      00073E AE 00 C8         [ 2] 1348 	ldw	x, #0x00c8
+      000741 CDr00r00         [ 4] 1349 	call	_delay_ms
+                                   1350 ;	main.c: 448: if(GPIO_ReadInputPin(mode_PORT, mode_PIN) == RESET){
+      000744 A6 08            [ 1] 1351 	ld	a, #0x08
+      000746 AE 50 00         [ 2] 1352 	ldw	x, #0x5000
+      000749 CDr00r00         [ 4] 1353 	call	_GPIO_ReadInputPin
+      00074C 4D               [ 1] 1354 	tnz	a
+      00074D 26 2E            [ 1] 1355 	jrne	00112$
+                                   1356 ;	main.c: 449: delay_ms(400);
+      00074F AE 01 90         [ 2] 1357 	ldw	x, #0x0190
+      000752 CDr00r00         [ 4] 1358 	call	_delay_ms
+                                   1359 ;	main.c: 450: if(GPIO_ReadInputPin(mode_PORT, mode_PIN) == RESET){
+      000755 A6 08            [ 1] 1360 	ld	a, #0x08
+      000757 AE 50 00         [ 2] 1361 	ldw	x, #0x5000
+      00075A CDr00r00         [ 4] 1362 	call	_GPIO_ReadInputPin
+      00075D 4D               [ 1] 1363 	tnz	a
+      00075E 26 1D            [ 1] 1364 	jrne	00112$
+                                   1365 ;	main.c: 451: delay_ms(400);
+      000760 AE 01 90         [ 2] 1366 	ldw	x, #0x0190
+      000763 CDr00r00         [ 4] 1367 	call	_delay_ms
+                                   1368 ;	main.c: 452: while(GPIO_ReadInputPin(mode_PORT, mode_PIN) == RESET);
+      000766                       1369 00103$:
+      000766 A6 08            [ 1] 1370 	ld	a, #0x08
+      000768 AE 50 00         [ 2] 1371 	ldw	x, #0x5000
+      00076B CDr00r00         [ 4] 1372 	call	_GPIO_ReadInputPin
+      00076E 4D               [ 1] 1373 	tnz	a
+      00076F 27 F5            [ 1] 1374 	jreq	00103$
+                                   1375 ;	main.c: 453: mode = 0;
+      000771 72 5Fu00u16      [ 1] 1376 	clr	_mode+0
+                                   1377 ;	main.c: 454: GPIO_WriteReverse(switch_PORT, switch_PIN);
+      000775 A6 10            [ 1] 1378 	ld	a, #0x10
+      000777 AE 50 0A         [ 2] 1379 	ldw	x, #0x500a
+      00077A CDr00r00         [ 4] 1380 	call	_GPIO_WriteReverse
+      00077D                       1381 00112$:
+                                   1382 ;	main.c: 460: }
+      00077D 80               [11] 1383 	iret
+                                   1384 ;	main.c: 462: INTERRUPT_HANDLER(ADC1_IRQHandler, 22){    
+                                   1385 ;	-----------------------------------------
+                                   1386 ;	 function ADC1_IRQHandler
+                                   1387 ;	-----------------------------------------
+      00077E                       1388 _ADC1_IRQHandler:
+      00077E 52 02            [ 2] 1389 	sub	sp, #2
+                                   1390 ;	main.c: 465: templ = ADC1->DRL;
+      000780 55 54 05u00u19   [ 1] 1391 	mov	_templ+0, 0x5405
+                                   1392 ;	main.c: 467: temph = ADC1->DRH;
+      000785 C6 54 04         [ 1] 1393 	ld	a, 0x5404
+      000788 5F               [ 1] 1394 	clrw	x
+      000789 97               [ 1] 1395 	ld	xl, a
+      00078A CFu00u17         [ 2] 1396 	ldw	_temph+0, x
+                                   1397 ;	main.c: 469: temph = (uint16_t)(templ | (uint16_t)(temph << (uint8_t) 8 ));
+      00078D C6u00u18         [ 1] 1398 	ld	a, _temph+1
+      000790 6B 01            [ 1] 1399 	ld	(0x01, sp), a
+      000792 0F 02            [ 1] 1400 	clr	(0x02, sp)
+      000794 C6u00u19         [ 1] 1401 	ld	a, _templ+0
+      000797 5F               [ 1] 1402 	clrw	x
+      000798 1A 02            [ 1] 1403 	or	a, (0x02, sp)
+      00079A 02               [ 1] 1404 	rlwa	x
+      00079B 1A 01            [ 1] 1405 	or	a, (0x01, sp)
+      00079D 95               [ 1] 1406 	ld	xh, a
+      00079E CFu00u17         [ 2] 1407 	ldw	_temph+0, x
+                                   1408 ;	main.c: 472: ADC1->CSR &= (uint8_t)((uint16_t)~(uint16_t)ADC1_IT_EOC);    
+      0007A1 72 1F 54 00      [ 1] 1409 	bres	0x5400, #7
+                                   1410 ;	main.c: 473: }
+      0007A5 5B 02            [ 2] 1411 	addw	sp, #2
+      0007A7 80               [11] 1412 	iret
+                                   1413 ;	main.c: 476: INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
+                                   1414 ;	-----------------------------------------
+                                   1415 ;	 function TIM4_UPD_OVF_IRQHandler
+                                   1416 ;	-----------------------------------------
+      0007A8                       1417 _TIM4_UPD_OVF_IRQHandler:
+      0007A8 4F               [ 1] 1418 	clr	a
+      0007A9 62               [ 2] 1419 	div	x, a
+                                   1420 ;	main.c: 478: counter++;
+      0007AA CEu00u10         [ 2] 1421 	ldw	x, _counter+0
+      0007AD 5C               [ 1] 1422 	incw	x
+                                   1423 ;	main.c: 479: if (counter == 1000)
+      0007AE CFu00u10         [ 2] 1424 	ldw	_counter+0, x
+      0007B1 A3 03 E8         [ 2] 1425 	cpw	x, #0x03e8
+      0007B4 26 39            [ 1] 1426 	jrne	00108$
+                                   1427 ;	main.c: 481: counter = 0;
+      0007B6 5F               [ 1] 1428 	clrw	x
+      0007B7 CFu00u10         [ 2] 1429 	ldw	_counter+0, x
+                                   1430 ;	main.c: 482: cnt_second++;
+      0007BA 72 5Cu00u13      [ 1] 1431 	inc	_cnt_second+0
+                                   1432 ;	main.c: 483: cnt_autoOff++;
+      0007BE 72 5Cu00u14      [ 1] 1433 	inc	_cnt_autoOff+0
+                                   1434 ;	main.c: 484: if((cnt_second % 5) == 0){
+      0007C2 C6u00u13         [ 1] 1435 	ld	a, _cnt_second+0
+      0007C5 5F               [ 1] 1436 	clrw	x
+      0007C6 4B 05            [ 1] 1437 	push	#0x05
+      0007C8 4B 00            [ 1] 1438 	push	#0x00
+      0007CA 97               [ 1] 1439 	ld	xl, a
+      0007CB CDr00r00         [ 4] 1440 	call	__modsint
+      0007CE 5D               [ 2] 1441 	tnzw	x
+      0007CF 26 04            [ 1] 1442 	jrne	00102$
+                                   1443 ;	main.c: 486: ADC1->CR1 |= ADC1_CR1_ADON;    
+      0007D1 72 10 54 01      [ 1] 1444 	bset	0x5401, #0
+      0007D5                       1445 00102$:
+                                   1446 ;	main.c: 488: if (cnt_second > 59) 
+      0007D5 C6u00u13         [ 1] 1447 	ld	a, _cnt_second+0
+      0007D8 A1 3B            [ 1] 1448 	cp	a, #0x3b
+      0007DA 23 13            [ 2] 1449 	jrule	00108$
+                                   1450 ;	main.c: 490: cnt_second = 0;
+      0007DC 72 5Fu00u13      [ 1] 1451 	clr	_cnt_second+0
+                                   1452 ;	main.c: 491: cnt_minute++;
+      0007E0 72 5Cu00u15      [ 1] 1453 	inc	_cnt_minute+0
+                                   1454 ;	main.c: 492: if (cnt_minute > 59) cnt_minute = 0;
+      0007E4 C6u00u15         [ 1] 1455 	ld	a, _cnt_minute+0
+      0007E7 A1 3B            [ 1] 1456 	cp	a, #0x3b
+      0007E9 23 04            [ 2] 1457 	jrule	00108$
+      0007EB 72 5Fu00u15      [ 1] 1458 	clr	_cnt_minute+0
+      0007EF                       1459 00108$:
+                                   1460 ;	main.c: 496: TIM4->SR1 = (uint8_t)(~TIM4_IT_UPDATE);
+      0007EF 35 FE 53 44      [ 1] 1461 	mov	0x5344+0, #0xfe
+                                   1462 ;	main.c: 497: }
+      0007F3 80               [11] 1463 	iret
+                                   1464 	.area CODE
+                                   1465 	.area CONST
+      000000                       1466 _mangAL:
+      000000 04                    1467 	.db #0x04	; 4
+      000001 06                    1468 	.db #0x06	; 6
+      000002 1B                    1469 	.db #0x1b	; 27
+      000003 07                    1470 	.db #0x07	; 7
+      000004 03                    1471 	.db #0x03	; 3
+      000005 07                    1472 	.db #0x07	; 7
+      000006 1D                    1473 	.db #0x1d	; 29
+      000007 08                    1474 	.db #0x08	; 8
+      000008 03                    1475 	.db #0x03	; 3
+      000009 08                    1476 	.db #0x08	; 8
+      00000A 1D                    1477 	.db #0x1d	; 29
+      00000B 09                    1478 	.db #0x09	; 9
+      00000C 01                    1479 	.db #0x01	; 1
+      00000D 0A                    1480 	.db #0x0a	; 10
+      00000E 01                    1481 	.db #0x01	; 1
+      00000F 0A                    1482 	.db #0x0a	; 10
+      000010 01                    1483 	.db #0x01	; 1
+      000011 0B                    1484 	.db #0x0b	; 11
+      000012 01                    1485 	.db #0x01	; 1
+      000013 0B                    1486 	.db #0x0b	; 11
+                                   1487 	.area CONST
+      000014                       1488 ___str_0:
+      000014 41 4C 3A 31 7C 31 35  1489 	.ascii "AL:1|15"
+      00001B 00                    1490 	.db 0x00
+                                   1491 	.area CODE
+                                   1492 	.area CONST
+      00001C                       1493 ___str_1:
+      00001C 2E                    1494 	.ascii "."
+      00001D 00                    1495 	.db 0x00
+                                   1496 	.area CODE
+                                   1497 	.area CONST
+      00001E                       1498 ___str_2:
+      00001E 56                    1499 	.ascii "V"
+      00001F 00                    1500 	.db 0x00
+                                   1501 	.area CODE
+                                   1502 	.area CONST
+      000020                       1503 ___str_3:
+      000020 2B 44 41 54 45 2B     1504 	.ascii "+DATE+"
+      000026 00                    1505 	.db 0x00
+                                   1506 	.area CODE
+                                   1507 	.area CONST
+      000027                       1508 ___str_4:
+      000027 41 4C 3A              1509 	.ascii "AL:"
+      00002A 00                    1510 	.db 0x00
+                                   1511 	.area CODE
+                                   1512 	.area CONST
+      00002B                       1513 ___str_5:
+      00002B 2D                    1514 	.ascii "-"
+      00002C 00                    1515 	.db 0x00
+                                   1516 	.area CODE
+                                   1517 	.area CONST
+      00002D                       1518 ___str_6:
+      00002D 2B 43 4F 55 4E 54 45  1519 	.ascii "+COUNTER+"
+             52 2B
+      000036 00                    1520 	.db 0x00
+                                   1521 	.area CODE
+                                   1522 	.area CONST
+      000037                       1523 ___str_7:
+      000037 2B 53 45 54 20 54 49  1524 	.ascii "+SET TIME+"
+             4D 45 2B
+      000041 00                    1525 	.db 0x00
+                                   1526 	.area CODE
+                                   1527 	.area INITIALIZER
+      000000                       1528 __xinit__u8Time:
+      000000 00                    1529 	.db #0x00	; 0
+      000001 00                    1530 	.db #0x00	; 0
+      000002 00                    1531 	.db #0x00	; 0
+      000003 00                    1532 	.db #0x00	; 0
+      000004 00                    1533 	.db #0x00	; 0
+      000005 00                    1534 	.db #0x00	; 0
+      000006                       1535 __xinit__u8Radio:
+      000006 00                    1536 	.db #0x00	; 0
+      000007 00                    1537 	.db #0x00	; 0
+      000008 00                    1538 	.db #0x00	; 0
+      000009 00                    1539 	.db #0x00	; 0
+      00000A                       1540 __xinit__FreFM:
+      00000A 00 00                 1541 	.dw #0x0000
+      00000C                       1542 __xinit__adc_value:
+      00000C 00 00                 1543 	.dw #0x0000
+      00000E                       1544 __xinit__voltBat:
+      00000E 00 00                 1545 	.dw #0x0000
+      000010                       1546 __xinit__counter:
+      000010 00 00                 1547 	.dw #0x0000
+      000012                       1548 __xinit__powerradio:
+      000012 00                    1549 	.db #0x00	; 0
+      000013                       1550 __xinit__cnt_second:
+      000013 00                    1551 	.db #0x00	; 0
+      000014                       1552 __xinit__cnt_autoOff:
+      000014 00                    1553 	.db #0x00	; 0
+      000015                       1554 __xinit__cnt_minute:
+      000015 00                    1555 	.db #0x00	; 0
+      000016                       1556 __xinit__mode:
+      000016 00                    1557 	.db #0x00	; 0
+      000017                       1558 __xinit__temph:
+      000017 00 00                 1559 	.dw #0x0000
+      000019                       1560 __xinit__templ:
+      000019 00                    1561 	.db #0x00	; 0
+      00001A                       1562 __xinit__date:
+      00001A 00                    1563 	.db #0x00	; 0
+      00001B                       1564 __xinit__month:
+      00001B 00                    1565 	.db #0x00	; 0
+      00001C                       1566 __xinit__dateAL:
+      00001C 00                    1567 	.db #0x00	; 0
+      00001D                       1568 __xinit__monthAL:
+      00001D 00                    1569 	.db #0x00	; 0
+      00001E                       1570 __xinit__cnt_refesh:
+      00001E 00                    1571 	.db #0x00	; 0
+      00001F                       1572 __xinit__lcdstate:
+      00001F 00                    1573 	.db #0x00	;  0
+                                   1574 	.area CABS (ABS)

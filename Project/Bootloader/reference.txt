@@ -1,0 +1,10 @@
+Link reference:
+
+https://www.facebook.com/groups/VDKARMVIETNAM/posts/1213674682148528
+https://github.com/lujji/stm8-bootloader/tree/master
+https://electronics.stackexchange.com/questions/528840/how-to-program-stm8s003f3p6-using-uart
+https://lujji.github.io/blog/serial-bootloader-for-stm8/
+https://github.com/lujji/stm8-bootloader/blob/master/Makefile
+https://www.st.com/resource/en/user_manual/um0560-stm8-bootloader-stmicroelectronics.pdf
+https://github.com/ZiB/STM8S-USB/blob/master/device/usb/usb.c#L417
+
