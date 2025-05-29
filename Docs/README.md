@@ -194,7 +194,17 @@ them duong PATH cho sdcc va make:
 
 <img src = "image/sdcc5.png" width = "350">
 
+## Cac link  tham khao khac:
 
+[Getting started with STM8 on Linux](https://www.ondrovo.com/a/20170107-stm8-getting-started/)
+
+[stm8s-sdcc-template](https://github.com/baoson2211/stm8s-sdcc-template/blob/master/Makefile) 
+
+[Reading Push-Buttons Through Polling: Learn Microcontroller with STM8S – Tutorial Part #6](https://www.circuitstate.com/tutorials/reading-push-buttons-through-polling-learn-microcontroller-with-stm8s-tutorial-part-6/#Uploading)
+
+[stm8flash](https://github.com/vdudouyt/stm8flash)
+
+[ngat tren stm8s](https://b4050n.wordpress.com/2017/01/10/stm8s-4-ngat-tren-stm8s-vi-du-ve-ngat-ngoai/)
 
 ## 1. Các thư viện
 - **Nghiên cứu các thư viện này:**
